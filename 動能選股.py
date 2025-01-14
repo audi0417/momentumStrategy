@@ -559,7 +559,7 @@ def main():
 
         sender_email = "audiaudy3030422@gmail.com"
         app_password = os.getenv("APP_PASSWORD")
-        receiver_email = "audiaudy3030422@gmail.com,ptbilly@gmail.com"
+        receiver_email = "audiaudy3030422@gmail.com"
 
         send_mail(sender_email, app_password, receiver_email, mail_content)
     except Exception as e:
