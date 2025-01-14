@@ -1,0 +1,8 @@
+bs4
+mplfinance
+numpy
+pandas
+requests
+rich
+tqdm
+yfinance
