@@ -1,0 +1,28 @@
+name: Stock Screening
+
+on:
+  schedule:
+    - cron: '0 21 * * 0-4'  # 每個工作日早上 5:00 (UTC+8) 運行
+  workflow_dispatch:  # 允許手動觸發
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run screening script
+      env:
+        APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+      run: python 動能選股.py
