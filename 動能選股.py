@@ -24,7 +24,7 @@ import logging
 import os
 
 def format_mail_content(momentum_stocks, rsi_stocks, macd_stocks, final_stocks, total_stocks):
-
+    sorted_momentum_stocks = dict(sorted(momentum_stocks.items(), key=lambda x: x[1], reverse=True))
 
     content = f"""
 股票篩選結果
@@ -34,12 +34,12 @@ def format_mail_content(momentum_stocks, rsi_stocks, macd_stocks, final_stocks, 
 --------
 - 篩選總數: {total_stocks} 支股票
 
-動能選股 (共 {len(momentum_stocks)} 支)
+動能選股 (共 {len(sorted_momentum_stocks)} 支)
 -------------------"""
 
-    if momentum_stocks:
+    if sorted_momentum_stocks:
         content += "\n"
-        for stock, momentum in momentum_stocks.items():
+        for stock, momentum in sorted_momentum_stocks.items():
             stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
             turnover = format_number(get_turnover_batch(stock))
             content += f"• {stock} {stock_name}: 動能 {momentum:.2f}%, 成交量 {turnover}\n"
