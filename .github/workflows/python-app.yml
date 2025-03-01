@@ -1,16 +1,16 @@
 name: Stock Screening
-
 on:
   schedule:
     - cron: '0 21 * * 0-4'  # 每個工作日早上 5:00 (UTC+8) 運行
   workflow_dispatch:  # 允許手動觸發
-
 jobs:
   screen:
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}  
     
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -26,3 +26,11 @@ jobs:
       env:
         APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
       run: python 動能選股.py
+    
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add stocks_data.json
+        git commit -m "更新股票數據 $(date +'%Y-%m-%d')" || echo "無變更"
+        git push
