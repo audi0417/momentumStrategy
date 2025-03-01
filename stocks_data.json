@@ -1,0 +1,47 @@
+{
+  "last_update": "2025-03-01",
+  "stocks": {
+    "1569": {
+      "stock_name": "濱川",
+      "momentum": 8.277699361728331,
+      "days": 1,
+      "last_signal_date": "2025-03-01"
+    },
+    "2641": {
+      "stock_name": "正德",
+      "momentum": 14.532024008916245,
+      "days": 1,
+      "last_signal_date": "2025-03-01"
+    },
+    "3147": {
+      "stock_name": "大綜",
+      "momentum": 8.045977011494255,
+      "days": 1,
+      "last_signal_date": "2025-03-01"
+    },
+    "4510": {
+      "stock_name": "高鋒",
+      "momentum": 11.376148188879732,
+      "days": 1,
+      "last_signal_date": "2025-03-01"
+    },
+    "4772": {
+      "stock_name": "台特化",
+      "momentum": 9.95575221238938,
+      "days": 1,
+      "last_signal_date": "2025-03-01"
+    },
+    "4931": {
+      "stock_name": "新盛力",
+      "momentum": 7.250760231168352,
+      "days": 1,
+      "last_signal_date": "2025-03-01"
+    },
+    "8436": {
+      "stock_name": "大江",
+      "momentum": 8.786610878661083,
+      "days": 1,
+      "last_signal_date": "2025-03-01"
+    }
+  }
+}
