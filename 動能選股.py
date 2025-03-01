@@ -22,10 +22,152 @@ import mplfinance as mpf
 import datetime
 import logging
 import os
+import json
+import datetime
+import requests
 
-def format_mail_content(momentum_stocks, rsi_stocks, macd_stocks, final_stocks, total_stocks):
-    sorted_momentum_stocks = dict(sorted(momentum_stocks.items(), key=lambda x: x[1], reverse=True))
+def get_holiday_schedule():
+    """從 TWSE API 獲取假日資料"""
+    try:
+        url = "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"獲取假日資料失敗: {response.status_code}")
+            return None
+    except Exception as e:
+        print(f"獲取假日資料時發生錯誤：{str(e)}")
+        return None
 
+def is_trading_day(date_str, holiday_schedule):
+    """判斷是否為交易日"""
+    try:
+        date = datetime.datetime.strptime(date_str, "%Y-%m-%d")
+        # 週末不交易
+        if date.weekday() >= 5:
+            return False
+
+        # 轉換日期格式以匹配假日資料 (YYYYMMDD -> 1YYMMDD)
+        formatted_date = f"1{date.strftime('%y%m%d')}"
+
+        # 檢查是否為假日
+        for holiday in holiday_schedule:
+            if holiday["Date"] == formatted_date:
+                return False
+
+        return True
+    except Exception as e:
+        print(f"檢查交易日時發生錯誤：{str(e)}")
+        return False
+
+def get_last_trading_day(current_date, holiday_schedule):
+    """獲取前一個交易日"""
+    try:
+        current = datetime.datetime.strptime(current_date, "%Y-%m-%d")
+
+        # 往前找最多30天，確保能找到前一個交易日
+        for i in range(1, 30):
+            previous_date = current - datetime.timedelta(days=i)
+            previous_date_str = previous_date.strftime("%Y-%m-%d")
+            if is_trading_day(previous_date_str, holiday_schedule):
+                return previous_date_str
+
+        return None
+    except Exception as e:
+        print(f"獲取前一交易日時發生錯誤：{str(e)}")
+        return None
+
+def load_stock_data():
+    """從 GitHub 儲存庫中加載股票數據JSON"""
+    file_path = 'stocks_data.json'
+
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            print("JSON 文件格式錯誤，創建新文件")
+
+    # 如果文件不存在或格式錯誤，則創建新的數據結構
+    return {
+        "last_update": datetime.datetime.now().strftime("%Y-%m-%d"),
+        "stocks": {}
+    }
+
+def save_stock_data(data):
+    """保存股票數據到 GitHub 儲存庫中的 JSON 文件"""
+    file_path = 'stocks_data.json'
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    print(f"已保存數據到 {file_path}")
+
+def update_momentum_stocks(momentum_stocks):
+    """更新動能股票記錄，計算累積天數"""
+    today = datetime.datetime.now().strftime("%Y-%m-%d")
+
+    # 獲取假日資料
+    holiday_schedule = get_holiday_schedule()
+    if not holiday_schedule:
+        print("無法獲取假日資料，將使用簡單的週末判斷")
+        holiday_schedule = []
+
+    # 獲取前一個交易日
+    last_trading_day = get_last_trading_day(today, holiday_schedule)
+    print(f"今日: {today}, 前一交易日: {last_trading_day}")
+
+    # 加載現有數據
+    data = load_stock_data()
+
+    # 股票代號列表，用於檢查哪些股票不再出現
+    current_stock_ids = set(momentum_stocks.keys())
+
+    # 更新數據
+    for stock_id, momentum in momentum_stocks.items():
+        stock_name = all_stock.loc[all_stock["股票代號"]==stock_id, "股票名稱"].values[0]
+
+        if stock_id in data["stocks"]:
+            # 檢查是否連續出現
+            if data["stocks"][stock_id]["last_signal_date"] == last_trading_day:
+                data["stocks"][stock_id]["days"] += 1
+                print(f"股票 {stock_id} 連續出現 {data['stocks'][stock_id]['days']} 天")
+            else:
+                data["stocks"][stock_id]["days"] = 1
+                print(f"股票 {stock_id} 重新出現，重設為 1 天")
+
+            # 更新其他數據
+            data["stocks"][stock_id]["momentum"] = float(momentum)
+            data["stocks"][stock_id]["last_signal_date"] = today
+        else:
+            # 新增記錄
+            data["stocks"][stock_id] = {
+                "stock_name": stock_name,
+                "momentum": float(momentum),
+                "days": 1,
+                "last_signal_date": today
+            }
+            print(f"新增股票 {stock_id} {stock_name}")
+
+    # 移除不再出現信號的股票
+    stocks_to_remove = []
+    for stock_id in data["stocks"]:
+        if stock_id not in current_stock_ids:
+            stocks_to_remove.append(stock_id)
+
+    for stock_id in stocks_to_remove:
+        stock_name = data["stocks"][stock_id]["stock_name"]
+        print(f"移除不再出現信號的股票: {stock_id} {stock_name}")
+        del data["stocks"][stock_id]
+
+    # 更新最後更新時間
+    data["last_update"] = today
+
+    # 保存更新後的數據
+    save_stock_data(data)
+
+    return data
+
+def format_mail_content_with_days(momentum_stocks, rsi_stocks, macd_stocks, final_stocks, total_stocks, stock_data):
     content = f"""
 股票篩選結果
 ======================
@@ -34,15 +176,16 @@ def format_mail_content(momentum_stocks, rsi_stocks, macd_stocks, final_stocks, 
 --------
 - 篩選總數: {total_stocks} 支股票
 
-動能選股 (共 {len(sorted_momentum_stocks)} 支)
+動能選股 (共 {len(momentum_stocks)} 支)
 -------------------"""
 
-    if sorted_momentum_stocks:
+    if momentum_stocks:
         content += "\n"
-        for stock, momentum in sorted_momentum_stocks.items():
+        for stock, momentum in momentum_stocks.items():
             stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
             turnover = format_number(get_turnover_batch(stock))
-            content += f"• {stock} {stock_name}: 動能 {momentum:.2f}%, 成交量 {turnover}\n"
+            days = stock_data["stocks"][stock]["days"] if stock in stock_data["stocks"] else 1
+            content += f"• {stock} {stock_name}: 動能 {momentum:.2f}%, 成交量 {turnover}, 連續 {days} 天\n"
 
     content += f"""
 RSI選股 (共 {len(rsi_stocks)} 支)
@@ -458,6 +601,10 @@ def main():
                     console.print(f"[yellow]警告: {stock_num} 成交量檢查失敗 ({str(e)})[/yellow]")
                     continue
 
+        # 新增：更新JSON數據
+        console.print("\n[cyan]開始更新動能股票連續天數...[/cyan]")
+        updated_stock_data = update_momentum_stocks(momentum_stocks)
+
         # 3. 輸出動能篩選結果（排序後）
         console.print("\n動能篩選結果:")
         console.print("=" * 50)
@@ -468,7 +615,8 @@ def main():
                 stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
                 turnover = get_turnover_batch(stock)
                 turnover_formatted = format_number(turnover)
-                console.print(f"股票代號: {stock} - {stock_name} (動能值: {momentum:.2f}%, 成交量: {turnover_formatted})")
+                days = updated_stock_data["stocks"][stock]["days"]
+                console.print(f"股票代號: {stock} - {stock_name} (動能值: {momentum:.2f}%, 成交量: {turnover_formatted}, 連續 {days} 天)")
         else:
             console.print("[yellow]沒有找到符合動能條件的股票[/yellow]")
         console.print("=" * 50)
@@ -549,17 +697,19 @@ def main():
                     print(f"成交量: 取得失敗 ({str(e)})")
         else:
             console.print("[yellow]沒有找到符合所有條件的股票[/yellow]")
-        mail_content = format_mail_content(
+
+        mail_content = format_mail_content_with_days(
             momentum_stocks,
             rsi_stocks,
             macd_stocks,
             final_qualified_stocks,
-            len(stock_index)
+            len(stock_index),
+            updated_stock_data
         )
 
         sender_email = "audiaudy3030422@gmail.com"
         app_password = os.getenv("APP_PASSWORD")
-        receiver_email = "audiaudy3030422@gmail.com,ptbilly@gmail.com"
+        receiver_email = "audiaudy3030422@gmail.com"
 
         send_mail(sender_email, app_password, receiver_email, mail_content)
     except Exception as e:
