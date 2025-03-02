@@ -874,6 +874,19 @@ def main():
         sender_email = os.getenv("SENDER_EMAIL")
         app_password = os.getenv("APP_PASSWORD")
         receiver_email = os.getenv("RECIVER_EMAIL")
+
+        if sender_email is None:
+            console.print("[yellow]警告: 缺少發送者郵箱設定 (SENDER_EMAIL)[/yellow]")
+            mail_config_valid = False
+        
+        if app_password is None:
+            console.print("[yellow]警告: 缺少應用程式密碼設定 (APP_PASSWORD)[/yellow]")
+            mail_config_valid = False
+        
+        if receiver_email is None:
+            console.print("[yellow]警告: 缺少接收者郵箱設定 (RECIVER_EMAIL)[/yellow]")
+            mail_config_valid = False
+
         send_mail(sender_email, app_password, receiver_email, mail_content)
 
     except Exception as e:
