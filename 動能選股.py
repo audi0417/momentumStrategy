@@ -7,6 +7,10 @@ Original file is located at
     https://colab.research.google.com/drive/1BPiBju0KvLRblu5N93PAVE3Fn2hCiz62
 """
 
+MIN_DATA_LENGTH = 126
+MIN_MOMENTUM = 7
+MIN_TURNOVER = 500000000  # 5億成交量
+
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -167,7 +171,151 @@ def update_momentum_stocks(momentum_stocks):
 
     return data
 
+def filter_stocks_by_condition(stock_index, condition_function, condition_args=None, min_value=None):
+    """通用股票篩選函數"""
+    filtered_stocks = {}
+    skipped_stocks = {
+        "length": 0,
+        "indicator_null": 0,
+        "below_threshold": 0,
+        "turnover_error": 0,
+        "turnover_low": 0
+    }
+
+    for stock_num, df in stock_index.items():
+        # 檢查數據長度
+        if len(df) < MIN_DATA_LENGTH:
+            skipped_stocks["length"] += 1
+            continue
+
+        # 計算指標
+        if condition_args:
+            indicator_value = condition_function(df, **condition_args)
+        else:
+            indicator_value = condition_function(df)
+
+        # 檢查指標值
+        if indicator_value is None:
+            skipped_stocks["indicator_null"] += 1
+            continue
+
+        # 檢查是否符合指標條件
+        is_signal_valid = True  # 默認信號有效
+
+        # 對於列表型指標（如RSI和MACD信號），檢查最後一個信號是否為買入信號
+        if isinstance(indicator_value, list):
+            if indicator_value[-1] != 100:  # 100表示買入信號
+                is_signal_valid = False
+                skipped_stocks["below_threshold"] += 1
+                continue
+        # 對於數值型指標（如動能），檢查是否大於min_value
+        elif min_value is not None:
+            if indicator_value <= min_value:
+                is_signal_valid = False
+                skipped_stocks["below_threshold"] += 1
+                continue
+
+        # 只有信號有效的股票才檢查成交量
+        if is_signal_valid:
+            try:
+                turnover_str = get_turnover_batch(stock_num)
+                turnover = int(turnover_str.replace(',', ''))
+                if turnover > MIN_TURNOVER:
+                    if isinstance(indicator_value, list):
+                        filtered_stocks[stock_num] = indicator_value[-1]
+                    else:
+                        filtered_stocks[stock_num] = indicator_value
+                else:
+                    skipped_stocks["turnover_low"] += 1
+                    print(f"股票 {stock_num} 成交量 {turnover_str} 低於閾值")
+            except Exception as e:
+                skipped_stocks["turnover_error"] += 1
+                print(f"警告: {stock_num} 成交量檢查失敗 ({str(e)})")
+
+    # 輸出篩選統計
+    total = sum(skipped_stocks.values()) + len(filtered_stocks)
+    print(f"\n篩選統計 (總計處理 {total} 支股票):")
+    print(f"- 數據長度不足: {skipped_stocks['length']} 支")
+    print(f"- 指標計算失敗: {skipped_stocks['indicator_null']} 支")
+    print(f"- 未達指標閾值: {skipped_stocks['below_threshold']} 支")
+    print(f"- 成交量取得失敗: {skipped_stocks['turnover_error']} 支")
+    print(f"- 成交量過低: {skipped_stocks['turnover_low']} 支")
+    print(f"- 符合條件: {len(filtered_stocks)} 支")
+
+    return filtered_stocks
+
+def print_filtering_results(stocks_dict, title, include_value=True, value_name="指標值", stock_data=None):
+    """統一顯示篩選結果
+
+    參數:
+    stocks_dict - 股票字典或列表
+    title - 顯示標題
+    include_value - 是否包含指標值
+    value_name - 指標名稱
+    stock_data - 包含股票連續天數的數據 (可選)
+    """
+    console.print(f"\n{title}:")
+    console.print("=" * 50)
+
+    if not stocks_dict:
+        console.print(f"[yellow]沒有找到符合{title}條件的股票[/yellow]")
+        console.print("=" * 50)
+        return
+
+    # 顯示結果
+    if isinstance(stocks_dict, dict):
+        items = sorted(stocks_dict.items(), key=lambda x: x[1], reverse=True)
+        count = len(items)
+    else:
+        items = [(stock, None) for stock in stocks_dict]
+        count = len(stocks_dict)
+
+    console.print(f"[green]共找到 {count} 支符合條件的股票:[/green]")
+
+    for stock, value in items:
+        stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
+        turnover = get_turnover_batch(stock)
+        turnover_formatted = format_number(turnover)
+
+        if include_value and value is not None:
+
+            days_info = ""
+            try:
+                if stock_data and "stocks" in stock_data and stock in stock_data["stocks"]:
+                    if "days" in stock_data["stocks"][stock]:
+                        days = stock_data["stocks"][stock]["days"]
+                        days_info = f", 連續 {days} 天"
+            except:
+                pass
+
+            console.print(f"股票代號: {stock} - {stock_name} ({value_name}: {value:.2f}%, 成交量: {turnover_formatted}{days_info})")
+        else:
+            console.print(f"股票代號: {stock} - {stock_name} (成交量: {turnover_formatted})")
+
+    console.print("=" * 50)
+
 def format_mail_content_with_days(momentum_stocks, rsi_stocks, macd_stocks, final_stocks, total_stocks, stock_data):
+    sections = [
+        {
+            "title": "動能選股",
+            "stocks": momentum_stocks,
+            "is_dict": True,
+            "value_name": "動能"
+        },
+        {
+            "title": "RSI選股",
+            "stocks": rsi_stocks,
+            "is_dict": False,
+            "value_name": None
+        },
+        {
+            "title": "MACD選股",
+            "stocks": macd_stocks,
+            "is_dict": False,
+            "value_name": None
+        }
+    ]
+
     content = f"""
 股票篩選結果
 ======================
@@ -175,40 +323,30 @@ def format_mail_content_with_days(momentum_stocks, rsi_stocks, macd_stocks, fina
 篩選概況
 --------
 - 篩選總數: {total_stocks} 支股票
+"""
 
-動能選股 (共 {len(momentum_stocks)} 支)
--------------------"""
+    # 處理各個篩選類別
+    for section in sections:
+        stocks = section["stocks"]
+        title = section["title"]
+        content += f"\n{title} (共 {len(stocks)} 支)\n-------------------"
 
-    if momentum_stocks:
-        content += "\n"
-        for stock, momentum in momentum_stocks.items():
-            stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
-            turnover = format_number(get_turnover_batch(stock))
-            days = stock_data["stocks"][stock]["days"] if stock in stock_data["stocks"] else 1
-            content += f"• {stock} {stock_name}: 動能 {momentum:.2f}%, 成交量 {turnover}, 連續 {days} 天\n"
+        if stocks:
+            content += "\n"
+            if section["is_dict"]:
+                sorted_stocks = sorted(stocks.items(), key=lambda x: x[1], reverse=True)
+                for stock, value in sorted_stocks:
+                    stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
+                    turnover = format_number(get_turnover_batch(stock))
+                    days = stock_data["stocks"][stock]["days"] if stock in stock_data["stocks"] else 1
+                    content += f"• {stock} {stock_name}: {section['value_name']} {value:.2f}%, 成交量 {turnover}, 連續 {days} 天\n"
+            else:
+                for stock in stocks:
+                    stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
+                    turnover = format_number(get_turnover_batch(stock))
+                    content += f"• {stock} {stock_name}: 成交量 {turnover}\n"
 
-    content += f"""
-RSI選股 (共 {len(rsi_stocks)} 支)
------------------"""
-
-    if rsi_stocks:
-        content += "\n"
-        for stock in rsi_stocks:
-            stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
-            turnover = format_number(get_turnover_batch(stock))
-            content += f"• {stock} {stock_name}: 成交量 {turnover}\n"
-
-    content += f"""
-MACD選股 (共 {len(macd_stocks)} 支)
-------------------"""
-
-    if macd_stocks:
-        content += "\n"
-        for stock in macd_stocks:
-            stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
-            turnover = format_number(get_turnover_batch(stock))
-            content += f"• {stock} {stock_name}: 成交量 {turnover}\n"
-
+    # 最終篩選結果
     content += "\n最終篩選結果"
     content += "\n-----------------"
     if final_stocks:
@@ -246,7 +384,7 @@ def send_mail(sender_email, app_password, receiver_email, content):
 logging.getLogger('yfinance').setLevel(logging.CRITICAL)
 # %matplotlib inline
 pd.options.mode.chained_assignment = None  # 關閉警告
-pd.options.mode.chained_assignment = 'warn'  # 開啟警告（預設值）
+#pd.options.mode.chained_assignment = 'warn'  # 開啟警告（預設值）
 
 """## 股票爬蟲"""
 
@@ -326,38 +464,100 @@ res = requests.get(url, params={
 })
 TPEx_turnover = res.json()['tables'][0]['data']
 
+# 上市股票成交金額緩存
+turnover_cache = {}
+
 def get_turnover_batch(stock_num):
-    """獲取單一股票的成交量資料"""
+    """獲取單一股票的成交金額資料"""
+    # 檢查快取
+    if stock_num in turnover_cache:
+        return turnover_cache[stock_num]
+
     try:
         # 取得股票市場類型
         market_type = all_stock.loc[all_stock["股票代號"]==stock_num, "市場別"].values[0]
 
         if market_type == "上櫃":
-            # 處理上櫃股票
+            # 處理上櫃股票 - 對於上櫃股票，成交金額在索引10的位置
             for stock in TPEx_turnover:
                 if stock[0] == stock_num:
-                    return stock[9]  # 返回成交量
-            raise ValueError(f"找不到上櫃股票 {stock_num} 的成交量資料")
+                    turnover = stock[10]  # 返回成交金額
+                    turnover_cache[stock_num] = turnover  # 存入快取
+                    return turnover
+            raise ValueError(f"找不到上櫃股票 {stock_num} 的成交金額資料")
 
         else:  # 處理上市股票
-            url = "https://www.twse.com.tw/exchangeReport/STOCK_DAY"
+            # 獲取假日資料
+            holiday_schedule = get_holiday_schedule() or []
+
+            # 獲取當前日期
+            today = datetime.datetime.now()
+            current_date_str = today.strftime("%Y-%m-%d")
+
+            # 獲取前一個交易日
+            last_trading_day = get_last_trading_day(current_date_str, holiday_schedule)
+            if not last_trading_day:
+                # 如果無法獲取前一交易日，使用當前月份的第一天
+                last_trading_day_date = datetime.date(today.year, today.month, 1)
+            else:
+                last_trading_day_date = datetime.datetime.strptime(last_trading_day, "%Y-%m-%d").date()
+
+            # 格式化為API所需的日期格式 YYYYMMDD
+            formatted_date = last_trading_day_date.strftime("%Y%m%d")
+
+            # 使用正確的API端點
+            url = f"https://www.twse.com.tw/exchangeReport/STOCK_DAY"
             res = requests.get(url, params={
-                "response": "json",
-                "date": datetime.datetime.now().strftime("%Y%m%d"),
+                "date": formatted_date,
                 "stockNo": stock_num
             })
 
             if res.status_code == 200:
                 res_json = res.json()
-                daily_price_list = res_json.get("data", [])
-                if daily_price_list:
-                    return daily_price_list[-1][2]  # 返回成交量
+                if res_json["stat"] == "OK" and len(res_json["data"]) > 0:
+                    # 尋找最近的交易日數據
+                    for i in range(len(res_json["data"])-1, -1, -1):  # 從後往前找
+                        date_str = res_json["data"][i][0]  # 日期格式: "114/02/27"
+                        # 轉換台灣日期格式為西元日期
+                        year = int(date_str.split('/')[0]) + 1911  # 民國年轉西元年
+                        month = int(date_str.split('/')[1])
+                        day = int(date_str.split('/')[2])
 
-            raise ValueError(f"找不到上市股票 {stock_num} 的成交量資料")
+                        data_date = datetime.date(year, month, day)
+
+                        # 如果日期不是未來的日期，就使用這個數據
+                        if data_date.toordinal() <= today.date().toordinal():
+                            turnover = res_json["data"][i][2]  # 成交金額在索引2的位置
+                            turnover_cache[stock_num] = turnover  # 存入快取
+                            return turnover
+
+                    # 如果沒有找到合適的日期，使用最後一個
+                    turnover = res_json["data"][-1][2]
+                    turnover_cache[stock_num] = turnover  # 存入快取
+                    return turnover
+
+            # 如果API請求失敗，嘗試使用其他可能的日期格式
+            if not res.ok or res_json.get("stat") != "OK":
+                # 嘗試前一個月
+                previous_month = last_trading_day_date.replace(day=1) - datetime.timedelta(days=1)
+                formatted_date = previous_month.strftime("%Y%m%d")
+
+                res = requests.get(url, params={
+                    "date": formatted_date,
+                    "stockNo": stock_num
+                })
+
+                if res.status_code == 200:
+                    res_json = res.json()
+                    if res_json["stat"] == "OK" and len(res_json["data"]) > 0:
+                        turnover = res_json["data"][-1][2]  # 使用最後一個交易日的成交金額
+                        turnover_cache[stock_num] = turnover  # 存入快取
+                        return turnover
+
+            raise ValueError(f"找不到上市股票 {stock_num} 的成交金額資料")
 
     except Exception as e:
-        raise Exception(f"獲取股票 {stock_num} 成交量時發生錯誤: {str(e)}")
-
+        raise Exception(f"獲取股票 {stock_num} 成交金額時發生錯誤: {str(e)}")
 
 def get_stock_data(stock_info, max_retries=3, base_delay=1):
     stock_num, market_type = stock_info
@@ -589,115 +789,79 @@ def main():
 
         # 2. 動能篩選
         console.print("\n[cyan]開始進行動能篩選...[/cyan]")
-        momentum_stocks = {}
-        for stock_num, df in stock_index.items():
-            if len(df) >= 126:
-                momentum = calculate_momentum(df)
-                try:
-                    turnover = int(get_turnover_batch(stock_num).replace(',', ''))
-                    if momentum and momentum > 7 and turnover > 500000000:
-                        momentum_stocks[stock_num] = momentum
-                except Exception as e:
-                    console.print(f"[yellow]警告: {stock_num} 成交量檢查失敗 ({str(e)})[/yellow]")
-                    continue
+        momentum_stocks = filter_stocks_by_condition(
+            stock_index,
+            calculate_momentum,
+            min_value=MIN_MOMENTUM
+        )
 
-        # 新增：更新JSON數據
+        # 更新動能股票連續天數
         console.print("\n[cyan]開始更新動能股票連續天數...[/cyan]")
         updated_stock_data = update_momentum_stocks(momentum_stocks)
 
-        # 3. 輸出動能篩選結果（排序後）
-        console.print("\n動能篩選結果:")
-        console.print("=" * 50)
-        if momentum_stocks:
-            sorted_momentum_stocks = sorted(momentum_stocks.items(), key=lambda x: x[1], reverse=True)
-            console.print(f"[green]共找到 {len(sorted_momentum_stocks)} 支符合動能條件的股票:[/green]")
-            for stock, momentum in sorted_momentum_stocks:
-                stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
-                turnover = get_turnover_batch(stock)
-                turnover_formatted = format_number(turnover)
-                days = updated_stock_data["stocks"][stock]["days"]
-                console.print(f"股票代號: {stock} - {stock_name} (動能值: {momentum:.2f}%, 成交量: {turnover_formatted}, 連續 {days} 天)")
-        else:
-            console.print("[yellow]沒有找到符合動能條件的股票[/yellow]")
-        console.print("=" * 50)
+        print_filtering_results(
+            momentum_stocks,
+            "動能篩選結果",
+            include_value=True,
+            value_name="動能值",
+            stock_data=updated_stock_data  # 傳入股票數據
+        )
 
-        # 4. RSI篩選
+        # 3. RSI篩選
         console.print("\n[cyan]開始進行RSI篩選...[/cyan]")
-        rsi_stocks = []
-        for stock_num, df in stock_index.items():
-            if len(df) >= 126:
-                rsi_signal = Signal_rsi(df, shortTern=5, longTern=80)
-                try:
-                    turnover = int(get_turnover_batch(stock_num).replace(',', ''))
-                    if rsi_signal and rsi_signal[-1] == 100 and turnover > 500000000:
-                        rsi_stocks.append(stock_num)
-                except Exception as e:
-                    console.print(f"[yellow]警告: {stock_num} 成交量檢查失敗 ({str(e)})[/yellow]")
-                    continue
+        rsi_stocks = filter_stocks_by_condition(
+            stock_index,
+            Signal_rsi,
+            condition_args={"shortTern": 5, "longTern": 80}
+        )
 
-        # 5. 輸出RSI篩選結果
-        console.print("\nRSI篩選結果:")
-        console.print("=" * 50)
-        if rsi_stocks:
-            console.print(f"[green]共找到 {len(rsi_stocks)} 支符合RSI條件的股票:[/green]")
-            for stock in rsi_stocks:
-                stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
-                turnover = get_turnover_batch(stock)
-                turnover_formatted = format_number(turnover)
-                console.print(f"股票代號: {stock} - {stock_name} (成交量: {turnover_formatted})")
-        else:
-            console.print("[yellow]沒有找到符合RSI條件的股票[/yellow]")
-        console.print("=" * 50)
+        # 輸出RSI篩選結果
+        print_filtering_results(
+            rsi_stocks,
+            "RSI篩選結果",
+            include_value=False,
+            stock_data=updated_stock_data  # 傳入股票數據
+        )
 
-        # 6. MACD篩選
+        # 4. MACD篩選
         console.print("\n[cyan]開始進行MACD篩選...[/cyan]")
-        macd_stocks = []
-        for stock_num, df in stock_index.items():
-            if len(df) >= 126:
-                macd_signal = Signal_macd(df, fastperiod=12, slowperiod=26, signalperiod=9)
-                try:
-                    turnover = int(get_turnover_batch(stock_num).replace(',', ''))
-                    if macd_signal and macd_signal[-1] == 100 and turnover > 500000000:
-                        macd_stocks.append(stock_num)
-                except Exception as e:
-                    console.print(f"[yellow]警告: {stock_num} 成交量檢查失敗 ({str(e)})[/yellow]")
-                    continue
+        macd_stocks = filter_stocks_by_condition(
+            stock_index,
+            Signal_macd,
+            condition_args={"fastperiod": 12, "slowperiod": 26, "signalperiod": 9}
+        )
 
-        # 7. 輸出MACD篩選結果
-        console.print("\nMACD篩選結果:")
-        console.print("=" * 50)
-        if macd_stocks:
-            console.print(f"[green]共找到 {len(macd_stocks)} 支符合MACD條件的股票:[/green]")
-            for stock in macd_stocks:
-                stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
-                turnover = get_turnover_batch(stock)
-                turnover_formatted = format_number(turnover)
-                console.print(f"股票代號: {stock} - {stock_name} (成交量: {turnover_formatted})")
-        else:
-            console.print("[yellow]沒有找到符合MACD條件的股票[/yellow]")
-        console.print("=" * 50)
+        # 輸出MACD篩選結果
+        print_filtering_results(
+            macd_stocks,
+            "MACD篩選結果",
+            include_value=False,
+            stock_data=updated_stock_data  # 傳入股票數據
+        )
 
-        # 8. 最終篩選結果
+        # 5. 最終篩選結果
         console.print("\n[cyan]最終篩選結果:[/cyan]")
         console.print("=" * 50)
-        final_qualified_stocks = [stock for stock in momentum_stocks
-                                if stock in rsi_stocks and stock in macd_stocks]
+
+        # 取得同時符合三個條件的股票
+        final_qualified_stocks = [
+            stock for stock in momentum_stocks
+            if stock in rsi_stocks and stock in macd_stocks
+        ]
 
         if final_qualified_stocks:
             console.print(f"[green]共找到 {len(final_qualified_stocks)} 支符合所有條件的股票:[/green]")
             for stock in final_qualified_stocks:
                 stock_name = all_stock.loc[all_stock["股票代號"]==stock, "股票名稱"].values[0]
-                print(f"\n股票代號: {stock} - {stock_name} 的篩選指標:")
-                print(f"動能值: {momentum_stocks[stock]:.2f}%")
-                try:
-                    turnover = get_turnover_batch(stock)
-                    turnover_formatted = format_number(turnover)
-                    print(f"成交量: {turnover_formatted}")
-                except Exception as e:
-                    print(f"成交量: 取得失敗 ({str(e)})")
+                momentum = momentum_stocks[stock]
+                turnover = get_turnover_batch(stock)
+                turnover_formatted = format_number(turnover)
+                console.print(f"\n股票代號: {stock} - {stock_name}")
+                console.print(f"  動能值: {momentum:.2f}%, 成交量: {turnover_formatted}")
         else:
             console.print("[yellow]沒有找到符合所有條件的股票[/yellow]")
 
+        # 6. 發送郵件
         mail_content = format_mail_content_with_days(
             momentum_stocks,
             rsi_stocks,
@@ -707,16 +871,17 @@ def main():
             updated_stock_data
         )
 
-        sender_email = "audiaudy3030422@gmail.com"
+        sender_email = os.getenv("SENDER_EMAIL")
         app_password = os.getenv("APP_PASSWORD")
-        receiver_email = "audiaudy3030422@gmail.com"
-
+        receiver_email = os.getenv("RECIVER_EMAIL")
         send_mail(sender_email, app_password, receiver_email, mail_content)
+
     except Exception as e:
         console.print(f"[red]執行過程發生錯誤: {str(e)}[/red]")
 
     finally:
         console.print("\n[green]程式執行完成[/green]")
+
 
 if __name__ == "__main__":
     try:
