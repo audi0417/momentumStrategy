@@ -25,6 +25,8 @@ jobs:
     - name: Run screening script
       env:
         APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+        RECIVER_EMAIL: ${{ secrets.RECIVER_EMAIL }}
+        SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
       run: python 動能選股.py
     
     - name: Commit and push changes
