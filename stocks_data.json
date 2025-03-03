@@ -1,77 +1,77 @@
 {
-  "last_update": "2025-03-02",
+  "last_update": "2025-03-03",
   "stocks": {
     "2014": {
       "stock_name": "中鴻",
       "momentum": 11.538457887080655,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "2027": {
       "stock_name": "大成鋼",
       "momentum": 10.520356631035499,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "2034": {
       "stock_name": "允強",
       "momentum": 7.61718291614677,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "2365": {
       "stock_name": "昆盈",
       "momentum": 7.167230162684901,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "2387": {
       "stock_name": "精元",
       "momentum": 7.919252101370966,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "2606": {
       "stock_name": "裕民",
       "momentum": 10.827063080063448,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "2637": {
       "stock_name": "慧洋-KY",
       "momentum": 11.275169833394516,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "3022": {
       "stock_name": "威強電",
       "momentum": 8.499999999999996,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "3059": {
       "stock_name": "華晶科",
       "momentum": 17.948713888115453,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "3694": {
       "stock_name": "海華",
       "momentum": 16.722414619195924,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "5608": {
       "stock_name": "四維航",
       "momentum": 17.91442961200451,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     },
     "6416": {
       "stock_name": "瑞祺電通",
       "momentum": 8.749999999999991,
       "days": 1,
-      "last_signal_date": "2025-03-02"
+      "last_signal_date": "2025-03-03"
     }
   }
 }
