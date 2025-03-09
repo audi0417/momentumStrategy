@@ -1,89 +1,71 @@
 {
-  "last_update": "2025-03-06",
+  "last_update": "2025-03-09",
   "stocks": {
-    "1736": {
-      "stock_name": "喬山",
-      "momentum": 15.235457063711921,
-      "days": 3,
-      "last_signal_date": "2025-03-06"
-    },
-    "2328": {
-      "stock_name": "廣宇",
-      "momentum": 7.80712189539039,
-      "days": 3,
-      "last_signal_date": "2025-03-06"
-    },
     "3563": {
       "stock_name": "牧德",
-      "momentum": 20.229885057471275,
-      "days": 3,
-      "last_signal_date": "2025-03-06"
-    },
-    "3596": {
-      "stock_name": "智易",
-      "momentum": 12.169312169312164,
-      "days": 3,
-      "last_signal_date": "2025-03-06"
+      "momentum": 21.177802944507352,
+      "days": 1,
+      "last_signal_date": "2025-03-09"
     },
     "4770": {
       "stock_name": "上品",
-      "momentum": 16.40625,
-      "days": 3,
-      "last_signal_date": "2025-03-06"
+      "momentum": 12.00000000000001,
+      "days": 1,
+      "last_signal_date": "2025-03-09"
     },
     "6196": {
       "stock_name": "帆宣",
-      "momentum": 7.692307692307687,
-      "days": 3,
-      "last_signal_date": "2025-03-06"
-    },
-    "3447": {
-      "stock_name": "展達",
-      "momentum": 7.1220838359529415,
-      "days": 2,
-      "last_signal_date": "2025-03-06"
+      "momentum": 10.423452768729646,
+      "days": 1,
+      "last_signal_date": "2025-03-09"
     },
     "4763": {
       "stock_name": "材料-KY",
-      "momentum": 16.756756756756765,
-      "days": 2,
-      "last_signal_date": "2025-03-06"
+      "momentum": 19.07327586206897,
+      "days": 1,
+      "last_signal_date": "2025-03-09"
     },
     "2429": {
       "stock_name": "銘旺科",
-      "momentum": 22.606383896133096,
+      "momentum": 23.280421731947264,
       "days": 1,
-      "last_signal_date": "2025-03-06"
+      "last_signal_date": "2025-03-09"
     },
     "3017": {
       "stock_name": "奇鋐",
-      "momentum": 7.2625698324022325,
+      "momentum": 7.707129094412335,
       "days": 1,
-      "last_signal_date": "2025-03-06"
+      "last_signal_date": "2025-03-09"
     },
     "4722": {
       "stock_name": "國精化",
-      "momentum": 12.038529545014388,
+      "momentum": 17.792420265758068,
       "days": 1,
-      "last_signal_date": "2025-03-06"
+      "last_signal_date": "2025-03-09"
     },
     "6117": {
       "stock_name": "迎廣",
-      "momentum": 13.997875420000994,
+      "momentum": 11.050917238347724,
       "days": 1,
-      "last_signal_date": "2025-03-06"
-    },
-    "6781": {
-      "stock_name": "AES-KY",
-      "momentum": 10.582010582010582,
-      "days": 1,
-      "last_signal_date": "2025-03-06"
+      "last_signal_date": "2025-03-09"
     },
     "6805": {
       "stock_name": "富世達",
-      "momentum": 7.703281027104136,
+      "momentum": 12.162162162162172,
       "days": 1,
-      "last_signal_date": "2025-03-06"
+      "last_signal_date": "2025-03-09"
+    },
+    "2421": {
+      "stock_name": "建準",
+      "momentum": 7.411387367312239,
+      "days": 1,
+      "last_signal_date": "2025-03-09"
+    },
+    "2468": {
+      "stock_name": "華經",
+      "momentum": 14.223505377837164,
+      "days": 1,
+      "last_signal_date": "2025-03-09"
     }
   }
 }
