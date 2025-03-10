@@ -7,6 +7,8 @@ Original file is located at
     https://colab.research.google.com/drive/1LYAW6Gw0bHxVbj6iDLBnOUK_ZUz6tfwc
 """
 
+!pip install mplfinance
+
 MIN_DATA_LENGTH = 90
 MIN_MOMENTUM = 7
 MIN_TURNOVER = 500000000  # 5億成交量
@@ -204,8 +206,14 @@ def update_momentum_stocks(momentum_stocks):
         stock_name = all_stock.loc[all_stock["股票代號"]==stock_id, "股票名稱"].values[0]
 
         if stock_id in data["stocks"]:
-            # 檢查是否連續出現
-            if data["stocks"][stock_id]["last_signal_date"] == last_trading_day:
+            # 检查记录的上次信号日期是否为前一个交易日或更早的交易日
+            # 而不是简单地检查是否等于前一交易日
+            signal_date = data["stocks"][stock_id]["last_signal_date"]
+
+            # 判断上次信号日期是否应该被视为连续
+            is_consecutive = is_consecutive_trading_day(signal_date, last_trading_day, holiday_schedule)
+
+            if is_consecutive:
                 data["stocks"][stock_id]["days"] += 1
                 print(f"股票 {stock_id} 連續出現 {data['stocks'][stock_id]['days']} 天")
             else:
@@ -243,6 +251,53 @@ def update_momentum_stocks(momentum_stocks):
     save_stock_data(data)
 
     return data
+# 新增函數，判斷兩個日期是否為連續的交易日
+def is_consecutive_trading_day(earlier_date, later_date, holiday_schedule):
+   """
+   判斷兩個日期是否為連續交易日
+   參數:
+   earlier_date - 較早的日期 (格式: YYYY-MM-DD)
+   later_date - 較晚的日期 (格式: YYYY-MM-DD)
+   holiday_schedule - 假日資料
+   """
+   try:
+       # 如果日期相同，認為是連續的
+       if earlier_date == later_date:
+           return True
+
+       # 轉換為日期物件
+       earlier = datetime.datetime.strptime(earlier_date, "%Y-%m-%d").date()
+       later = datetime.datetime.strptime(later_date, "%Y-%m-%d").date()
+
+       # 獲取這兩個日期之間的所有日期
+       delta = later - earlier
+       if delta.days <= 0:
+           # later_date不應早於earlier_date
+           return False
+
+       # 檢查中間的每一天是否為交易日
+       date_range = [earlier + datetime.timedelta(days=i) for i in range(1, delta.days)]
+
+       # 過濾掉所有非交易日（週末和假日）
+       trading_days = []
+       for date in date_range:
+           # 如果是週末，跳過
+           if date.weekday() >= 5:
+               continue
+
+           # 如果是假日，跳過
+           if is_holiday(date, holiday_schedule):
+               continue
+
+           trading_days.append(date)
+
+       # 如果中間沒有交易日，說明是連續的交易日
+       return len(trading_days) == 0
+
+   except Exception as e:
+       print(f"判斷連續交易日時出錯: {str(e)}")
+       # 出錯時保守處理，返回False
+       return False
 
 def filter_stocks_by_condition(stock_index, condition_function, condition_args=None, min_value=None):
     """通用股票篩選函數"""
