@@ -7,8 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1LYAW6Gw0bHxVbj6iDLBnOUK_ZUz6tfwc
 """
 
-!pip install mplfinance
-
 MIN_DATA_LENGTH = 90
 MIN_MOMENTUM = 7
 MIN_TURNOVER = 500000000  # 5億成交量
