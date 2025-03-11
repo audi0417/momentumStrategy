@@ -3,55 +3,49 @@
   "stocks": {
     "4763": {
       "stock_name": "材料-KY",
-      "momentum": 21.56448202959831,
-      "days": 2,
-      "last_signal_date": "2025-03-11"
-    },
-    "2429": {
-      "stock_name": "銘旺科",
-      "momentum": 22.542590118344606,
-      "days": 2,
-      "last_signal_date": "2025-03-11"
-    },
-    "6117": {
-      "stock_name": "迎廣",
-      "momentum": 7.790825282299818,
-      "days": 2,
+      "momentum": 11.902339776195326,
+      "days": 1,
       "last_signal_date": "2025-03-11"
     },
     "2421": {
       "stock_name": "建準",
-      "momentum": 12.473343888684374,
-      "days": 2,
+      "momentum": 11.401675418258028,
+      "days": 1,
       "last_signal_date": "2025-03-11"
     },
     "2468": {
       "stock_name": "華經",
-      "momentum": 8.058132561995123,
-      "days": 2,
+      "momentum": 9.743587787334729,
+      "days": 1,
       "last_signal_date": "2025-03-11"
     },
     "1802": {
       "stock_name": "台玻",
-      "momentum": 9.451226710138716,
+      "momentum": 7.485029598166215,
       "days": 1,
       "last_signal_date": "2025-03-11"
     },
     "2451": {
       "stock_name": "創見",
-      "momentum": 12.756260317712997,
+      "momentum": 16.609781821019265,
       "days": 1,
       "last_signal_date": "2025-03-11"
     },
-    "2486": {
-      "stock_name": "一詮",
-      "momentum": 8.374384236453203,
+    "3312": {
+      "stock_name": "弘憶股",
+      "momentum": 15.514017265533742,
       "days": 1,
       "last_signal_date": "2025-03-11"
     },
-    "6757": {
-      "stock_name": "台灣虎航",
-      "momentum": 9.854022389582152,
+    "3528": {
+      "stock_name": "安馳",
+      "momentum": 34.05405680338542,
+      "days": 1,
+      "last_signal_date": "2025-03-11"
+    },
+    "3563": {
+      "stock_name": "牧德",
+      "momentum": 8.023483365949113,
       "days": 1,
       "last_signal_date": "2025-03-11"
     }
