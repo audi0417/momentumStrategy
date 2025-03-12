@@ -1,53 +1,59 @@
 {
-  "last_update": "2025-03-11",
+  "last_update": "2025-03-12",
   "stocks": {
-    "4763": {
-      "stock_name": "材料-KY",
-      "momentum": 11.902339776195326,
-      "days": 1,
-      "last_signal_date": "2025-03-11"
-    },
     "2421": {
       "stock_name": "建準",
-      "momentum": 11.401675418258028,
-      "days": 1,
-      "last_signal_date": "2025-03-11"
+      "momentum": 15.14195768341413,
+      "days": 2,
+      "last_signal_date": "2025-03-12"
     },
     "2468": {
       "stock_name": "華經",
-      "momentum": 9.743587787334729,
-      "days": 1,
-      "last_signal_date": "2025-03-11"
-    },
-    "1802": {
-      "stock_name": "台玻",
-      "momentum": 7.485029598166215,
-      "days": 1,
-      "last_signal_date": "2025-03-11"
-    },
-    "2451": {
-      "stock_name": "創見",
-      "momentum": 16.609781821019265,
-      "days": 1,
-      "last_signal_date": "2025-03-11"
+      "momentum": 13.654095957938917,
+      "days": 2,
+      "last_signal_date": "2025-03-12"
     },
     "3312": {
       "stock_name": "弘憶股",
-      "momentum": 15.514017265533742,
-      "days": 1,
-      "last_signal_date": "2025-03-11"
+      "momentum": 15.79960829895819,
+      "days": 2,
+      "last_signal_date": "2025-03-12"
     },
     "3528": {
       "stock_name": "安馳",
-      "momentum": 34.05405680338542,
-      "days": 1,
-      "last_signal_date": "2025-03-11"
+      "momentum": 35.53571701049805,
+      "days": 2,
+      "last_signal_date": "2025-03-12"
     },
     "3563": {
       "stock_name": "牧德",
-      "momentum": 8.023483365949113,
+      "momentum": 8.795411089866167,
+      "days": 2,
+      "last_signal_date": "2025-03-12"
+    },
+    "2328": {
+      "stock_name": "廣宇",
+      "momentum": 8.413207026095382,
       "days": 1,
-      "last_signal_date": "2025-03-11"
+      "last_signal_date": "2025-03-12"
+    },
+    "2344": {
+      "stock_name": "華邦電",
+      "momentum": 15.702481770633291,
+      "days": 1,
+      "last_signal_date": "2025-03-12"
+    },
+    "2408": {
+      "stock_name": "南亞科",
+      "momentum": 10.190217602568463,
+      "days": 1,
+      "last_signal_date": "2025-03-12"
+    },
+    "4566": {
+      "stock_name": "時碩工業",
+      "momentum": 12.5528932783314,
+      "days": 1,
+      "last_signal_date": "2025-03-12"
     }
   }
 }
