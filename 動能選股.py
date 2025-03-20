@@ -179,9 +179,10 @@ def save_stock_data(data):
         json.dump(data, f, ensure_ascii=False, indent=2)
     print(f"已保存數據到 {file_path}")
 
+# 在update_momentum_stocks函數中
 def update_momentum_stocks(momentum_stocks):
     """更新動能股票記錄，計算累積天數"""
-    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    today = get_current_trading_date()  # 使用統一的台灣時區日期
 
     # 獲取假日資料
     holiday_schedule = get_holiday_schedule()
@@ -204,12 +205,11 @@ def update_momentum_stocks(momentum_stocks):
         stock_name = all_stock.loc[all_stock["股票代號"]==stock_id, "股票名稱"].values[0]
 
         if stock_id in data["stocks"]:
-            # 检查记录的上次信号日期是否为前一个交易日或更早的交易日
-            # 而不是简单地检查是否等于前一交易日
+            # 檢查記錄的上次信號日期是否為連續交易日
             signal_date = data["stocks"][stock_id]["last_signal_date"]
 
-            # 判断上次信号日期是否应该被视为连续
-            is_consecutive = is_consecutive_trading_day(signal_date, last_trading_day, holiday_schedule)
+            # 使用新函數判斷是否為連續交易日
+            is_consecutive = is_consecutive_trading_day(signal_date, today, holiday_schedule)
 
             if is_consecutive:
                 data["stocks"][stock_id]["days"] += 1
@@ -249,53 +249,58 @@ def update_momentum_stocks(momentum_stocks):
     save_stock_data(data)
 
     return data
-# 新增函數，判斷兩個日期是否為連續的交易日
+
+
 def is_consecutive_trading_day(earlier_date, later_date, holiday_schedule):
-   """
-   判斷兩個日期是否為連續交易日
-   參數:
-   earlier_date - 較早的日期 (格式: YYYY-MM-DD)
-   later_date - 較晚的日期 (格式: YYYY-MM-DD)
-   holiday_schedule - 假日資料
-   """
-   try:
-       # 如果日期相同，認為是連續的
-       if earlier_date == later_date:
-           return True
+    """
+    判斷兩個日期是否為連續交易日
+    參數:
+    earlier_date - 較早的日期 (格式: YYYY-MM-DD)
+    later_date - 較晚的日期 (格式: YYYY-MM-DD)
+    holiday_schedule - 假日資料
+    """
+    try:
+        # 如果日期相同，認為是連續的
+        if earlier_date == later_date:
+            return True
 
-       # 轉換為日期物件
-       earlier = datetime.datetime.strptime(earlier_date, "%Y-%m-%d").date()
-       later = datetime.datetime.strptime(later_date, "%Y-%m-%d").date()
+        # 轉換為日期物件
+        earlier = datetime.datetime.strptime(earlier_date, "%Y-%m-%d").date()
+        later = datetime.datetime.strptime(later_date, "%Y-%m-%d").date()
 
-       # 獲取這兩個日期之間的所有日期
-       delta = later - earlier
-       if delta.days <= 0:
-           # later_date不應早於earlier_date
-           return False
+        # 如果later比earlier早，不是連續
+        if later < earlier:
+            return False
 
-       # 檢查中間的每一天是否為交易日
-       date_range = [earlier + datetime.timedelta(days=i) for i in range(1, delta.days)]
+        # 獲取這兩個日期之間的所有日期
+        delta = later - earlier
+        if delta.days <= 0:
+            # later_date不應早於earlier_date
+            return False
 
-       # 過濾掉所有非交易日（週末和假日）
-       trading_days = []
-       for date in date_range:
-           # 如果是週末，跳過
-           if date.weekday() >= 5:
-               continue
+        # 檢查中間的每一天是否為交易日
+        date_range = [earlier + datetime.timedelta(days=i) for i in range(1, delta.days)]
 
-           # 如果是假日，跳過
-           if is_holiday(date, holiday_schedule):
-               continue
+        # 過濾掉所有非交易日（週末和假日）
+        for date in date_range:
+            # 如果是週末，跳過
+            if date.weekday() >= 5:
+                continue
 
-           trading_days.append(date)
+            # 如果是假日，跳過
+            if is_holiday(date, holiday_schedule):
+                continue
 
-       # 如果中間沒有交易日，說明是連續的交易日
-       return len(trading_days) == 0
+            # 如果找到交易日，則不是連續的
+            return False
 
-   except Exception as e:
-       print(f"判斷連續交易日時出錯: {str(e)}")
-       # 出錯時保守處理，返回False
-       return False
+        # 如果中間沒有交易日，說明是連續的交易日
+        return True
+
+    except Exception as e:
+        print(f"判斷連續交易日時出錯: {str(e)}")
+        # 出錯時保守處理，返回False
+        return False
 
 def filter_stocks_by_condition(stock_index, condition_function, condition_args=None, min_value=None):
     """通用股票篩選函數"""
@@ -493,7 +498,7 @@ def send_mail(sender_email, app_password, receiver_email, content):
         msg = MIMEMultipart()
         msg['From'] = sender_email
         msg['To'] = receiver_email
-        msg['Subject'] = f"股票篩選結果 - {datetime.datetime.now().strftime('%Y-%m-%d')}"
+        msg['Subject'] = f"股票篩選結果 - {get_current_trading_date()}"
 
         msg.attach(MIMEText(content, 'plain', 'utf-8'))
 
@@ -569,10 +574,6 @@ all_stock = all_stock[all_stock['CFICode']=="ESVUFR"]
 
 # 移除股票代號或名稱為 None 的列
 all_stock = all_stock.dropna(subset=['股票代號', '股票名稱'])
-
-#start_date = "2024-01-01"
-#end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-#end_date = "2024-12-31"
 
 from concurrent.futures import ThreadPoolExecutor
 import time
@@ -731,10 +732,10 @@ def get_stock_data(stock_info, max_retries=3, base_delay=1):
 
     return stock_num, None
 
-def parallel_get_stock_data(max_workers=5):
+def parallel_get_stock_data(max_workers=8):
     import concurrent.futures
 
-    batch_size = 50
+    batch_size = 30
     stock_info_list = [(num, all_stock.loc[all_stock["股票代號"]==num, "市場別"].values[0])
                        for num in all_stock["股票代號"]]
 
@@ -925,9 +926,9 @@ def format_number(number):
 def main():
     try:
         # 日期檢查和調試信息
-        taiwan_now = get_taiwan_datetime()
-        current_date = get_current_trading_date()
-        previous_trading_day = get_previous_trading_day()
+        taiwan_now = get_taiwan_datetime()         # 獲取台灣完整時間對象
+        current_date = get_current_trading_date()  # 獲取台灣日期字符串 (YYYY-MM-DD)
+        previous_trading_day = get_previous_trading_day()  # 獲取前一交易日
 
         console.print(f"[cyan]系統檢查[/cyan]")
         console.print(f"台灣時間: {taiwan_now}")
@@ -942,9 +943,25 @@ def main():
             console.print(f"假日資料獲取成功, 共 {len(holiday_schedule)} 筆")
             if len(holiday_schedule) > 0:
                 console.print(f"假日資料範例: {holiday_schedule[0]}")
+
+                # 檢查當天是否為國定假日
+                current_date_obj = taiwan_now.date()
+                is_today_holiday = is_holiday(current_date_obj, holiday_schedule)
+
+                if is_today_holiday:
+                    console.print(f"[yellow]今日 {current_date} 為國定假日，程序終止執行[/yellow]")
+                    return
+
+                # 檢查是否為週末
+                if taiwan_now.weekday() >= 5:  # 5=星期六, 6=星期日
+                    console.print(f"[yellow]今日 {current_date} 為週末，程序終止執行[/yellow]")
+                    return
+
+                console.print(f"[green]今日 {current_date} 為交易日，程序繼續執行[/green]")
         else:
             console.print("[yellow]警告: 無法獲取假日資料[/yellow]")
         console.print("=" * 50)
+
         # 1. 獲取股票資料
         console.print("[cyan]開始獲取股票資料...[/cyan]")
         stock_index = parallel_get_stock_data(max_workers=3)
