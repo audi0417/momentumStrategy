@@ -179,10 +179,12 @@ def save_stock_data(data):
         json.dump(data, f, ensure_ascii=False, indent=2)
     print(f"已保存數據到 {file_path}")
 
-# 在update_momentum_stocks函數中
+
 def update_momentum_stocks(momentum_stocks):
     """更新動能股票記錄，計算累積天數"""
-    today = get_current_trading_date()  # 使用統一的台灣時區日期
+    # 獲取台灣時間
+    taiwan_now = get_taiwan_datetime()
+    current_date = get_current_trading_date()
 
     # 獲取假日資料
     holiday_schedule = get_holiday_schedule()
@@ -190,9 +192,12 @@ def update_momentum_stocks(momentum_stocks):
         print("無法獲取假日資料，將使用簡單的週末判斷")
         holiday_schedule = []
 
-    # 獲取前一個交易日
-    last_trading_day = get_last_trading_day(today, holiday_schedule)
-    print(f"今日: {today}, 前一交易日: {last_trading_day}")
+    # 關鍵修改：使用前一個交易日作為信號日期
+    # 因為凌晨執行時，最新數據實際上是前一個交易日的
+    last_trading_day = get_previous_trading_day(current_date)
+    signal_date = last_trading_day  # 用前一交易日作為信號日期
+
+    print(f"今日: {current_date}, 信號日期: {signal_date}")
 
     # 加載現有數據
     data = load_stock_data()
@@ -200,16 +205,16 @@ def update_momentum_stocks(momentum_stocks):
     # 股票代號列表，用於檢查哪些股票不再出現
     current_stock_ids = set(momentum_stocks.keys())
 
-    # 更新數據
+    # 更新數據時使用信號日期而非當前日期
     for stock_id, momentum in momentum_stocks.items():
         stock_name = all_stock.loc[all_stock["股票代號"]==stock_id, "股票名稱"].values[0]
 
         if stock_id in data["stocks"]:
-            # 檢查記錄的上次信號日期是否為連續交易日
-            signal_date = data["stocks"][stock_id]["last_signal_date"]
+            # 檢查記錄的上次信號日期
+            previous_signal_date = data["stocks"][stock_id]["last_signal_date"]
 
-            # 使用新函數判斷是否為連續交易日
-            is_consecutive = is_consecutive_trading_day(signal_date, today, holiday_schedule)
+            # 判斷是否為連續交易日
+            is_consecutive = is_consecutive_trading_day(previous_signal_date, signal_date, holiday_schedule)
 
             if is_consecutive:
                 data["stocks"][stock_id]["days"] += 1
@@ -218,16 +223,16 @@ def update_momentum_stocks(momentum_stocks):
                 data["stocks"][stock_id]["days"] = 1
                 print(f"股票 {stock_id} 重新出現，重設為 1 天")
 
-            # 更新其他數據
+            # 更新信號日期
             data["stocks"][stock_id]["momentum"] = float(momentum)
-            data["stocks"][stock_id]["last_signal_date"] = today
+            data["stocks"][stock_id]["last_signal_date"] = signal_date
         else:
             # 新增記錄
             data["stocks"][stock_id] = {
                 "stock_name": stock_name,
                 "momentum": float(momentum),
                 "days": 1,
-                "last_signal_date": today
+                "last_signal_date": signal_date  # 使用信號日期
             }
             print(f"新增股票 {stock_id} {stock_name}")
 
@@ -243,7 +248,7 @@ def update_momentum_stocks(momentum_stocks):
         del data["stocks"][stock_id]
 
     # 更新最後更新時間
-    data["last_update"] = today
+    data["last_update"] = current_date
 
     # 保存更新後的數據
     save_stock_data(data)
