@@ -1,35 +1,35 @@
 {
-  "last_update": "2025-03-27",
+  "last_update": "2025-03-31",
   "stocks": {
-    "2468": {
-      "stock_name": "華經",
-      "momentum": 40.965208333422524,
-      "days": 4,
-      "last_signal_date": "2025-03-26"
-    },
-    "4572": {
-      "stock_name": "駐龍",
-      "momentum": 10.606060606060597,
-      "days": 2,
-      "last_signal_date": "2025-03-26"
-    },
-    "6438": {
-      "stock_name": "迅得",
-      "momentum": 7.474226804123707,
-      "days": 2,
-      "last_signal_date": "2025-03-26"
-    },
     "6753": {
       "stock_name": "龍德造船",
-      "momentum": 14.903846153846146,
-      "days": 2,
-      "last_signal_date": "2025-03-26"
-    },
-    "4583": {
-      "stock_name": "台灣精銳",
-      "momentum": 10.196078431372557,
+      "momentum": 11.555555555555564,
       "days": 1,
-      "last_signal_date": "2025-03-26"
+      "last_signal_date": "2025-03-28"
+    },
+    "1316": {
+      "stock_name": "上曜",
+      "momentum": 13.081394768586495,
+      "days": 1,
+      "last_signal_date": "2025-03-28"
+    },
+    "2337": {
+      "stock_name": "旺宏",
+      "momentum": 9.855775094244112,
+      "days": 1,
+      "last_signal_date": "2025-03-28"
+    },
+    "5244": {
+      "stock_name": "弘凱",
+      "momentum": 14.092446933559577,
+      "days": 1,
+      "last_signal_date": "2025-03-28"
+    },
+    "6799": {
+      "stock_name": "來頡",
+      "momentum": 18.26923076923077,
+      "days": 1,
+      "last_signal_date": "2025-03-28"
     }
   }
 }
