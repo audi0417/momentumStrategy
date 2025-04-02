@@ -1,17 +1,17 @@
 {
-  "last_update": "2025-04-02",
+  "last_update": "2025-04-03",
   "stocks": {
     "1736": {
       "stock_name": "喬山",
-      "momentum": 13.648293963254599,
-      "days": 1,
-      "last_signal_date": "2025-04-01"
+      "momentum": 8.000000000000007,
+      "days": 2,
+      "last_signal_date": "2025-04-02"
     },
     "8222": {
       "stock_name": "寶一",
-      "momentum": 14.042549944938498,
-      "days": 1,
-      "last_signal_date": "2025-04-01"
+      "momentum": 18.942727279907512,
+      "days": 2,
+      "last_signal_date": "2025-04-02"
     }
   }
 }
