@@ -1,8 +1,8 @@
 name: Stock Screening
 on:
   schedule:
-    - cron: '0 21 * * 0-4'  # 每個工作日早上 5:00 (UTC+8) 運行
-  workflow_dispatch:  # 允許手動觸發
+    - cron: '0 21 * * 0-4'
+  workflow_dispatch:
 
 jobs:
   screen:
@@ -29,8 +29,9 @@ jobs:
         APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
         RECIVER_EMAIL: ${{ secrets.RECIVER_EMAIL }}
         SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-        REQUESTS_CA_BUNDLE: $(python -m certifi)
-      run: python 動能選股.py
+      run: |
+        export REQUESTS_CA_BUNDLE=$(python -m certifi)
+        python 動能選股.py
 
     - name: Commit and push changes
       run: |
