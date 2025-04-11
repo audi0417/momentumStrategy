@@ -32,8 +32,6 @@ import requests
 
 import certifi
 
-res = requests.get(url, verify=certifi.where())
-
 def get_taiwan_datetime():
     """獲取台灣時區的當前日期時間"""
     from datetime import datetime, timezone, timedelta
@@ -530,7 +528,7 @@ pd.options.mode.chained_assignment = None  # 關閉警告
 
 #國內上市證卷辨識號碼一覽表
 url = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=2"
-res = requests.get(url)
+res = requests.get(url, verify=certifi.where())
 TWSE_listed = pd.read_html(res.text)[0]
 # 設定column名稱
 TWSE_listed.columns = list(TWSE_listed.iloc[0].values)
