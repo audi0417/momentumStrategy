@@ -30,6 +30,10 @@ import json
 import datetime
 import requests
 
+import certifi
+
+res = requests.get(url, verify=certifi.where())
+
 def get_taiwan_datetime():
     """獲取台灣時區的當前日期時間"""
     from datetime import datetime, timezone, timedelta
