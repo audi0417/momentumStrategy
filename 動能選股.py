@@ -526,31 +526,24 @@ pd.options.mode.chained_assignment = None  # 關閉警告
 
 """## 股票爬蟲"""
 
-#國內上市證卷辨識號碼一覽表
+# 國內上市證券識別碼一覽表
 url = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=2"
 res = requests.get(url, verify=certifi.where())
 TWSE_listed = pd.read_html(res.text)[0]
-# 設定column名稱
 TWSE_listed.columns = list(TWSE_listed.iloc[0].values)
-# 刪除第一行
 TWSE_listed = TWSE_listed.iloc[2:]
 TWSE_listed.reset_index(drop=True, inplace=True)
 
-#國內上櫃證卷辨識號碼一覽表
+# 國內上櫃證券識別碼一覽表
 url = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=4"
-res = requests.get(url)
+res = requests.get(url, verify=certifi.where())  # ✅ 加上 verify
 TPEX_listed = pd.read_html(res.text)[0]
-# 設定column名稱
 TPEX_listed.columns = list(TPEX_listed.iloc[0].values)
-# 刪除第一行
 TPEX_listed = TPEX_listed.iloc[2:]
 TPEX_listed.reset_index(drop=True, inplace=True)
 
-# 刪除第一行並合併
-TWSE_listed = TWSE_listed.iloc[2:]
-TPEX_listed = TPEX_listed.iloc[2:]
+# 合併資料
 all_stock = pd.concat([TWSE_listed, TPEX_listed])
-
 all_stock.reset_index(drop=True, inplace=True)
 
 #整理欄位
