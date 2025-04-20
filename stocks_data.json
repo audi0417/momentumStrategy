@@ -1,131 +1,59 @@
 {
-  "last_update": "2025-04-18",
+  "last_update": "2025-04-21",
   "stocks": {
-    "2059": {
-      "stock_name": "川湖",
-      "momentum": 10.996563573883167,
-      "days": 4,
-      "last_signal_date": "2025-04-17"
-    },
-    "2368": {
-      "stock_name": "金像電",
-      "momentum": 7.309941520467844,
-      "days": 4,
-      "last_signal_date": "2025-04-17"
-    },
-    "2615": {
-      "stock_name": "萬海",
-      "momentum": 7.3071737677676385,
-      "days": 4,
-      "last_signal_date": "2025-04-17"
-    },
-    "3037": {
-      "stock_name": "欣興",
-      "momentum": 8.173682818701632,
-      "days": 4,
-      "last_signal_date": "2025-04-17"
-    },
     "3231": {
       "stock_name": "緯創",
-      "momentum": 11.295677301800078,
-      "days": 4,
-      "last_signal_date": "2025-04-17"
-    },
-    "3665": {
-      "stock_name": "貿聯-KY",
-      "momentum": 9.361233480176212,
-      "days": 4,
-      "last_signal_date": "2025-04-17"
-    },
-    "4763": {
-      "stock_name": "材料-KY",
-      "momentum": 7.470511140235914,
-      "days": 4,
-      "last_signal_date": "2025-04-17"
-    },
-    "6415": {
-      "stock_name": "矽力*-KY",
-      "momentum": 18.45161290322581,
-      "days": 4,
-      "last_signal_date": "2025-04-17"
-    },
-    "9958": {
-      "stock_name": "世紀鋼",
-      "momentum": 20.13201320132014,
-      "days": 4,
-      "last_signal_date": "2025-04-17"
-    },
-    "2376": {
-      "stock_name": "技嘉",
-      "momentum": 8.663366336633672,
-      "days": 3,
-      "last_signal_date": "2025-04-17"
-    },
-    "6139": {
-      "stock_name": "亞翔",
-      "momentum": 11.05527638190955,
-      "days": 3,
-      "last_signal_date": "2025-04-17"
-    },
-    "6558": {
-      "stock_name": "興能高",
-      "momentum": 10.280377580168132,
-      "days": 3,
-      "last_signal_date": "2025-04-17"
-    },
-    "3036": {
-      "stock_name": "文曄",
-      "momentum": 13.228703425410092,
-      "days": 2,
-      "last_signal_date": "2025-04-17"
+      "momentum": 7.913665680098947,
+      "days": 5,
+      "last_signal_date": "2025-04-18"
     },
     "2466": {
       "stock_name": "冠西電",
-      "momentum": 31.197102785753117,
-      "days": 1,
-      "last_signal_date": "2025-04-17"
+      "momentum": 19.95386812076303,
+      "days": 2,
+      "last_signal_date": "2025-04-18"
     },
     "2468": {
       "stock_name": "華經",
-      "momentum": 13.86718431313061,
-      "days": 1,
-      "last_signal_date": "2025-04-17"
+      "momentum": 12.962962962962955,
+      "days": 2,
+      "last_signal_date": "2025-04-18"
     },
     "2474": {
       "stock_name": "可成",
-      "momentum": 10.621761658031081,
-      "days": 1,
-      "last_signal_date": "2025-04-17"
+      "momentum": 10.389610389610393,
+      "days": 2,
+      "last_signal_date": "2025-04-18"
     },
-    "3376": {
-      "stock_name": "新日興",
-      "momentum": 8.169014084507031,
+    "3528": {
+      "stock_name": "安馳",
+      "momentum": 20.634921702835097,
       "days": 1,
-      "last_signal_date": "2025-04-17"
+      "last_signal_date": "2025-04-18"
     },
-    "4583": {
-      "stock_name": "台灣精銳",
-      "momentum": 7.374100719424459,
+    "4916": {
+      "stock_name": "事欣科",
+      "momentum": 13.909223390225755,
       "days": 1,
-      "last_signal_date": "2025-04-17"
+      "last_signal_date": "2025-04-18"
     },
-    "4949": {
-      "stock_name": "有成精密",
-      "momentum": 23.397432879975334,
+    "6215": {
+      "stock_name": "和椿",
+      "momentum": 17.25104473478707,
       "days": 1,
-      "last_signal_date": "2025-04-17"
+      "last_signal_date": "2025-04-18"
     },
-    "5269": {
-      "stock_name": "祥碩",
-      "momentum": 15.714285714285726,
+    "6442": {
+      "stock_name": "光聖",
+      "momentum": 7.1651090342679025,
       "days": 1,
-      "last_signal_date": "2025-04-17"
+      "last_signal_date": "2025-04-18"
     },
-    "6890": {
-      "stock_name": "來億-KY",
-      "momentum": 10.63829787234043,
+    "8222": {
+      "stock_name": "寶一",
+      "momentum": 7.692307692307687,
       "days": 1,
-      "last_signal_date": "2025-04-17"
+      "last_signal_date": "2025-04-18"
     }
   }
 }
