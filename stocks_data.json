@@ -1,41 +1,17 @@
 {
-  "last_update": "2025-04-22",
+  "last_update": "2025-04-23",
   "stocks": {
-    "2466": {
-      "stock_name": "冠西電",
-      "momentum": 8.07974470269459,
-      "days": 3,
-      "last_signal_date": "2025-04-21"
-    },
-    "2474": {
-      "stock_name": "可成",
-      "momentum": 10.621761658031081,
-      "days": 3,
-      "last_signal_date": "2025-04-21"
-    },
     "2408": {
       "stock_name": "南亞科",
-      "momentum": 12.301013296235253,
-      "days": 1,
-      "last_signal_date": "2025-04-21"
+      "momentum": 20.152667096552968,
+      "days": 2,
+      "last_signal_date": "2025-04-22"
     },
     "3596": {
       "stock_name": "智易",
-      "momentum": 10.45454545454545,
-      "days": 1,
-      "last_signal_date": "2025-04-21"
-    },
-    "4949": {
-      "stock_name": "有成精密",
-      "momentum": 20.27972027972027,
-      "days": 1,
-      "last_signal_date": "2025-04-21"
-    },
-    "6890": {
-      "stock_name": "來億-KY",
-      "momentum": 13.99999999999999,
-      "days": 1,
-      "last_signal_date": "2025-04-21"
+      "momentum": 9.817351598173518,
+      "days": 2,
+      "last_signal_date": "2025-04-22"
     }
   }
 }
