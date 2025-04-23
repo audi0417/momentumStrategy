@@ -1,17 +1,47 @@
 {
-  "last_update": "2025-04-23",
+  "last_update": "2025-04-24",
   "stocks": {
     "2408": {
       "stock_name": "南亞科",
-      "momentum": 20.152667096552968,
-      "days": 2,
-      "last_signal_date": "2025-04-22"
+      "momentum": 20.24922214635081,
+      "days": 3,
+      "last_signal_date": "2025-04-23"
     },
     "3596": {
       "stock_name": "智易",
-      "momentum": 9.817351598173518,
-      "days": 2,
-      "last_signal_date": "2025-04-22"
+      "momentum": 9.154929577464799,
+      "days": 3,
+      "last_signal_date": "2025-04-23"
+    },
+    "2468": {
+      "stock_name": "華經",
+      "momentum": 15.95197145585665,
+      "days": 1,
+      "last_signal_date": "2025-04-23"
+    },
+    "2471": {
+      "stock_name": "資通",
+      "momentum": 9.598603967245257,
+      "days": 1,
+      "last_signal_date": "2025-04-23"
+    },
+    "4916": {
+      "stock_name": "事欣科",
+      "momentum": 7.898262070836326,
+      "days": 1,
+      "last_signal_date": "2025-04-23"
+    },
+    "8028": {
+      "stock_name": "昇陽半導體",
+      "momentum": 11.374407582938396,
+      "days": 1,
+      "last_signal_date": "2025-04-23"
+    },
+    "9955": {
+      "stock_name": "佳龍",
+      "momentum": 14.06518159562311,
+      "days": 1,
+      "last_signal_date": "2025-04-23"
     }
   }
 }
