@@ -1,47 +1,59 @@
 {
-  "last_update": "2025-04-24",
+  "last_update": "2025-04-25",
   "stocks": {
-    "2408": {
-      "stock_name": "南亞科",
-      "momentum": 20.24922214635081,
-      "days": 3,
-      "last_signal_date": "2025-04-23"
-    },
-    "3596": {
-      "stock_name": "智易",
-      "momentum": 9.154929577464799,
-      "days": 3,
-      "last_signal_date": "2025-04-23"
-    },
     "2468": {
       "stock_name": "華經",
-      "momentum": 15.95197145585665,
-      "days": 1,
-      "last_signal_date": "2025-04-23"
+      "momentum": 21.80328369140625,
+      "days": 2,
+      "last_signal_date": "2025-04-24"
     },
     "2471": {
       "stock_name": "資通",
-      "momentum": 9.598603967245257,
-      "days": 1,
-      "last_signal_date": "2025-04-23"
-    },
-    "4916": {
-      "stock_name": "事欣科",
-      "momentum": 7.898262070836326,
-      "days": 1,
-      "last_signal_date": "2025-04-23"
+      "momentum": 9.715241478960035,
+      "days": 2,
+      "last_signal_date": "2025-04-24"
     },
     "8028": {
       "stock_name": "昇陽半導體",
-      "momentum": 11.374407582938396,
-      "days": 1,
-      "last_signal_date": "2025-04-23"
+      "momentum": 13.207547169811317,
+      "days": 2,
+      "last_signal_date": "2025-04-24"
     },
     "9955": {
       "stock_name": "佳龍",
-      "momentum": 14.06518159562311,
+      "momentum": 18.739062808357488,
+      "days": 2,
+      "last_signal_date": "2025-04-24"
+    },
+    "3528": {
+      "stock_name": "安馳",
+      "momentum": 8.479525282128652,
       "days": 1,
-      "last_signal_date": "2025-04-23"
+      "last_signal_date": "2025-04-24"
+    },
+    "4949": {
+      "stock_name": "有成精密",
+      "momentum": 12.278632704360138,
+      "days": 1,
+      "last_signal_date": "2025-04-24"
+    },
+    "6890": {
+      "stock_name": "來億-KY",
+      "momentum": 15.396341463414643,
+      "days": 1,
+      "last_signal_date": "2025-04-24"
+    },
+    "8046": {
+      "stock_name": "南電",
+      "momentum": 7.726756618905339,
+      "days": 1,
+      "last_signal_date": "2025-04-24"
+    },
+    "8222": {
+      "stock_name": "寶一",
+      "momentum": 7.500001362391884,
+      "days": 1,
+      "last_signal_date": "2025-04-24"
     }
   }
 }
