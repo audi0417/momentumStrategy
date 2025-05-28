@@ -1,65 +1,59 @@
 {
-  "last_update": "2025-05-28",
+  "last_update": "2025-05-29",
   "stocks": {
-    "4949": {
-      "stock_name": "有成精密",
-      "momentum": 8.152173800369301,
-      "days": 6,
-      "last_signal_date": "2025-05-27"
-    },
     "6191": {
       "stock_name": "精成科",
-      "momentum": 28.167119117885676,
-      "days": 4,
-      "last_signal_date": "2025-05-27"
-    },
-    "6213": {
-      "stock_name": "聯茂",
-      "momentum": 12.10986861725174,
-      "days": 4,
-      "last_signal_date": "2025-05-27"
+      "momentum": 18.01471182906791,
+      "days": 5,
+      "last_signal_date": "2025-05-28"
     },
     "5234": {
       "stock_name": "達興材料",
-      "momentum": 9.934319932236946,
-      "days": 3,
-      "last_signal_date": "2025-05-27"
+      "momentum": 15.1361154236608,
+      "days": 4,
+      "last_signal_date": "2025-05-28"
     },
     "6515": {
       "stock_name": "穎崴",
-      "momentum": 9.261186264308009,
-      "days": 2,
-      "last_signal_date": "2025-05-27"
-    },
-    "3004": {
-      "stock_name": "豐達科",
-      "momentum": 8.417508417508412,
-      "days": 1,
-      "last_signal_date": "2025-05-27"
+      "momentum": 8.446298227320126,
+      "days": 3,
+      "last_signal_date": "2025-05-28"
     },
     "3037": {
       "stock_name": "欣興",
-      "momentum": 7.804878048780495,
-      "days": 1,
-      "last_signal_date": "2025-05-27"
+      "momentum": 7.352941176470584,
+      "days": 2,
+      "last_signal_date": "2025-05-28"
     },
     "5469": {
       "stock_name": "瀚宇博",
-      "momentum": 9.326420671626522,
-      "days": 1,
-      "last_signal_date": "2025-05-27"
+      "momentum": 10.304057787507826,
+      "days": 2,
+      "last_signal_date": "2025-05-28"
     },
-    "8046": {
-      "stock_name": "南電",
-      "momentum": 7.009345794392519,
+    "1711": {
+      "stock_name": "永光",
+      "momentum": 11.111113656788362,
       "days": 1,
-      "last_signal_date": "2025-05-27"
+      "last_signal_date": "2025-05-28"
     },
-    "9902": {
-      "stock_name": "台火",
-      "momentum": 36.419749016479265,
+    "1802": {
+      "stock_name": "台玻",
+      "momentum": 14.946614941544523,
       "days": 1,
-      "last_signal_date": "2025-05-27"
+      "last_signal_date": "2025-05-28"
+    },
+    "6117": {
+      "stock_name": "迎廣",
+      "momentum": 7.371796622183324,
+      "days": 1,
+      "last_signal_date": "2025-05-28"
+    },
+    "6781": {
+      "stock_name": "AES-KY",
+      "momentum": 11.288604898828547,
+      "days": 1,
+      "last_signal_date": "2025-05-28"
     }
   }
 }
