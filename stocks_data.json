@@ -1,71 +1,41 @@
 {
-  "last_update": "2025-06-02",
+  "last_update": "2025-06-03",
   "stocks": {
-    "6515": {
-      "stock_name": "穎崴",
-      "momentum": 14.197530864197528,
-      "days": 5,
-      "last_signal_date": "2025-05-30"
-    },
-    "1802": {
-      "stock_name": "台玻",
-      "momentum": 7.692303588276261,
-      "days": 3,
-      "last_signal_date": "2025-05-30"
-    },
-    "6781": {
-      "stock_name": "AES-KY",
-      "momentum": 10.752688172043001,
-      "days": 3,
-      "last_signal_date": "2025-05-30"
-    },
     "1325": {
       "stock_name": "恆大",
-      "momentum": 24.842772689981828,
-      "days": 2,
-      "last_signal_date": "2025-05-30"
+      "momentum": 25.379933394693133,
+      "days": 3,
+      "last_signal_date": "2025-06-02"
     },
     "1732": {
       "stock_name": "毛寶",
-      "momentum": 12.387787462603805,
-      "days": 2,
-      "last_signal_date": "2025-05-30"
-    },
-    "2332": {
-      "stock_name": "友訊",
-      "momentum": 10.584201525858127,
-      "days": 2,
-      "last_signal_date": "2025-05-30"
-    },
-    "2376": {
-      "stock_name": "技嘉",
-      "momentum": 7.8125,
-      "days": 2,
-      "last_signal_date": "2025-05-30"
+      "momentum": 14.336280485170082,
+      "days": 3,
+      "last_signal_date": "2025-06-02"
     },
     "2408": {
       "stock_name": "南亞科",
-      "momentum": 7.05052891607818,
-      "days": 2,
-      "last_signal_date": "2025-05-30"
-    },
-    "6213": {
-      "stock_name": "聯茂",
-      "momentum": 8.374388309512138,
-      "days": 2,
-      "last_signal_date": "2025-05-30"
-    },
-    "8210": {
-      "stock_name": "勤誠",
-      "momentum": 7.475083056478415,
-      "days": 2,
-      "last_signal_date": "2025-05-30"
+      "momentum": 7.009345919338927,
+      "days": 3,
+      "last_signal_date": "2025-06-02"
     },
     "9919": {
       "stock_name": "康那香",
-      "momentum": 12.50000253636796,
-      "days": 2,
-      "last_signal_date": "2025-05-30"
+      "momentum": 9.585494583426147,
+      "days": 3,
+      "last_signal_date": "2025-06-02"
+    },
+    "1760": {
+      "stock_name": "寶齡富錦",
+      "momentum": 12.214763052511547,
+      "days": 1,
+      "last_signal_date": "2025-06-02"
+    },
+    "2383": {
+      "stock_name": "台光電",
+      "momentum": 7.213578500707207,
+      "days": 1,
+      "last_signal_date": "2025-06-02"
     }
   }
 }
