@@ -1,65 +1,65 @@
 {
-  "last_update": "2025-06-23",
+  "last_update": "2025-06-24",
   "stocks": {
-    "1616": {
-      "stock_name": "億泰",
-      "momentum": 13.733337402343748,
-      "days": 8,
-      "last_signal_date": "2025-06-20"
-    },
     "8210": {
       "stock_name": "勤誠",
-      "momentum": 12.589073634204272,
-      "days": 8,
-      "last_signal_date": "2025-06-20"
+      "momentum": 11.506524317912215,
+      "days": 9,
+      "last_signal_date": "2025-06-23"
     },
     "6919": {
       "stock_name": "康霈*",
-      "momentum": 23.38308457711442,
-      "days": 4,
-      "last_signal_date": "2025-06-20"
+      "momentum": 12.27272727272728,
+      "days": 5,
+      "last_signal_date": "2025-06-23"
     },
     "2408": {
       "stock_name": "南亞科",
-      "momentum": 11.342154682291984,
-      "days": 3,
-      "last_signal_date": "2025-06-20"
+      "momentum": 8.550190249165679,
+      "days": 4,
+      "last_signal_date": "2025-06-23"
     },
     "3376": {
       "stock_name": "新日興",
-      "momentum": 18.157181571815716,
-      "days": 2,
-      "last_signal_date": "2025-06-20"
+      "momentum": 18.08219178082191,
+      "days": 3,
+      "last_signal_date": "2025-06-23"
     },
     "4770": {
       "stock_name": "上品",
-      "momentum": 17.926565874730027,
-      "days": 2,
-      "last_signal_date": "2025-06-20"
-    },
-    "2404": {
-      "stock_name": "漢唐",
-      "momentum": 8.912655971479499,
-      "days": 1,
-      "last_signal_date": "2025-06-20"
+      "momentum": 20.469083155650324,
+      "days": 3,
+      "last_signal_date": "2025-06-23"
     },
     "3030": {
       "stock_name": "德律",
-      "momentum": 7.086614173228356,
-      "days": 1,
-      "last_signal_date": "2025-06-20"
-    },
-    "3406": {
-      "stock_name": "玉晶光",
-      "momentum": 7.024265644955308,
-      "days": 1,
-      "last_signal_date": "2025-06-20"
+      "momentum": 7.547169811320753,
+      "days": 2,
+      "last_signal_date": "2025-06-23"
     },
     "6139": {
       "stock_name": "亞翔",
-      "momentum": 12.4282982791587,
+      "momentum": 23.04761904761905,
+      "days": 2,
+      "last_signal_date": "2025-06-23"
+    },
+    "3037": {
+      "stock_name": "欣興",
+      "momentum": 8.374384236453203,
       "days": 1,
-      "last_signal_date": "2025-06-20"
+      "last_signal_date": "2025-06-23"
+    },
+    "3040": {
+      "stock_name": "遠見",
+      "momentum": 34.73918266574436,
+      "days": 1,
+      "last_signal_date": "2025-06-23"
+    },
+    "6838": {
+      "stock_name": "台新藥",
+      "momentum": 11.904761650346995,
+      "days": 1,
+      "last_signal_date": "2025-06-23"
     }
   }
 }
