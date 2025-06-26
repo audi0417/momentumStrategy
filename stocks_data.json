@@ -1,137 +1,155 @@
 {
-  "last_update": "2025-06-26",
+  "last_update": "2025-06-27",
   "stocks": {
     "6139": {
       "stock_name": "亞翔",
-      "momentum": 26.355140186915893,
-      "days": 4,
-      "last_signal_date": "2025-06-25"
+      "momentum": 13.605442176870742,
+      "days": 5,
+      "last_signal_date": "2025-06-26"
     },
     "3037": {
       "stock_name": "欣興",
-      "momentum": 13.432835820895516,
-      "days": 3,
-      "last_signal_date": "2025-06-25"
+      "momentum": 13.99999999999999,
+      "days": 4,
+      "last_signal_date": "2025-06-26"
     },
     "1560": {
       "stock_name": "中砂",
-      "momentum": 12.914485165794076,
-      "days": 2,
-      "last_signal_date": "2025-06-25"
-    },
-    "2316": {
-      "stock_name": "楠梓電",
-      "momentum": 9.783728269091508,
-      "days": 2,
-      "last_signal_date": "2025-06-25"
-    },
-    "2404": {
-      "stock_name": "漢唐",
-      "momentum": 7.432432432432434,
-      "days": 2,
-      "last_signal_date": "2025-06-25"
+      "momentum": 13.884007029876976,
+      "days": 3,
+      "last_signal_date": "2025-06-26"
     },
     "3583": {
       "stock_name": "辛耘",
-      "momentum": 9.422492401215798,
-      "days": 2,
-      "last_signal_date": "2025-06-25"
-    },
-    "6691": {
-      "stock_name": "洋基工程",
-      "momentum": 8.669833729216148,
-      "days": 2,
-      "last_signal_date": "2025-06-25"
+      "momentum": 8.588957055214719,
+      "days": 3,
+      "last_signal_date": "2025-06-26"
     },
     "6781": {
       "stock_name": "AES-KY",
-      "momentum": 14.649681528662416,
-      "days": 2,
-      "last_signal_date": "2025-06-25"
+      "momentum": 18.918918918918926,
+      "days": 3,
+      "last_signal_date": "2025-06-26"
     },
     "8021": {
       "stock_name": "尖點",
-      "momentum": 15.999995640345976,
-      "days": 2,
-      "last_signal_date": "2025-06-25"
+      "momentum": 19.00000435965401,
+      "days": 3,
+      "last_signal_date": "2025-06-26"
     },
     "1736": {
       "stock_name": "喬山",
-      "momentum": 13.826366559485525,
-      "days": 1,
-      "last_signal_date": "2025-06-25"
+      "momentum": 25.172413793103445,
+      "days": 2,
+      "last_signal_date": "2025-06-26"
     },
     "2360": {
       "stock_name": "致茂",
-      "momentum": 10.764872521246449,
-      "days": 1,
-      "last_signal_date": "2025-06-25"
+      "momentum": 22.857142857142865,
+      "days": 2,
+      "last_signal_date": "2025-06-26"
     },
     "2455": {
       "stock_name": "全新",
-      "momentum": 7.024793388429762,
-      "days": 1,
-      "last_signal_date": "2025-06-25"
+      "momentum": 12.66375545851528,
+      "days": 2,
+      "last_signal_date": "2025-06-26"
     },
     "3032": {
       "stock_name": "偉訓",
-      "momentum": 20.862308319424816,
-      "days": 1,
-      "last_signal_date": "2025-06-25"
-    },
-    "3231": {
-      "stock_name": "緯創",
-      "momentum": 8.658008658008654,
-      "days": 1,
-      "last_signal_date": "2025-06-25"
+      "momentum": 20.30597797534974,
+      "days": 2,
+      "last_signal_date": "2025-06-26"
     },
     "3443": {
       "stock_name": "創意",
-      "momentum": 15.02347417840375,
-      "days": 1,
-      "last_signal_date": "2025-06-25"
+      "momentum": 14.084507042253524,
+      "days": 2,
+      "last_signal_date": "2025-06-26"
     },
     "3715": {
       "stock_name": "定穎投控",
-      "momentum": 15.384613234884647,
-      "days": 1,
-      "last_signal_date": "2025-06-25"
+      "momentum": 21.257863554564672,
+      "days": 2,
+      "last_signal_date": "2025-06-26"
     },
     "5269": {
       "stock_name": "祥碩",
-      "momentum": 7.222222222222219,
-      "days": 1,
-      "last_signal_date": "2025-06-25"
+      "momentum": 7.756232686980602,
+      "days": 2,
+      "last_signal_date": "2025-06-26"
     },
-    "6438": {
-      "stock_name": "迅得",
-      "momentum": 8.000000000000007,
+    "2233": {
+      "stock_name": "宇隆",
+      "momentum": 15.451895043731788,
       "days": 1,
-      "last_signal_date": "2025-06-25"
+      "last_signal_date": "2025-06-26"
     },
-    "6591": {
-      "stock_name": "動力-KY",
-      "momentum": 13.909223390225755,
+    "2338": {
+      "stock_name": "光罩",
+      "momentum": 13.508766575863485,
       "days": 1,
-      "last_signal_date": "2025-06-25"
+      "last_signal_date": "2025-06-26"
     },
-    "6669": {
-      "stock_name": "緯穎",
-      "momentum": 10.31595325572967,
+    "2344": {
+      "stock_name": "華邦電",
+      "momentum": 10.026382807572798,
       "days": 1,
-      "last_signal_date": "2025-06-25"
+      "last_signal_date": "2025-06-26"
     },
-    "6937": {
-      "stock_name": "天虹",
-      "momentum": 13.959390862944154,
+    "3030": {
+      "stock_name": "德律",
+      "momentum": 8.823529411764696,
       "days": 1,
-      "last_signal_date": "2025-06-25"
+      "last_signal_date": "2025-06-26"
     },
-    "8072": {
-      "stock_name": "陞泰",
-      "momentum": 7.563030260968584,
+    "3036": {
+      "stock_name": "文曄",
+      "momentum": 7.692307692307687,
       "days": 1,
-      "last_signal_date": "2025-06-25"
+      "last_signal_date": "2025-06-26"
+    },
+    "4551": {
+      "stock_name": "智伸科",
+      "momentum": 13.963963963963955,
+      "days": 1,
+      "last_signal_date": "2025-06-26"
+    },
+    "4576": {
+      "stock_name": "大銀微系統",
+      "momentum": 10.619469026548668,
+      "days": 1,
+      "last_signal_date": "2025-06-26"
+    },
+    "6269": {
+      "stock_name": "台郡",
+      "momentum": 11.976048268942098,
+      "days": 1,
+      "last_signal_date": "2025-06-26"
+    },
+    "6558": {
+      "stock_name": "興能高",
+      "momentum": 17.250987399189043,
+      "days": 1,
+      "last_signal_date": "2025-06-26"
+    },
+    "6789": {
+      "stock_name": "采鈺",
+      "momentum": 9.263657957244664,
+      "days": 1,
+      "last_signal_date": "2025-06-26"
+    },
+    "7722": {
+      "stock_name": "LINEPAY",
+      "momentum": 7.943925233644866,
+      "days": 1,
+      "last_signal_date": "2025-06-26"
+    },
+    "8478": {
+      "stock_name": "東哥遊艇",
+      "momentum": 22.073578595317734,
+      "days": 1,
+      "last_signal_date": "2025-06-26"
     }
   }
 }
