@@ -1,71 +1,71 @@
 {
-  "last_update": "2025-07-07",
+  "last_update": "2025-07-08",
   "stocks": {
     "8021": {
       "stock_name": "尖點",
-      "momentum": 11.746905673996345,
-      "days": 5,
-      "last_signal_date": "2025-07-04"
+      "momentum": 14.354584623748545,
+      "days": 6,
+      "last_signal_date": "2025-07-07"
     },
     "6625": {
       "stock_name": "必應",
-      "momentum": 9.743589743589753,
-      "days": 3,
-      "last_signal_date": "2025-07-04"
-    },
-    "2308": {
-      "stock_name": "台達電",
-      "momentum": 10.653753026634384,
-      "days": 2,
-      "last_signal_date": "2025-07-04"
+      "momentum": 9.391123148425095,
+      "days": 4,
+      "last_signal_date": "2025-07-07"
     },
     "2451": {
       "stock_name": "創見",
-      "momentum": 19.402985074626855,
-      "days": 2,
-      "last_signal_date": "2025-07-04"
+      "momentum": 8.29268135178156,
+      "days": 3,
+      "last_signal_date": "2025-07-07"
     },
     "6770": {
       "stock_name": "力積電",
-      "momentum": 14.610389972300087,
-      "days": 2,
-      "last_signal_date": "2025-07-04"
+      "momentum": 11.612898303616426,
+      "days": 3,
+      "last_signal_date": "2025-07-07"
     },
     "8046": {
       "stock_name": "南電",
-      "momentum": 13.495579189502838,
-      "days": 2,
-      "last_signal_date": "2025-07-04"
+      "momentum": 13.0997291929702,
+      "days": 3,
+      "last_signal_date": "2025-07-07"
     },
     "1476": {
       "stock_name": "儒鴻",
-      "momentum": 13.658536585365844,
-      "days": 1,
-      "last_signal_date": "2025-07-04"
-    },
-    "2915": {
-      "stock_name": "潤泰全",
-      "momentum": 8.598127989011385,
-      "days": 1,
-      "last_signal_date": "2025-07-04"
-    },
-    "4526": {
-      "stock_name": "東台",
-      "momentum": 9.765624854480848,
-      "days": 1,
-      "last_signal_date": "2025-07-04"
+      "momentum": 8.56793145654835,
+      "days": 2,
+      "last_signal_date": "2025-07-07"
     },
     "8478": {
       "stock_name": "東哥遊艇",
-      "momentum": 22.715404699738894,
-      "days": 1,
-      "last_signal_date": "2025-07-04"
+      "momentum": 18.20580474934037,
+      "days": 2,
+      "last_signal_date": "2025-07-07"
     },
     "9945": {
       "stock_name": "潤泰新",
-      "momentum": 8.739490669314609,
+      "momentum": 7.9391903756220294,
+      "days": 2,
+      "last_signal_date": "2025-07-07"
+    },
+    "2889": {
+      "stock_name": "國票金",
+      "momentum": 15.44117183008833,
       "days": 1,
-      "last_signal_date": "2025-07-04"
+      "last_signal_date": "2025-07-07"
+    },
+    "4958": {
+      "stock_name": "臻鼎-KY",
+      "momentum": 7.499999999999996,
+      "days": 1,
+      "last_signal_date": "2025-07-07"
+    },
+    "6412": {
+      "stock_name": "群電",
+      "momentum": 14.155251141552515,
+      "days": 1,
+      "last_signal_date": "2025-07-07"
     }
   }
 }
