@@ -519,8 +519,7 @@ def send_mail(sender_email, app_password, receiver_email, content):
     except Exception as e:
         print(f"發送郵件時發生錯誤：{str(e)}")
 
-def robust_get(url, headers=None, max_retries=3, timeout=10):
-    """穩健的 GET 請求，處理斷線與 retry"""
+def robust_get(url, headers=None, params=None, max_retries=3, timeout=10):
     session = requests.Session()
     retries = Retry(
         total=max_retries,
@@ -535,7 +534,7 @@ def robust_get(url, headers=None, max_retries=3, timeout=10):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
     }
 
-    response = session.get(url, headers=headers, timeout=timeout, verify=certifi.where())
+    response = session.get(url, headers=headers, params=params, timeout=timeout, verify=certifi.where())
     response.raise_for_status()
     return response
 
