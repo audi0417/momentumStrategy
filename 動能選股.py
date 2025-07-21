@@ -518,6 +518,26 @@ def send_mail(sender_email, app_password, receiver_email, content):
     except Exception as e:
         print(f"發送郵件時發生錯誤：{str(e)}")
 
+def robust_get(url, headers=None, max_retries=3, timeout=10):
+    """穩健的 GET 請求，處理斷線與 retry"""
+    session = requests.Session()
+    retries = Retry(
+        total=max_retries,
+        backoff_factor=1,
+        status_forcelist=[500, 502, 503, 504],
+        raise_on_status=False
+    )
+    session.mount('http://', HTTPAdapter(max_retries=retries))
+    session.mount('https://', HTTPAdapter(max_retries=retries))
+
+    headers = headers or {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    }
+
+    response = session.get(url, headers=headers, timeout=timeout, verify=certifi.where())
+    response.raise_for_status()
+    return response
+
 # Commented out IPython magic to ensure Python compatibility.
 logging.getLogger('yfinance').setLevel(logging.CRITICAL)
 # %matplotlib inline
@@ -528,7 +548,8 @@ pd.options.mode.chained_assignment = None  # 關閉警告
 
 # 國內上市證券識別碼一覽表
 url = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=2"
-res = requests.get(url, verify=certifi.where())
+res = robust_get(url)
+# res = requests.get(url, verify=certifi.where())
 TWSE_listed = pd.read_html(res.text)[0]
 TWSE_listed.columns = list(TWSE_listed.iloc[0].values)
 TWSE_listed = TWSE_listed.iloc[2:]
@@ -536,7 +557,8 @@ TWSE_listed.reset_index(drop=True, inplace=True)
 
 # 國內上櫃證券識別碼一覽表
 url = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=4"
-res = requests.get(url, verify=certifi.where())  # ✅ 加上 verify
+res = robust_get(url)
+# res = requests.get(url, verify=certifi.where())  # ✅ 加上 verify
 TPEX_listed = pd.read_html(res.text)[0]
 TPEX_listed.columns = list(TPEX_listed.iloc[0].values)
 TPEX_listed = TPEX_listed.iloc[2:]
