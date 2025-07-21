@@ -29,10 +29,11 @@ import os
 import json
 import datetime
 import requests
-from urllib3.util.retry import Retry
-from requests.adapters import HTTPAdapter
 import certifi
-
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+from requests.exceptions import ChunkedEncodingError
+from urllib3.exceptions import ProtocolError
 def get_taiwan_datetime():
     """獲取台灣時區的當前日期時間"""
     from datetime import datetime, timezone, timedelta
@@ -519,7 +520,7 @@ def send_mail(sender_email, app_password, receiver_email, content):
     except Exception as e:
         print(f"發送郵件時發生錯誤：{str(e)}")
 
-def robust_get(url, headers=None, params=None, max_retries=3, timeout=10):
+def robust_get(url, headers=None, params=None, max_retries=3, timeout=10, delay=2):
     session = requests.Session()
     retries = Retry(
         total=max_retries,
@@ -534,9 +535,23 @@ def robust_get(url, headers=None, params=None, max_retries=3, timeout=10):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
     }
 
-    response = session.get(url, headers=headers, params=params, timeout=timeout, verify=certifi.where())
-    response.raise_for_status()
-    return response
+    for attempt in range(max_retries):
+        try:
+            response = session.get(
+                url, headers=headers, params=params, timeout=timeout, verify=certifi.where()
+            )
+            response.raise_for_status()
+            return response
+
+        except (ChunkedEncodingError, ProtocolError) as e:
+            print(f"[重試中] 第 {attempt+1} 次 ChunkedEncodingError: {e}")
+            time.sleep(delay * (attempt + 1))  # 遞增 delay
+
+        except Exception as e:
+            print(f"[錯誤] 第 {attempt+1} 次連線發生例外: {e}")
+            time.sleep(delay * (attempt + 1))
+
+    raise Exception(f"在 {max_retries} 次重試後仍無法成功連線: {url}")
 
 # Commented out IPython magic to ensure Python compatibility.
 logging.getLogger('yfinance').setLevel(logging.CRITICAL)
