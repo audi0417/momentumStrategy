@@ -531,8 +531,12 @@ def robust_get(url, headers=None, params=None, max_retries=3, timeout=10, delay=
     session.mount('http://', HTTPAdapter(max_retries=retries))
     session.mount('https://', HTTPAdapter(max_retries=retries))
 
-    headers = headers or {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "Accept": "application/json, text/javascript, */*; q=0.01",
+        "X-Requested-With": "XMLHttpRequest",  # 假裝是 AJAX 請求
+        "Referer": "https://www.tpex.org.tw/web/stock/aftertrading/daily_quotes/stk_quote_result.php",
+        "Origin": "https://www.tpex.org.tw"
     }
 
     for attempt in range(max_retries):
