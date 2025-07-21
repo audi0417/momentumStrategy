@@ -29,7 +29,7 @@ import os
 import json
 import datetime
 import requests
-
+from urllib3.util.retry import Retry
 import certifi
 
 def get_taiwan_datetime():
