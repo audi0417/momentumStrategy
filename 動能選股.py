@@ -607,10 +607,13 @@ from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn
 console = Console()
 url = "https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes"
 
-res = requests.get(url, params={
-        "response": "json",
-        "date": datetime.datetime.now().strftime("%Y%mm%dd")
+date_str = datetime.datetime.now().strftime("%Y%m%d")
+
+res = robust_get(url, params={
+    "response": "json",
+    "date": date_str
 })
+# res = requests.get(url, params={"response": "json","date": datetime.datetime.now().strftime("%Y%mm%dd")})
 TPEx_turnover = res.json()['tables'][0]['data']
 
 # 上市股票成交金額緩存
