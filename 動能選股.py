@@ -504,9 +504,17 @@ def format_mail_content_with_days(momentum_stocks, rsi_stocks, macd_stocks, fina
 
 def send_mail(sender_email, app_password, receiver_email, content):
     try:
+        # 處理多個收件者，支援逗號分隔
+        if ',' in receiver_email:
+            receiver_list = [email.strip() for email in receiver_email.split(',') if email.strip()]
+            receiver_email_str = ', '.join(receiver_list)
+        else:
+            receiver_list = [receiver_email.strip()]
+            receiver_email_str = receiver_email.strip()
+        
         msg = MIMEMultipart()
         msg['From'] = sender_email
-        msg['To'] = receiver_email
+        msg['To'] = receiver_email_str
         msg['Subject'] = f"股票篩選結果 - {get_current_trading_date()}"
 
         msg.attach(MIMEText(content, 'plain', 'utf-8'))
@@ -516,7 +524,7 @@ def send_mail(sender_email, app_password, receiver_email, content):
         server.send_message(msg)
         server.quit()
 
-        print("郵件發送成功！")
+        print(f"郵件發送成功！發送至 {len(receiver_list)} 個收件者")
     except Exception as e:
         print(f"發送郵件時發生錯誤：{str(e)}")
 

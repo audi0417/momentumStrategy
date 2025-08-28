@@ -56,6 +56,8 @@
    export SENDER_EMAIL="your-email@gmail.com"
    export APP_PASSWORD="your-app-password"
    export RECIVER_EMAIL="recipient-email@example.com"
+   # 多個收件者請用逗號分隔：
+   # export RECIVER_EMAIL="email1@example.com,email2@example.com,email3@example.com"
    ```
 
 4. 運行程式：
@@ -69,7 +71,7 @@
 
 - `SENDER_EMAIL`: 用於發送郵件的 Gmail 帳號
 - `APP_PASSWORD`: Gmail 的應用程式密碼
-- `RECIVER_EMAIL`: 接收結果的信箱地址
+- `RECIVER_EMAIL`: 接收結果的信箱地址（多個收件者請用逗號分隔，例如：email1@example.com,email2@example.com）
 - `TOKEN`: GitHub 個人訪問令牌 (用於提交更新後的 stocks_data.json)
 
 ## 輸出結果說明
