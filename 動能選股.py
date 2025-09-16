@@ -9,7 +9,7 @@ Original file is located at
 
 MIN_DATA_LENGTH = 90
 MIN_MOMENTUM = 7
-MIN_TURNOVER = 500000000  # 5億成交量
+MIN_TURNOVER = 100000000  # 1億成交量
 
 import smtplib
 from email.mime.text import MIMEText
