@@ -31,22 +31,38 @@ def generate_stock_data():
     end_date = datetime.now()
     start_date = end_date - timedelta(days=120)
     
-    for i, stock_id in enumerate(list(all_stocks)[:10]):  # 先處理前10隻股票作為示範
-        print(f"處理股票 {stock_id} ({i+1}/10)")
+    all_stocks_list = list(all_stocks)
+    total_stocks = len(all_stocks_list)
+    
+    for i, stock_id in enumerate(all_stocks_list):  # 處理所有股票
+        print(f"處理股票 {stock_id} ({i+1}/{total_stocks})")
         
         try:
-            # 判斷市場類型
+            # 嘗試不同的股票代號後綴
+            data = None
+            ticker_symbols_to_try = []
+            
+            # 根據metadata判斷市場類型
             market_type = metadata.get(stock_id, '上市')
             if market_type == '上櫃':
-                ticker_symbol = f"{stock_id}.TWO"
+                ticker_symbols_to_try = [f"{stock_id}.TWO", f"{stock_id}.TW"]
             else:
-                ticker_symbol = f"{stock_id}.TW"
+                ticker_symbols_to_try = [f"{stock_id}.TW", f"{stock_id}.TWO"]
             
-            # 獲取股票數據
-            data = yf.download(ticker_symbol, start=start_date, end=end_date)
+            # 嘗試不同的代號
+            for ticker_symbol in ticker_symbols_to_try:
+                try:
+                    print(f"  - 嘗試 {ticker_symbol}")
+                    temp_data = yf.download(ticker_symbol, start=start_date, end=end_date)
+                    if not temp_data.empty:
+                        data = temp_data
+                        print(f"  ✓ 成功使用 {ticker_symbol}")
+                        break
+                except:
+                    continue
             
-            if data.empty:
-                print(f"  - 無法獲取 {stock_id} 的數據")
+            if data is None or data.empty:
+                print(f"  - 無法獲取 {stock_id} 的數據（已嘗試所有後綴）")
                 continue
             
             # 處理多層索引
