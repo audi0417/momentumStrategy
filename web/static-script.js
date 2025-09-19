@@ -242,8 +242,7 @@ function loadKlineChart(stockId) {
             showlegend: false,
             template: 'plotly_dark',
             font: { size: 12 },
-            margin: { l: 50, r: 50, t: 50, b: 50 },
-            height: 400
+            margin: { l: 50, r: 50, t: 50, b: 50 }
         };
 
         const config = { responsive: true };
@@ -345,7 +344,6 @@ function loadIndicatorsChart(stockId) {
             template: 'plotly_dark',
             font: { size: 12 },
             margin: { l: 50, r: 50, t: 20, b: 50 },
-            height: 400,
             shapes: [
                 // MACD zero line
                 {
