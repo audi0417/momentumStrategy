@@ -67,14 +67,14 @@ def generate_stock_data():
             # 取最近90天數據
             data_90d = data.tail(90)
             
-            # 轉換為JSON格式
+            # 轉換為JSON格式，處理NaN值
             stock_data = {
                 'dates': data_90d.index.strftime('%Y-%m-%d').tolist(),
-                'open': data_90d['Open'].round(2).tolist(),
-                'high': data_90d['High'].round(2).tolist(),
-                'low': data_90d['Low'].round(2).tolist(),
-                'close': data_90d['Close'].round(2).tolist(),
-                'volume': data_90d['Volume'].astype(int).tolist()
+                'open': data_90d['Open'].fillna(0).round(2).tolist(),
+                'high': data_90d['High'].fillna(0).round(2).tolist(),
+                'low': data_90d['Low'].fillna(0).round(2).tolist(),
+                'close': data_90d['Close'].fillna(0).round(2).tolist(),
+                'volume': data_90d['Volume'].fillna(0).astype(int).tolist()
             }
             
             # 計算技術指標
@@ -94,13 +94,13 @@ def generate_stock_data():
             rs = gain / loss
             rsi = 100 - (100 / (1 + rs))
             
-            # 取最近90天的指標數據
+            # 取最近90天的指標數據，處理NaN值
             indicators_90d = {
                 'dates': data.tail(90).index.strftime('%Y-%m-%d').tolist(),
-                'macd': macd.tail(90).round(4).tolist(),
-                'signal': signal.tail(90).round(4).tolist(),
-                'histogram': histogram.tail(90).round(4).tolist(),
-                'rsi': rsi.tail(90).round(2).tolist()
+                'macd': macd.tail(90).fillna(0).round(4).tolist(),
+                'signal': signal.tail(90).fillna(0).round(4).tolist(),
+                'histogram': histogram.tail(90).fillna(0).round(4).tolist(),
+                'rsi': rsi.tail(90).fillna(50).round(2).tolist()  # RSI預設值為50
             }
             
             stock_price_data[stock_id] = {
