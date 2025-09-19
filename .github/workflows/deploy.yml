@@ -27,6 +27,17 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
+      - name: List files for debugging
+        run: |
+          echo "=== Root directory files ==="
+          ls -la
+          echo "=== Web directory files ==="
+          ls -la web/
+          echo "=== Checking specific files ==="
+          test -f historical_data.json && echo "✅ historical_data.json exists" || echo "❌ historical_data.json missing"
+          test -f web/static.html && echo "✅ web/static.html exists" || echo "❌ web/static.html missing"
+          test -f web/stock_price_data.json && echo "✅ web/stock_price_data.json exists" || echo "❌ web/stock_price_data.json missing"
+      
       - name: Prepare GitHub Pages files
         run: |
           # Copy static version as index.html for GitHub Pages
@@ -37,6 +48,8 @@ jobs:
           cp web/stock_price_data.json .
           cp web/README.md web-readme.md
           # historical_data.json is already in root directory
+          echo "=== Files after copying ==="
+          ls -la *.html *.css *.js *.json
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
