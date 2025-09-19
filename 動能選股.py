@@ -611,7 +611,7 @@ all_stock.insert(1, "股票名稱", stock_name, True)
 all_stock = all_stock.drop(["有價證券代號及名稱"], axis=1)
 
 # 只保留普通股
-all_stock = all_stock[all_stock['CFICode']=="ESVUFR"]
+all_stock = all_stock[all_stock['CFICode']=='ESVUFR']
 
 # 移除股票代號或名稱為 None 的列
 all_stock = all_stock.dropna(subset=['股票代號', '股票名稱'])

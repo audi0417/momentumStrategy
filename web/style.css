@@ -1,0 +1,176 @@
+
+:root {
+    --background-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --header-bg: #2c2c2c;
+    --row-bg: #252525;
+    --row-alt-bg: #202020;
+    --border-color: #444;
+    --hover-bg: #383838;
+    --link-color: #4a90e2;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* 禁止整個頁面滾動 */
+    box-sizing: border-box;
+}
+
+.dashboard-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    gap: 20px;
+    max-height: 100vh;
+}
+
+.left-panel {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: 100vh;
+    height: 100vh;
+}
+
+.right-panel {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 0;
+    max-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    color: #e0e0e0;
+    margin: 0 0 20px 0;
+    flex-shrink: 0;
+}
+
+#table-container {
+    width: 100%;
+    overflow: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    flex: 1;
+    min-height: 0;
+    max-height: calc(100vh - 80px);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 15px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+th {
+    background-color: var(--header-bg);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+tbody tr {
+    background-color: var(--row-bg);
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--row-alt-bg);
+}
+
+tbody tr:hover {
+    background-color: var(--hover-bg);
+    cursor: pointer;
+}
+
+tbody tr.selected {
+    background-color: #2a4d6b !important;
+    border-left: 4px solid var(--link-color);
+}
+
+.stock-name {
+    font-weight: bold;
+    color: var(--link-color);
+}
+
+td:first-child, th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: inherit;
+}
+
+.chart-section {
+    flex: 3;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    background-color: var(--row-bg);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.indicator-section {
+    flex: 2;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    background-color: var(--row-bg);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#kline-container, #indicator-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+    min-height: 0;
+}
+
+#kline-container h3, #indicator-container h3 {
+    margin: 0 0 10px 0;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+/* Plotly chart containers */
+#kline-container > div, #indicator-container > div {
+    flex: 1;
+    min-height: 0;
+}
+
+/* Plotly chart styling */
+#kline-container .plotly-graph-div, #indicator-container .plotly-graph-div {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Ensure Plotly charts are responsive */
+#kline-container [id^="kline-"], #indicator-container [id^="indicators-"] {
+    width: 100% !important;
+    height: 100% !important;
+}

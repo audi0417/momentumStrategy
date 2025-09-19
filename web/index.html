@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momentum Stocks Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="left-panel">
+            <h1>Momentum Stocks</h1>
+            <div id="table-container"></div>
+        </div>
+        <div class="right-panel">
+            <div class="chart-section">
+                <div id="kline-container">
+                    <h3>K線圖 (90天)</h3>
+                    <p>Select a stock to view the K-line chart.</p>
+                </div>
+            </div>
+            <div class="indicator-section">
+                <div id="indicator-container">
+                    <h3>技術指標 (MACD & RSI)</h3>
+                    <p>Select a stock to view MACD and RSI indicators.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

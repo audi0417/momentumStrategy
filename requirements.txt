@@ -7,3 +7,5 @@ rich
 tqdm
 yfinance
 lxml
+fastapi
+uvicorn
