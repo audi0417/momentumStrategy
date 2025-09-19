@@ -23,8 +23,13 @@ let stockPriceData = {};
 
 function initializeApp() {
     // Load momentum data
-    fetch("../historical_data.json")
-        .then(response => response.json())
+    fetch("historical_data.json")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.error) {
                 document.getElementById("table-container").innerText = data.error;
@@ -36,7 +41,12 @@ function initializeApp() {
             // Load stock price data
             return fetch("stock_price_data.json");
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(priceData => {
             stockPriceData = priceData;
             addEventListeners();
@@ -57,8 +67,9 @@ function initializeApp() {
             console.error('Error loading data:', error);
             document.getElementById("table-container").innerHTML = `
                 <p style="text-align: center; padding: 40px; color: #ff6b6b;">
-                    ❌ 無法載入數據<br>
-                    請確保文件路徑正確
+                    ❌ 無法載入數據: ${error.message}<br>
+                    <small>請檢查瀏覽器開發者工具的Console面板查看詳細錯誤</small><br><br>
+                    <small>GitHub Pages URL: ${window.location.href}</small>
                 </p>`;
         });
 }
