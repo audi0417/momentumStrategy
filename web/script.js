@@ -45,14 +45,23 @@ function createTable(data) {
     const dates = Object.keys(data.dates).sort().reverse();
     const latestDate = dates[0];
     
-    // Add future empty dates for planning (after the latest date)
+    // Add future empty dates for planning (after the latest date) - only weekdays
     const futureDates = [];
     if (latestDate) {
         const lastDate = new Date(latestDate);
-        for (let i = 1; i <= 5; i++) {
+        let daysAdded = 0;
+        let dayOffset = 1;
+        
+        while (daysAdded < 5) {
             const futureDate = new Date(lastDate);
-            futureDate.setDate(lastDate.getDate() + i);
-            futureDates.push(futureDate.toISOString().split('T')[0]);
+            futureDate.setDate(lastDate.getDate() + dayOffset);
+            
+            // Skip weekends (Saturday = 6, Sunday = 0)
+            if (futureDate.getDay() !== 0 && futureDate.getDay() !== 6) {
+                futureDates.push(futureDate.toISOString().split('T')[0]);
+                daysAdded++;
+            }
+            dayOffset++;
         }
     }
     

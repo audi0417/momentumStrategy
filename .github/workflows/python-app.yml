@@ -29,10 +29,16 @@ jobs:
         SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
       run: python 動能選股.py
     
+    - name: Archive historical data
+      run: python archive_data.py
+    
+    - name: Generate stock price data for web
+      run: python generate_stock_data.py
+    
     - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add stocks_data.json
-        git commit -m "更新股票數據 $(date +'%Y-%m-%d')" || echo "無變更"
+        git add stocks_data.json historical_data.json web/stock_price_data.json
+        git commit -m "更新股票數據和價格圖表數據 $(date +'%Y-%m-%d')" || echo "無變更"
         git push
