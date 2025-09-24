@@ -5,7 +5,7 @@
     --header-bg: #2c2c2c;
     --row-bg: #252525;
     --row-alt-bg: #202020;
-    --border-color: #444;
+    --border-color: #555; /* 加強邊框顏色 */
     --hover-bg: #383838;
     --link-color: #4a90e2;
 }
@@ -63,7 +63,7 @@ h1 {
     width: 100%;
     overflow-x: auto; /* 水平滾動 */
     overflow-y: auto; /* 垂直滾動 */
-    border: 1px solid var(--border-color);
+    /* border: 1px solid var(--border-color); 移除容器邊框，避免雙重邊框 */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     flex: 1;
@@ -97,10 +97,12 @@ table {
     border-collapse: collapse;
     width: max-content; /* 允許表格寬度超出容器 */
     min-width: 100%; /* 至少填滿容器寬度 */
+    border: 1px solid var(--border-color); /* 添加表格外邊框 */
+    background-color: var(--row-bg); /* 添加表格背景色 */
 }
 
 th, td {
-    border-bottom: 1px solid var(--border-color);
+    border: 1px solid var(--border-color); /* 添加完整邊框 */
     padding: 12px 20px; /* 增加水平padding */
     text-align: left;
     white-space: nowrap;
