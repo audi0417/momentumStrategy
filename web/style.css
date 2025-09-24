@@ -31,9 +31,9 @@ body {
 }
 
 .left-panel {
-    width: 800px; /* 增加固定寬度 */
-    min-width: 600px; /* 增加最小寬度 */
-    max-width: 1000px; /* 增加最大寬度 */
+    width: 650px; /* 從800px縮短到650px */
+    min-width: 500px; /* 從600px調整到500px */
+    max-width: 750px; /* 從1000px調整到750px */
     display: flex;
     flex-direction: column;
     min-height: 0;
@@ -103,21 +103,23 @@ table {
 
 th, td {
     border: 1px solid var(--border-color); /* 添加完整邊框 */
-    padding: 12px 20px; /* 增加水平padding */
+    padding: 12px 15px; /* 保持基本padding */
     text-align: left;
     white-space: nowrap;
-    min-width: 100px; /* 設定最小寬度 */
+    min-width: 80px; /* 從100px調整到80px */
 }
 
 /* 為第一列（股票名稱）設定較大的寬度 */
 th:first-child, td:first-child {
-    min-width: 150px;
+    min-width: 140px; /* 稍微調整股票名稱列寬度 */
+    padding: 12px 15px; /* 保持較多padding給股票名稱 */
 }
 
 /* 為日期列設定固定寬度 */
 th:not(:first-child), td:not(:first-child) {
-    min-width: 120px;
+    min-width: 85px; /* 從120px縮小到85px */
     text-align: center;
+    padding: 12px 10px; /* 減少左右padding */
 }
 
 th {

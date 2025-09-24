@@ -149,10 +149,10 @@ function createTable(data) {
         const row = document.createElement("tr");
         row.dataset.stockId = stock_id;
         
-        // Add indicator if stock has price data
-        const hasData = stockPriceData[stock_id] ? " 📊" : " ⚪";
+        // Add indicator if stock has price data - 移除符號顯示
+        // const hasData = stockPriceData[stock_id] ? " 📊" : " ⚪";
         const stock_name_cell = document.createElement("td");
-        stock_name_cell.innerHTML = `<div class="stock-name">${all_stocks[stock_id].name}${hasData}</div><div>${stock_id}</div>`;
+        stock_name_cell.innerHTML = `<div class="stock-name">${all_stocks[stock_id].name}</div><div>${stock_id}</div>`;
         row.appendChild(stock_name_cell);
 
         allDates.forEach(date => {
@@ -429,15 +429,15 @@ function showNoDataMessage() {
     document.getElementById("kline-container").innerHTML = `
         <h3>K線圖 (90天)</h3>
         <p style="text-align: center; padding: 40px; color: #888;">
-            📊 此股票暫無價格數據<br>
-            <small>請選擇有 📊 標記的股票</small>
+            此股票暫無價格數據<br>
+            <small>請選擇其他股票查看圖表</small>
         </p>`;
     
     document.getElementById("indicator-container").innerHTML = `
         <h3>技術指標 (MACD & RSI)</h3>
         <p style="text-align: center; padding: 40px; color: #888;">
-            📈 此股票暫無技術指標數據<br>
-            <small>請選擇有 📊 標記的股票</small>
+            此股票暫無技術指標數據<br>
+            <small>請選擇其他股票查看指標</small>
         </p>`;
 }
 
