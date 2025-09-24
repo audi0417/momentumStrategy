@@ -31,7 +31,8 @@ body {
 }
 
 .left-panel {
-    flex: 3;
+    width: 800px; /* Fixed width */
+    flex-shrink: 0; /* Prevent shrinking */
     display: flex;
     flex-direction: column;
     min-height: 0;
@@ -40,7 +41,7 @@ body {
 }
 
 .right-panel {
-    flex: 2;
+    flex: 1; /* Fill remaining space */
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -67,7 +68,6 @@ h1 {
 }
 
 table {
-    width: 100%;
     border-collapse: collapse;
 }
 
