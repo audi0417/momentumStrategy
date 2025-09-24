@@ -31,7 +31,7 @@ body {
 }
 
 .left-panel {
-    width: 800px; /* Fixed width */
+    width: 500px; /* Fixed width */
     flex-shrink: 0; /* Prevent shrinking */
     display: flex;
     flex-direction: column;
