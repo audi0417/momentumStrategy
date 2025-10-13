@@ -1,347 +1,317 @@
 {
-  "last_update": "2025-10-13",
+  "last_update": "2025-10-14",
   "stocks": {
     "6770": {
       "stock_name": "力積電",
-      "momentum": 9.38627582133391,
-      "days": 11,
-      "last_signal_date": "2025-10-10"
-    },
-    "8996": {
-      "stock_name": "高力",
-      "momentum": 8.607594936708862,
-      "days": 8,
-      "last_signal_date": "2025-10-10"
+      "momentum": 7.536761689557414,
+      "days": 12,
+      "last_signal_date": "2025-10-13"
     },
     "2344": {
       "stock_name": "華邦電",
-      "momentum": 20.694446563720703,
-      "days": 7,
-      "last_signal_date": "2025-10-10"
-    },
-    "6531": {
-      "stock_name": "愛普*",
-      "momentum": 13.11239193083573,
-      "days": 7,
-      "last_signal_date": "2025-10-10"
-    },
-    "6768": {
-      "stock_name": "志強-KY",
-      "momentum": 7.14285714285714,
-      "days": 7,
-      "last_signal_date": "2025-10-10"
+      "momentum": 10.824744447231183,
+      "days": 8,
+      "last_signal_date": "2025-10-13"
     },
     "8110": {
       "stock_name": "華東",
-      "momentum": 24.03100530676623,
-      "days": 7,
-      "last_signal_date": "2025-10-10"
-    },
-    "1590": {
-      "stock_name": "亞德客-KY",
-      "momentum": 12.857142857142856,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
+      "momentum": 10.352944766773886,
+      "days": 8,
+      "last_signal_date": "2025-10-13"
     },
     "2308": {
       "stock_name": "台達電",
-      "momentum": 11.74496644295302,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
+      "momentum": 9.341825902335454,
+      "days": 7,
+      "last_signal_date": "2025-10-13"
     },
     "2408": {
       "stock_name": "南亞科",
-      "momentum": 23.588461444944198,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
-    },
-    "3006": {
-      "stock_name": "晶豪科",
-      "momentum": 12.266662597656254,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
-    },
-    "4551": {
-      "stock_name": "智伸科",
-      "momentum": 15.671641791044767,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
+      "momentum": 15.180721053157953,
+      "days": 7,
+      "last_signal_date": "2025-10-13"
     },
     "4967": {
       "stock_name": "十銓",
-      "momentum": 30.733949529453586,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
+      "momentum": 39.1982135323025,
+      "days": 7,
+      "last_signal_date": "2025-10-13"
     },
     "4989": {
       "stock_name": "榮科",
-      "momentum": 45.89552084781934,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
+      "momentum": 41.42614752761639,
+      "days": 7,
+      "last_signal_date": "2025-10-13"
     },
     "6139": {
       "stock_name": "亞翔",
-      "momentum": 14.986737400530515,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
+      "momentum": 12.0211360634082,
+      "days": 7,
+      "last_signal_date": "2025-10-13"
     },
     "6209": {
       "stock_name": "今國光",
-      "momentum": 9.961679589217054,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
-    },
-    "6235": {
-      "stock_name": "華孚",
-      "momentum": 17.027864179295026,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
-    },
-    "6442": {
-      "stock_name": "光聖",
-      "momentum": 11.01376720901126,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
-    },
-    "6805": {
-      "stock_name": "富世達",
-      "momentum": 17.910447761194035,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
-    },
-    "8046": {
-      "stock_name": "南電",
-      "momentum": 14.71861471861471,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
-    },
-    "8070": {
-      "stock_name": "長華*",
-      "momentum": 20.34956724377974,
-      "days": 6,
-      "last_signal_date": "2025-10-10"
+      "momentum": 11.041409521599622,
+      "days": 7,
+      "last_signal_date": "2025-10-13"
     },
     "1802": {
       "stock_name": "台玻",
-      "momentum": 17.158669937546644,
-      "days": 4,
-      "last_signal_date": "2025-10-10"
+      "momentum": 9.892086602412341,
+      "days": 5,
+      "last_signal_date": "2025-10-13"
     },
     "2313": {
       "stock_name": "華通",
-      "momentum": 19.66988122700819,
-      "days": 4,
-      "last_signal_date": "2025-10-10"
-    },
-    "2327": {
-      "stock_name": "國巨*",
-      "momentum": 7.624633431085037,
-      "days": 4,
-      "last_signal_date": "2025-10-10"
+      "momentum": 16.073776947267216,
+      "days": 5,
+      "last_signal_date": "2025-10-13"
     },
     "2399": {
       "stock_name": "映泰",
-      "momentum": 20.887728875615473,
-      "days": 4,
-      "last_signal_date": "2025-10-10"
-    },
-    "3413": {
-      "stock_name": "京鼎",
-      "momentum": 7.528641571194772,
-      "days": 4,
-      "last_signal_date": "2025-10-10"
+      "momentum": 13.541658181283545,
+      "days": 5,
+      "last_signal_date": "2025-10-13"
     },
     "1605": {
       "stock_name": "華新",
-      "momentum": 26.666663674747237,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 22.376236112991176,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "2009": {
       "stock_name": "第一銅",
-      "momentum": 18.943305240578123,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 7.835815053231632,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "2059": {
       "stock_name": "川湖",
-      "momentum": 12.125748502994016,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 8.931185944363108,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "2465": {
       "stock_name": "麗臺",
-      "momentum": 34.10302135546155,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
-    },
-    "3035": {
-      "stock_name": "智原",
-      "momentum": 8.709677419354843,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 24.56140350877194,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "3189": {
       "stock_name": "景碩",
-      "momentum": 26.146788990825698,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 19.19642857142858,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "3443": {
       "stock_name": "創意",
-      "momentum": 9.782608695652172,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 9.090909090909083,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "3617": {
       "stock_name": "碩天",
-      "momentum": 12.410501193317414,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
-    },
-    "3711": {
-      "stock_name": "日月光投控",
-      "momentum": 8.814589665653493,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
-    },
-    "4722": {
-      "stock_name": "國精化",
-      "momentum": 9.743589743589753,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
-    },
-    "4968": {
-      "stock_name": "立積",
-      "momentum": 13.265306122448983,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 13.809523809523805,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "6409": {
       "stock_name": "旭隼",
-      "momentum": 13.413304252998914,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 11.592632719393281,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "6890": {
       "stock_name": "來億-KY",
-      "momentum": 16.21004566210045,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 10.786516853932593,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "6923": {
       "stock_name": "中台",
-      "momentum": 13.636363636363647,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 7.30593607305936,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "8271": {
       "stock_name": "宇瞻",
-      "momentum": 18.055555555555557,
-      "days": 3,
-      "last_signal_date": "2025-10-10"
+      "momentum": 27.586206896551737,
+      "days": 4,
+      "last_signal_date": "2025-10-13"
     },
     "1303": {
       "stock_name": "南亞",
-      "momentum": 10.219914080979752,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
+      "momentum": 8.690019079423973,
+      "days": 3,
+      "last_signal_date": "2025-10-13"
     },
     "1304": {
       "stock_name": "台聚",
-      "momentum": 11.503535427606003,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
+      "momentum": 12.068971353885827,
+      "days": 3,
+      "last_signal_date": "2025-10-13"
     },
     "1308": {
       "stock_name": "亞聚",
-      "momentum": 10.729614085238026,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
-    },
-    "1312": {
-      "stock_name": "國喬",
-      "momentum": 8.858056924688329,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
-    },
-    "2329": {
-      "stock_name": "華泰",
-      "momentum": 12.085564761238299,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
-    },
-    "2337": {
-      "stock_name": "旺宏",
-      "momentum": 9.343938040214805,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
-    },
-    "3380": {
-      "stock_name": "明泰",
-      "momentum": 8.71080116216676,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
+      "momentum": 19.213972453387605,
+      "days": 3,
+      "last_signal_date": "2025-10-13"
     },
     "3515": {
       "stock_name": "華擎",
-      "momentum": 10.81081081081081,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
-    },
-    "3661": {
-      "stock_name": "世芯-KY",
-      "momentum": 7.001522070015231,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
-    },
-    "3665": {
-      "stock_name": "貿聯-KY",
-      "momentum": 7.804878048780495,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
+      "momentum": 10.351201478743066,
+      "days": 3,
+      "last_signal_date": "2025-10-13"
     },
     "3715": {
       "stock_name": "定穎投控",
-      "momentum": 13.268612143132374,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
-    },
-    "5285": {
-      "stock_name": "界霖",
-      "momentum": 9.969782066697652,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
+      "momentum": 8.55614973262031,
+      "days": 3,
+      "last_signal_date": "2025-10-13"
     },
     "6214": {
       "stock_name": "精誠",
-      "momentum": 13.86554621848739,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
+      "momentum": 12.916666666666664,
+      "days": 3,
+      "last_signal_date": "2025-10-13"
     },
     "6269": {
       "stock_name": "台郡",
-      "momentum": 8.11688331794449,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
+      "momentum": 8.538582623897796,
+      "days": 3,
+      "last_signal_date": "2025-10-13"
     },
     "6282": {
       "stock_name": "康舒",
-      "momentum": 10.876631077274258,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
+      "momentum": 8.23722590190723,
+      "days": 3,
+      "last_signal_date": "2025-10-13"
     },
     "6541": {
       "stock_name": "泰福-KY",
-      "momentum": 10.476190476190483,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
+      "momentum": 21.52380807059151,
+      "days": 3,
+      "last_signal_date": "2025-10-13"
     },
     "8039": {
       "stock_name": "台虹",
-      "momentum": 10.82910607634171,
-      "days": 2,
-      "last_signal_date": "2025-10-10"
+      "momentum": 11.167510396825353,
+      "days": 3,
+      "last_signal_date": "2025-10-13"
+    },
+    "1419": {
+      "stock_name": "新紡",
+      "momentum": 8.884682065543847,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "1517": {
+      "stock_name": "利奇",
+      "momentum": 26.7281061435082,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "1609": {
+      "stock_name": "大亞",
+      "momentum": 7.416883987344169,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "1723": {
+      "stock_name": "中碳",
+      "momentum": 7.116568161666037,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "1809": {
+      "stock_name": "中釉",
+      "momentum": 10.93332926432291,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "2211": {
+      "stock_name": "長榮鋼",
+      "momentum": 7.327139692794438,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "2312": {
+      "stock_name": "金寶",
+      "momentum": 13.367600885009722,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "2392": {
+      "stock_name": "正崴",
+      "momentum": 7.5657913999654935,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "2451": {
+      "stock_name": "創見",
+      "momentum": 7.488986784140961,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "2489": {
+      "stock_name": "瑞軒",
+      "momentum": 8.856586016432178,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "2630": {
+      "stock_name": "亞航",
+      "momentum": 8.185050554580275,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "2637": {
+      "stock_name": "慧洋-KY",
+      "momentum": 9.298244275544821,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "3135": {
+      "stock_name": "凌航",
+      "momentum": 16.501244793482407,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "3712": {
+      "stock_name": "永崴投控",
+      "momentum": 9.89660986655434,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "5222": {
+      "stock_name": "全訊",
+      "momentum": 8.391608391608397,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "6806": {
+      "stock_name": "森崴能源",
+      "momentum": 11.80811369205328,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "6937": {
+      "stock_name": "天虹",
+      "momentum": 9.941520467836252,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "8473": {
+      "stock_name": "山林水",
+      "momentum": 13.947001988324569,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
+    },
+    "8499": {
+      "stock_name": "鼎炫-KY",
+      "momentum": 8.565737051792821,
+      "days": 1,
+      "last_signal_date": "2025-10-13"
     }
   }
 }
