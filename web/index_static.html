@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>動能因子分析系統</title>
-    <link rel="stylesheet" href="style.css">
+    <title>動能因子分析系統 - 靜態版</title>
+    <link rel="stylesheet" href="style_modern.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -167,6 +167,49 @@
     <!-- Toast Notifications -->
     <div class="toast-container" id="toast-container"></div>
 
-    <script src="script.js"></script>
+    <!-- Static Data Script -->
+    <script>
+        // 實際的歷史數據
+        const stockData = {
+            "dates": {
+                "2025-10-27": {
+                    "2481": {"stock_name": "強茂", "momentum": 19.95, "days": 8},
+                    "8112": {"stock_name": "至上", "momentum": 16.51, "days": 8},
+                    "8103": {"stock_name": "瀚荃", "momentum": 15.54, "days": 7},
+                    "8210": {"stock_name": "勤誠", "momentum": 9.19, "days": 7},
+                    "2375": {"stock_name": "凱美", "momentum": 13.86, "days": 6}
+                },
+                "2025-10-24": {
+                    "2481": {"stock_name": "強茂", "momentum": 19.95, "days": 7},
+                    "8112": {"stock_name": "至上", "momentum": 16.51, "days": 7},
+                    "8103": {"stock_name": "瀚荃", "momentum": 15.54, "days": 6},
+                    "2327": {"stock_name": "國巨*", "momentum": 22.49, "days": 4},
+                    "2472": {"stock_name": "立隆電", "momentum": 24.44, "days": 4}
+                },
+                "2025-10-23": {
+                    "2481": {"stock_name": "強茂", "momentum": 14.12, "days": 6},
+                    "8112": {"stock_name": "至上", "momentum": 16.44, "days": 6},
+                    "8103": {"stock_name": "瀚荃", "momentum": 28.48, "days": 5},
+                    "2375": {"stock_name": "凱美", "momentum": 23.86, "days": 4},
+                    "2408": {"stock_name": "南亞科", "momentum": 15.91, "days": 4}
+                },
+                "2025-10-22": {
+                    "3189": {"stock_name": "景碩", "momentum": 11.52, "days": 5},
+                    "2481": {"stock_name": "強茂", "momentum": 16.39, "days": 5},
+                    "8103": {"stock_name": "瀚荃", "momentum": 33.39, "days": 4},
+                    "2375": {"stock_name": "凱美", "momentum": 27.60, "days": 3},
+                    "2408": {"stock_name": "南亞科", "momentum": 22.25, "days": 3}
+                },
+                "2025-10-21": {
+                    "8271": {"stock_name": "宇瞻", "momentum": 15.38, "days": 9},
+                    "3665": {"stock_name": "貿聯-KY", "momentum": 14.67, "days": 5},
+                    "8996": {"stock_name": "高力", "momentum": 14.88, "days": 5},
+                    "1808": {"stock_name": "潤隆", "momentum": 22.24, "days": 4},
+                    "3189": {"stock_name": "景碩", "momentum": 23.27, "days": 4}
+                }
+            }
+        };
+    </script>
+    <script src="script_static.js"></script>
 </body>
 </html>

@@ -1,243 +1,717 @@
-
+/* Modern CSS Variables */
 :root {
-    --background-color: #1a1a1a;
-    --text-color: #e0e0e0;
-    --header-bg: #2c2c2c;
-    --row-bg: #252525;
-    --row-alt-bg: #202020;
-    --border-color: #555; /* 加強邊框顏色 */
-    --hover-bg: #383838;
-    --link-color: #4a90e2;
+    /* Color Palette */
+    --background: hsl(222, 84%, 4%);
+    --foreground: hsl(210, 40%, 98%);
+    --card: hsl(222, 84%, 5%);
+    --card-foreground: hsl(210, 40%, 98%);
+    --popover: hsl(222, 84%, 5%);
+    --popover-foreground: hsl(210, 40%, 98%);
+    --primary: hsl(217, 91%, 60%);
+    --primary-foreground: hsl(222, 84%, 5%);
+    --secondary: hsl(217, 32%, 17%);
+    --secondary-foreground: hsl(210, 40%, 98%);
+    --muted: hsl(217, 32%, 17%);
+    --muted-foreground: hsl(215, 20%, 65%);
+    --accent: hsl(217, 32%, 17%);
+    --accent-foreground: hsl(210, 40%, 98%);
+    --destructive: hsl(0, 62%, 30%);
+    --destructive-foreground: hsl(210, 40%, 98%);
+    --border: hsl(217, 32%, 17%);
+    --input: hsl(217, 32%, 17%);
+    --ring: hsl(224, 71%, 4%);
+    --success: hsl(142, 71%, 45%);
+    --success-foreground: hsl(210, 40%, 98%);
+    --warning: hsl(38, 92%, 50%);
+    --warning-foreground: hsl(222, 84%, 5%);
+    --danger: hsl(0, 84%, 60%);
+    --danger-foreground: hsl(210, 40%, 98%);
+    
+    /* Chart Colors */
+    --chart-1: hsl(173, 58%, 39%);
+    --chart-2: hsl(12, 76%, 61%);
+    --chart-3: hsl(197, 37%, 24%);
+    --chart-4: hsl(43, 74%, 66%);
+    --chart-5: hsl(27, 87%, 67%);
+    
+    /* Spacing */
+    --radius: 0.5rem;
+    --container-padding: 2rem;
+    --header-height: 80px;
+    
+    /* Typography */
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Fira Code", "Monaco", "Cascadia Code", "Roboto Mono", monospace;
+    
+    /* Effects */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+/* Reset and Base Styles */
+* {
     margin: 0;
-    padding: 20px;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    display: flex;
-    height: 100vh;
-    overflow: hidden; /* 禁止整個頁面滾動 */
+    padding: 0;
     box-sizing: border-box;
 }
 
-.dashboard-container {
+body {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--foreground);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Header Styles */
+.header {
+    position: sticky;
+    top: 0;
+    height: var(--header-height);
+    background: rgba(2, 8, 23, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    z-index: 50;
+}
+
+.header-content {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 var(--container-padding);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo i {
+    font-size: 2rem;
+    color: var(--primary);
+}
+
+.logo-text h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--foreground);
+}
+
+.logo-text p {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    margin-top: -0.25rem;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-container {
+    position: relative;
+    width: 24rem;
+}
+
+.search-container i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+}
+
+.search-container input {
     width: 100%;
-    height: 100vh;
-    gap: 20px;
-    max-height: 100vh;
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--foreground);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
 }
 
-.left-panel {
-    width: 650px; /* 從800px縮短到650px */
-    min-width: 500px; /* 從600px調整到500px */
-    max-width: 750px; /* 從1000px調整到750px */
+.search-container input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px hsla(217, 91%, 60%, 0.1);
+}
+
+.search-container input::placeholder {
+    color: var(--muted-foreground);
+}
+
+.notification-btn {
+    padding: 0.75rem;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.notification-btn:hover {
+    background: var(--accent);
+}
+
+.status-indicator {
     display: flex;
-    flex-direction: column;
-    min-height: 0;
-    max-height: 100vh;
-    height: 100vh;
-    flex-shrink: 0; /* 防止被壓縮 */
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--success);
 }
 
-.right-panel {
-    flex: 1; /* 佔據剩餘空間 */
-    min-width: 0; /* 允許彈性縮放 */
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Main Content */
+.main-content {
+    padding: 2rem var(--container-padding);
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: calc(100vh - var(--header-height));
+}
+
+/* Market Overview */
+.market-overview {
+    margin-bottom: 2rem;
+}
+
+.market-overview h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+}
+
+.overview-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.overview-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 2px);
+    padding: 1.5rem;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    height: 100vh;
-    max-height: 100vh;
+    align-items: center;
+    gap: 1rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
 }
 
-h1 {
-    text-align: center;
-    color: #e0e0e0;
-    margin: 0 0 20px 0;
-    flex-shrink: 0;
+.overview-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
-#table-container {
-    width: 100%;
-    overflow-x: auto; /* 水平滾動 */
-    overflow-y: auto; /* 垂直滾動 */
-    /* border: 1px solid var(--border-color); 移除容器邊框，避免雙重邊框 */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+.card-icon {
+    padding: 1rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: var(--radius);
+    font-size: 1.25rem;
+}
+
+.card-content {
     flex: 1;
-    min-height: 0;
-    max-height: calc(100vh - 80px);
-    /* 美化滾動條 */
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-color) transparent;
 }
 
-/* WebKit 瀏覽器滾動條樣式 */
-#table-container::-webkit-scrollbar {
+.card-title {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    margin-bottom: 0.25rem;
+}
+
+.card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--foreground);
+}
+
+/* Dashboard Layout */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 650px 1fr;
+    gap: 2rem;
+    height: calc(100vh - var(--header-height) - 8rem);
+}
+
+/* Left Panel */
+.left-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 2px);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.panel-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.panel-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.sort-btn, .refresh-btn {
+    padding: 0.5rem;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sort-btn:hover, .refresh-btn:hover {
+    background: var(--accent);
+}
+
+.table-container {
+    flex: 1;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.table-container::-webkit-scrollbar {
     height: 8px;
     width: 8px;
 }
 
-#table-container::-webkit-scrollbar-track {
+.table-container::-webkit-scrollbar-track {
     background: transparent;
 }
 
-#table-container::-webkit-scrollbar-thumb {
-    background-color: var(--border-color);
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--border);
     border-radius: 4px;
 }
 
-#table-container::-webkit-scrollbar-thumb:hover {
-    background-color: var(--text-color);
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
 }
 
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 1rem;
+    color: var(--muted-foreground);
+}
+
+.loading-spinner i {
+    font-size: 2rem;
+    color: var(--primary);
+}
+
+/* Table Styles */
 table {
+    width: 100%;
     border-collapse: collapse;
-    width: max-content; /* 允許表格寬度超出容器 */
-    min-width: 100%; /* 至少填滿容器寬度 */
-    border: 1px solid var(--border-color); /* 添加表格外邊框 */
-    background-color: var(--row-bg); /* 添加表格背景色 */
+    background: var(--card);
 }
 
 th, td {
-    border: 1px solid var(--border-color); /* 添加完整邊框 */
-    padding: 12px 15px; /* 保持基本padding */
+    padding: 1rem 0.75rem;
     text-align: left;
+    border-bottom: 1px solid var(--border);
     white-space: nowrap;
-    min-width: 80px; /* 從100px調整到80px */
-}
-
-/* 為第一列（股票名稱）設定較大的寬度 */
-th:first-child, td:first-child {
-    min-width: 140px; /* 稍微調整股票名稱列寬度 */
-    padding: 12px 15px; /* 保持較多padding給股票名稱 */
-}
-
-/* 為日期列設定固定寬度 */
-th:not(:first-child), td:not(:first-child) {
-    min-width: 85px; /* 從120px縮小到85px */
-    text-align: center;
-    padding: 12px 10px; /* 減少左右padding */
 }
 
 th {
-    background-color: var(--header-bg);
+    background: var(--muted);
+    color: var(--foreground);
     font-weight: 600;
     position: sticky;
     top: 0;
-    z-index: 2;
+    z-index: 10;
+}
+
+th:first-child, td:first-child {
+    position: sticky;
+    left: 0;
+    background: inherit;
+    z-index: 5;
+    min-width: 140px;
+}
+
+th:first-child {
+    z-index: 15;
 }
 
 tbody tr {
-    background-color: var(--row-bg);
-    transition: background-color 0.2s ease;
-}
-
-tbody tr:nth-child(even) {
-    background-color: var(--row-alt-bg);
-}
-
-tbody tr:hover {
-    background-color: var(--hover-bg);
+    transition: all 0.2s ease;
     cursor: pointer;
 }
 
+tbody tr:hover {
+    background: var(--accent);
+}
+
 tbody tr.selected {
-    background-color: #2a4d6b !important;
-    border-left: 4px solid var(--link-color);
+    background: rgba(59, 130, 246, 0.1);
+    border-left: 4px solid var(--primary);
 }
 
 .stock-name {
-    font-weight: bold;
-    color: var(--link-color);
+    font-weight: 600;
+    color: var(--primary);
 }
 
-td:first-child, th:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 3; /* 提高z-index，確保高於表頭 */
-    background-color: inherit;
-    box-shadow: 2px 0 4px rgba(0,0,0,0.1); /* 添加陰影效果 */
+.stock-code {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    font-family: var(--font-mono);
 }
 
-/* 確保第一列在暗色主題下有正確的背景 */
-th:first-child {
-    background-color: var(--header-bg);
-    z-index: 3; /* 確保表頭第一列有最高優先級 */
-}
-
-tbody tr:nth-child(even) td:first-child {
-    background-color: var(--row-alt-bg);
-}
-
-tbody tr:nth-child(odd) td:first-child {
-    background-color: var(--row-bg);
-}
-
-tbody tr:hover td:first-child {
-    background-color: var(--hover-bg);
-}
-
-tbody tr.selected td:first-child {
-    background-color: #2a4d6b !important;
-}
-
-.chart-section {
-    flex: 3;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 20px;
-    background-color: var(--row-bg);
-    min-height: 0;
+/* Right Panel */
+.right-panel {
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
 }
 
-.indicator-section {
-    flex: 2;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 20px;
-    background-color: var(--row-bg);
-    min-height: 0;
+/* Stock Info Card */
+.stock-info-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 2px);
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.stock-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stock-details h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--foreground);
+}
+
+.stock-details p {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    font-family: var(--font-mono);
+}
+
+.stock-badge {
+    padding: 0.5rem 1rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* Charts Container */
+.charts-container {
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
+    flex: 1;
 }
 
-#kline-container, #indicator-container {
-    width: 100%;
-    height: 100%;
+.chart-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 2px);
+    backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+}
+
+.chart-panel:first-child {
+    flex: 3;
+}
+
+.chart-panel:last-child {
+    flex: 2;
+}
+
+.chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.chart-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.chart-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.period-btn {
+    padding: 0.5rem 1rem;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--foreground);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.period-btn:hover {
+    background: var(--accent);
+}
+
+.period-btn.active {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+}
+
+.indicator-badges {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.indicator-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: calc(var(--radius) - 2px);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.indicator-badge.macd {
+    background: var(--chart-1);
+    color: var(--foreground);
+}
+
+.indicator-badge.rsi {
+    background: var(--chart-2);
+    color: var(--foreground);
+}
+
+.chart-content {
     flex: 1;
+    padding: 1rem;
     min-height: 0;
 }
 
-#kline-container h3, #indicator-container h3 {
-    margin: 0 0 10px 0;
-    color: var(--text-color);
+.chart-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--muted-foreground);
     text-align: center;
-    font-size: 16px;
-    flex-shrink: 0;
+    gap: 1rem;
 }
 
-/* Plotly chart containers */
-#kline-container > div, #indicator-container > div {
-    flex: 1;
-    min-height: 0;
+.chart-placeholder i {
+    font-size: 3rem;
+    opacity: 0.5;
 }
 
-/* Plotly chart styling */
-#kline-container .plotly-graph-div, #indicator-container .plotly-graph-div {
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.toast {
+    padding: 1rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 400px;
+    animation: slideIn 0.3s ease;
+}
+
+.toast.success {
+    border-color: var(--success);
+}
+
+.toast.error {
+    border-color: var(--danger);
+}
+
+.toast.warning {
+    border-color: var(--warning);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Score Colors */
+.score-excellent { color: var(--success); font-weight: 700; }
+.score-good { color: var(--chart-1); font-weight: 600; }
+.score-neutral { color: var(--foreground); }
+.score-poor { color: var(--warning); }
+.score-bad { color: var(--danger); font-weight: 600; }
+.future-cell { opacity: 0.5; }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+    
+    .search-container {
+        width: 16rem;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --container-padding: 1rem;
+        --header-height: 60px;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        height: auto;
+        padding: 1rem;
+    }
+    
+    .overview-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-container {
+        width: 100%;
+    }
+    
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .charts-container {
+        flex-direction: column;
+    }
+    
+    .chart-panel:first-child,
+    .chart-panel:last-child {
+        flex: none;
+        height: 400px;
+    }
+}
+
+/* Plotly Chart Styling */
+.plotly-graph-div {
     width: 100% !important;
     height: 100% !important;
 }
 
-/* Ensure Plotly charts are responsive */
-#kline-container [id^="kline-"], #indicator-container [id^="indicators-"] {
-    width: 100% !important;
-    height: 100% !important;
+.plotly-graph-div .main-svg {
+    background: transparent !important;
+}
+
+/* Dark theme for plotly */
+.js-plotly-plot .plotly {
+    background: transparent !important;
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
