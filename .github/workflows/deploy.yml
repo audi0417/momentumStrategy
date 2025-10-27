@@ -35,18 +35,18 @@ jobs:
           ls -la web/
           echo "=== Checking specific files ==="
           test -f historical_data.json && echo "✅ historical_data.json exists" || echo "❌ historical_data.json missing"
-          test -f web/static.html && echo "✅ web/static.html exists" || echo "❌ web/static.html missing"
+          test -f web/index.html && echo "✅ web/index.html exists" || echo "❌ web/index.html missing"
+          test -f web/historical_data.json && echo "✅ web/historical_data.json exists" || echo "❌ web/historical_data.json missing"
           test -f web/stock_price_data.json && echo "✅ web/stock_price_data.json exists" || echo "❌ web/stock_price_data.json missing"
-      
+
       - name: Prepare GitHub Pages files
         run: |
-          # Copy static version as index.html for GitHub Pages
-          cp web/static.html index.html
-          # Copy all necessary files
+          # Copy web files to root for GitHub Pages
+          cp web/index.html .
           cp web/style.css .
-          cp web/static-script.js script.js
+          cp web/script.js .
           cp web/stock_price_data.json .
-          # historical_data.json is already in root directory
+          cp web/historical_data.json .
           echo "=== Files after copying ==="
           ls -la *.html *.css *.js *.json
       

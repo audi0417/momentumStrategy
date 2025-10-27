@@ -35,10 +35,15 @@ jobs:
     - name: Generate stock price data for web
       run: python generate_stock_data.py
     
+    - name: Copy historical data to web folder
+      run: |
+        cp historical_data.json web/historical_data.json
+        echo "✅ Copied historical_data.json to web folder"
+
     - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add stocks_data.json historical_data.json web/stock_price_data.json
+        git add stocks_data.json historical_data.json web/stock_price_data.json web/historical_data.json
         git commit -m "更新股票數據和價格圖表數據 $(date +'%Y-%m-%d')" || echo "無變更"
         git push
