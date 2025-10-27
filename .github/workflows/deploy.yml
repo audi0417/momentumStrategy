@@ -46,7 +46,6 @@ jobs:
           cp web/style.css .
           cp web/static-script.js script.js
           cp web/stock_price_data.json .
-          cp web/README.md web-readme.md
           # historical_data.json is already in root directory
           echo "=== Files after copying ==="
           ls -la *.html *.css *.js *.json
