@@ -404,6 +404,12 @@ tbody tr.selected {
     border-left: 4px solid var(--primary);
 }
 
+.stock-name-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .stock-name {
     font-weight: 600;
     color: var(--primary);
@@ -413,6 +419,36 @@ tbody tr.selected {
     font-size: 0.875rem;
     color: var(--muted-foreground);
     font-family: var(--font-mono);
+}
+
+/* Signal Badges */
+.stock-signals {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.signal-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.signal-badge.signal-rsi {
+    background-color: rgba(139, 92, 246, 0.2);
+    color: #a78bfa;
+    border: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+.signal-badge.signal-macd {
+    background-color: rgba(236, 72, 153, 0.2);
+    color: #f472b6;
+    border: 1px solid rgba(236, 72, 153, 0.4);
 }
 
 /* Right Panel */

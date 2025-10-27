@@ -184,8 +184,8 @@ def save_stock_data(data):
     print(f"已保存數據到 {file_path}")
 
 
-def update_momentum_stocks(momentum_stocks):
-    """更新動能股票記錄，計算累積天數"""
+def update_momentum_stocks(momentum_stocks, rsi_stocks=None, macd_stocks=None):
+    """更新動能股票記錄，計算累積天數，並標記 RSI/MACD 信號"""
     # 獲取台灣時間
     taiwan_now = get_taiwan_datetime()
     current_date = get_current_trading_date()
@@ -209,9 +209,20 @@ def update_momentum_stocks(momentum_stocks):
     # 股票代號列表，用於檢查哪些股票不再出現
     current_stock_ids = set(momentum_stocks.keys())
 
+    # 轉換信號字典為集合，方便查詢
+    rsi_signal_stocks = set(rsi_stocks.keys()) if rsi_stocks else set()
+    macd_signal_stocks = set(macd_stocks.keys()) if macd_stocks else set()
+
     # 更新數據時使用信號日期而非當前日期
     for stock_id, momentum in momentum_stocks.items():
         stock_name = all_stock.loc[all_stock["股票代號"]==stock_id, "股票名稱"].values[0]
+
+        # 檢查該股票是否觸發 RSI 或 MACD 信號
+        signals = []
+        if stock_id in rsi_signal_stocks:
+            signals.append("rsi")
+        if stock_id in macd_signal_stocks:
+            signals.append("macd")
 
         if stock_id in data["stocks"]:
             # 檢查記錄的上次信號日期
@@ -227,18 +238,21 @@ def update_momentum_stocks(momentum_stocks):
                 data["stocks"][stock_id]["days"] = 1
                 print(f"股票 {stock_id} 重新出現，重設為 1 天")
 
-            # 更新信號日期
+            # 更新信號日期和信號標記
             data["stocks"][stock_id]["momentum"] = float(momentum)
             data["stocks"][stock_id]["last_signal_date"] = signal_date
+            data["stocks"][stock_id]["signals"] = signals
         else:
             # 新增記錄
             data["stocks"][stock_id] = {
                 "stock_name": stock_name,
                 "momentum": float(momentum),
                 "days": 1,
-                "last_signal_date": signal_date  # 使用信號日期
+                "last_signal_date": signal_date,  # 使用信號日期
+                "signals": signals
             }
-            print(f"新增股票 {stock_id} {stock_name}")
+            signal_info = f" (信號: {', '.join(signals).upper()})" if signals else ""
+            print(f"新增股票 {stock_id} {stock_name}{signal_info}")
 
     # 移除不再出現信號的股票
     stocks_to_remove = []
@@ -1026,9 +1040,25 @@ def main():
             min_value=MIN_MOMENTUM
         )
 
-        # 更新動能股票連續天數
+        # 3. RSI篩選
+        console.print("\n[cyan]開始進行RSI篩選...[/cyan]")
+        rsi_stocks = filter_stocks_by_condition(
+            stock_index,
+            Signal_rsi,
+            condition_args={"shortTern": 5, "longTern": 80}
+        )
+
+        # 4. MACD篩選
+        console.print("\n[cyan]開始進行MACD篩選...[/cyan]")
+        macd_stocks = filter_stocks_by_condition(
+            stock_index,
+            Signal_macd,
+            condition_args={"fastperiod": 12, "slowperiod": 26, "signalperiod": 9}
+        )
+
+        # 更新動能股票連續天數（傳入 RSI 和 MACD 信號）
         console.print("\n[cyan]開始更新動能股票連續天數...[/cyan]")
-        updated_stock_data = update_momentum_stocks(momentum_stocks)
+        updated_stock_data = update_momentum_stocks(momentum_stocks, rsi_stocks, macd_stocks)
 
         print_filtering_results(
             momentum_stocks,
@@ -1038,28 +1068,12 @@ def main():
             stock_data=updated_stock_data  # 傳入股票數據
         )
 
-        # 3. RSI篩選
-        console.print("\n[cyan]開始進行RSI篩選...[/cyan]")
-        rsi_stocks = filter_stocks_by_condition(
-            stock_index,
-            Signal_rsi,
-            condition_args={"shortTern": 5, "longTern": 80}
-        )
-
         # 輸出RSI篩選結果
         print_filtering_results(
             rsi_stocks,
             "RSI篩選結果",
             include_value=False,
             stock_data=updated_stock_data  # 傳入股票數據
-        )
-
-        # 4. MACD篩選
-        console.print("\n[cyan]開始進行MACD篩選...[/cyan]")
-        macd_stocks = filter_stocks_by_condition(
-            stock_index,
-            Signal_macd,
-            condition_args={"fastperiod": 12, "slowperiod": 26, "signalperiod": 9}
         )
 
         # 輸出MACD篩選結果

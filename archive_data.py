@@ -115,7 +115,8 @@ def archive_stock_data():
                 historical_data["dates"][signal_date][stock_id] = {
                     "stock_name": stock_info["stock_name"],
                     "momentum": stock_info["momentum"],
-                    "days": stock_info["days"]
+                    "days": stock_info["days"],
+                    "signals": stock_info.get("signals", [])  # 加入信號標記
                 }
             with open(historical_data_path, 'w', encoding='utf-8') as f:
                 json.dump(historical_data, f, ensure_ascii=False, indent=2)

@@ -158,11 +158,17 @@ class MomentumDashboard {
                     allStocks[stockId] = {
                         name: stocksOnDate[stockId].stock_name,
                         scores: {},
-                        days: {}
+                        days: {},
+                        signals: []
                     };
                 }
                 allStocks[stockId].scores[date] = stocksOnDate[stockId].momentum;
                 allStocks[stockId].days[date] = stocksOnDate[stockId].days;
+
+                // 保存最新日期的信號
+                if (date === latestDate && stocksOnDate[stockId].signals) {
+                    allStocks[stockId].signals = stocksOnDate[stockId].signals;
+                }
             }
         });
 
@@ -178,6 +184,7 @@ class MomentumDashboard {
                 name: allStocks[stockId].name,
                 scores: allStocks[stockId].scores,
                 days: allStocks[stockId].days,
+                signals: allStocks[stockId].signals,
                 latestScore: allStocks[stockId].scores[latestDate] || 0
             }));
     }
@@ -220,8 +227,20 @@ class MomentumDashboard {
 
             // Stock name cell
             const nameCell = document.createElement('td');
+
+            // 建立信號標籤 HTML
+            let signalBadges = '';
+            if (stock.signals && stock.signals.length > 0) {
+                signalBadges = stock.signals.map(signal =>
+                    `<span class="signal-badge signal-${signal}">${signal.toUpperCase()}</span>`
+                ).join('');
+            }
+
             nameCell.innerHTML = `
-                <div class="stock-name">${stock.name}</div>
+                <div class="stock-name-container">
+                    <div class="stock-name">${stock.name}</div>
+                    <div class="stock-signals">${signalBadges}</div>
+                </div>
                 <div class="stock-code">${stock.id}</div>
             `;
             row.appendChild(nameCell);
