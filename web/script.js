@@ -292,6 +292,13 @@ class MomentumDashboard {
 
         // Load charts
         this.loadCharts(stockId);
+
+        // If K-line panel is open, update it with new stock data
+        if (this.klinePanelOpen) {
+            const klineStockInfo = document.getElementById('kline-stock-info');
+            klineStockInfo.textContent = `${stockName} (${stockId})`;
+            this.loadIntegratedChart(stockId);
+        }
     }
 
     updateStockInfo(stockId, stockName) {
