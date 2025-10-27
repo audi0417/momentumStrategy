@@ -5,6 +5,8 @@ class MomentumDashboard {
         this.sortOrder = 'desc';
         this.searchQuery = '';
         this.isLoading = false;
+        this.currentPeriod = '90';
+        this.priceData = null;
 
         this.init();
     }
@@ -42,6 +44,13 @@ class MomentumDashboard {
             });
         }
 
+        // Period buttons
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.changePeriod(e.target.dataset.period);
+            });
+        });
+
         // Notification button
         const notificationBtn = document.querySelector('.notification-btn');
         if (notificationBtn) {
@@ -56,13 +65,20 @@ class MomentumDashboard {
 
         try {
             // 從 JSON 文件載入數據
-            const response = await fetch('historical_data.json');
-            if (!response.ok) {
+            const [historyResponse, priceResponse] = await Promise.all([
+                fetch('historical_data.json'),
+                fetch('stock_price_data.json')
+            ]);
+
+            if (!historyResponse.ok || !priceResponse.ok) {
                 throw new Error('無法載入數據文件');
             }
 
-            const data = await response.json();
+            const data = await historyResponse.json();
             this.stockData = data;
+
+            const priceData = await priceResponse.json();
+            this.priceData = priceData;
 
             this.renderTable(data);
             this.updateMarketOverview();
@@ -261,8 +277,221 @@ class MomentumDashboard {
     }
 
     loadCharts(stockId) {
+        this.loadKlineChart(stockId);
+        this.loadIndicatorsChart(stockId);
         this.loadMomentumChart(stockId);
         this.loadPerformanceSummary(stockId);
+    }
+
+    loadKlineChart(stockId) {
+        const container = document.getElementById('kline-container');
+        container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><span>載入K線圖...</span></div>';
+
+        setTimeout(() => {
+            try {
+                if (!this.priceData || !this.priceData[stockId]) {
+                    container.innerHTML = `
+                        <div class="chart-placeholder">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>無法找到 ${stockId} 的價格數據</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const stockPriceData = this.priceData[stockId].price_data;
+                const period = parseInt(this.currentPeriod);
+
+                // Filter data by period
+                const dates = stockPriceData.dates.slice(-period);
+                const opens = stockPriceData.open.slice(-period);
+                const highs = stockPriceData.high.slice(-period);
+                const lows = stockPriceData.low.slice(-period);
+                const closes = stockPriceData.close.slice(-period);
+
+                container.innerHTML = '';
+                const chartDiv = document.createElement('div');
+                chartDiv.id = `kline-${stockId}-${Date.now()}`;
+                chartDiv.style.height = '100%';
+                chartDiv.style.width = '100%';
+                container.appendChild(chartDiv);
+
+                // Candlestick trace
+                const candlestickTrace = {
+                    x: dates,
+                    open: opens,
+                    high: highs,
+                    low: lows,
+                    close: closes,
+                    type: 'candlestick',
+                    name: 'K線',
+                    increasing: { line: { color: '#ef4444' } },
+                    decreasing: { line: { color: '#10b981' } }
+                };
+
+                const layout = {
+                    paper_bgcolor: 'transparent',
+                    plot_bgcolor: 'transparent',
+                    font: { color: 'hsl(210, 40%, 98%)' },
+                    xaxis: {
+                        title: '日期',
+                        gridcolor: 'hsl(217, 32%, 17%)',
+                        color: 'hsl(215, 20%, 65%)',
+                        rangeslider: { visible: false }
+                    },
+                    yaxis: {
+                        title: '價格',
+                        gridcolor: 'hsl(217, 32%, 17%)',
+                        color: 'hsl(215, 20%, 65%)'
+                    },
+                    margin: { l: 50, r: 50, t: 20, b: 50 },
+                    showlegend: false
+                };
+
+                const config = {
+                    displayModeBar: false,
+                    responsive: true
+                };
+
+                Plotly.newPlot(chartDiv.id, [candlestickTrace], layout, config);
+
+            } catch (error) {
+                console.error('Error loading K-line chart:', error);
+                container.innerHTML = `
+                    <div class="chart-placeholder">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>載入K線圖失敗</p>
+                    </div>
+                `;
+            }
+        }, 500);
+    }
+
+    loadIndicatorsChart(stockId) {
+        const container = document.getElementById('indicator-container');
+        container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><span>載入技術指標...</span></div>';
+
+        setTimeout(() => {
+            try {
+                if (!this.priceData || !this.priceData[stockId]) {
+                    container.innerHTML = `
+                        <div class="chart-placeholder">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>無法找到 ${stockId} 的技術指標數據</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const indicators = this.priceData[stockId].price_data.indicators;
+                if (!indicators) {
+                    container.innerHTML = `
+                        <div class="chart-placeholder">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>技術指標數據不可用</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const dates = this.priceData[stockId].price_data.dates;
+
+                container.innerHTML = '';
+                const chartDiv = document.createElement('div');
+                chartDiv.id = `indicators-${stockId}-${Date.now()}`;
+                chartDiv.style.height = '100%';
+                chartDiv.style.width = '100%';
+                container.appendChild(chartDiv);
+
+                const traces = [];
+
+                // MACD trace
+                if (indicators.macd) {
+                    traces.push({
+                        x: dates,
+                        y: indicators.macd,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'MACD',
+                        line: { color: '#3b82f6', width: 2 },
+                        yaxis: 'y'
+                    });
+                }
+
+                // Signal line
+                if (indicators.signal) {
+                    traces.push({
+                        x: dates,
+                        y: indicators.signal,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'Signal',
+                        line: { color: '#f59e0b', width: 2 },
+                        yaxis: 'y'
+                    });
+                }
+
+                // RSI trace
+                if (indicators.rsi) {
+                    traces.push({
+                        x: dates,
+                        y: indicators.rsi,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'RSI',
+                        line: { color: '#a855f7', width: 2 },
+                        yaxis: 'y2'
+                    });
+                }
+
+                const layout = {
+                    paper_bgcolor: 'transparent',
+                    plot_bgcolor: 'transparent',
+                    font: { color: 'hsl(210, 40%, 98%)' },
+                    xaxis: {
+                        title: '日期',
+                        gridcolor: 'hsl(217, 32%, 17%)',
+                        color: 'hsl(215, 20%, 65%)'
+                    },
+                    yaxis: {
+                        title: 'MACD',
+                        gridcolor: 'hsl(217, 32%, 17%)',
+                        color: 'hsl(215, 20%, 65%)',
+                        domain: [0.5, 1]
+                    },
+                    yaxis2: {
+                        title: 'RSI',
+                        gridcolor: 'hsl(217, 32%, 17%)',
+                        color: 'hsl(215, 20%, 65%)',
+                        domain: [0, 0.45]
+                    },
+                    margin: { l: 50, r: 50, t: 20, b: 50 },
+                    showlegend: true,
+                    legend: {
+                        x: 0,
+                        y: 1,
+                        bgcolor: 'rgba(0,0,0,0.5)',
+                        font: { color: 'hsl(210, 40%, 98%)' }
+                    }
+                };
+
+                const config = {
+                    displayModeBar: false,
+                    responsive: true
+                };
+
+                Plotly.newPlot(chartDiv.id, traces, layout, config);
+
+            } catch (error) {
+                console.error('Error loading indicators chart:', error);
+                container.innerHTML = `
+                    <div class="chart-placeholder">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>載入技術指標失敗</p>
+                    </div>
+                `;
+            }
+        }, 500);
     }
 
     loadMomentumChart(stockId) {
@@ -302,11 +531,11 @@ class MomentumDashboard {
                     mode: 'lines+markers',
                     name: '動能',
                     line: {
-                        color: 'hsl(var(--chart-1))',
+                        color: '#2dd4bf',  // Teal color
                         width: 3
                     },
                     marker: {
-                        color: 'hsl(var(--chart-1))',
+                        color: '#2dd4bf',
                         size: 8
                     }
                 };
@@ -476,6 +705,22 @@ class MomentumDashboard {
         if (momentum > 5) return 'B';
         if (momentum > 0) return 'C';
         return 'D';
+    }
+
+    changePeriod(period) {
+        this.currentPeriod = period;
+
+        // Update active button
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        document.querySelector(`[data-period="${period}"]`).classList.add('active');
+
+        // Reload chart if stock is selected
+        if (this.selectedStock) {
+            this.loadKlineChart(this.selectedStock.id);
+        }
     }
 
     toggleSort() {
