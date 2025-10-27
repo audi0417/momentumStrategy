@@ -430,18 +430,21 @@ class MomentumDashboard {
                 };
 
                 // Add technical indicators if enabled
-                const indicators = stockPriceData.indicators;
+                const indicators = this.priceData[stockId].indicators;
                 if (indicators) {
                     let currentDomain = 0.35;
                     const domainHeight = 0.15;
 
                     // Add MACD if enabled
                     if (this.showMACD && indicators.macd) {
-                        const macdDates = dates.slice(-indicators.macd.length);
+                        // Use indicator dates and slice by period
+                        const indicatorDates = indicators.dates.slice(-period);
+                        const macdValues = indicators.macd.slice(-period);
+                        const signalValues = indicators.signal.slice(-period);
 
                         traces.push({
-                            x: macdDates,
-                            y: indicators.macd.slice(-period),
+                            x: indicatorDates,
+                            y: macdValues,
                             type: 'scatter',
                             mode: 'lines',
                             name: 'MACD',
@@ -452,8 +455,8 @@ class MomentumDashboard {
 
                         if (indicators.signal) {
                             traces.push({
-                                x: macdDates,
-                                y: indicators.signal.slice(-period),
+                                x: indicatorDates,
+                                y: signalValues,
                                 type: 'scatter',
                                 mode: 'lines',
                                 name: 'Signal',
@@ -475,11 +478,13 @@ class MomentumDashboard {
 
                     // Add RSI if enabled
                     if (this.showRSI && indicators.rsi) {
-                        const rsiDates = dates.slice(-indicators.rsi.length);
+                        // Use indicator dates and slice by period
+                        const indicatorDates = indicators.dates.slice(-period);
+                        const rsiValues = indicators.rsi.slice(-period);
 
                         traces.push({
-                            x: rsiDates,
-                            y: indicators.rsi.slice(-period),
+                            x: indicatorDates,
+                            y: rsiValues,
                             type: 'scatter',
                             mode: 'lines',
                             name: 'RSI',
@@ -490,8 +495,8 @@ class MomentumDashboard {
 
                         // Add RSI reference lines (30 and 70)
                         traces.push({
-                            x: rsiDates,
-                            y: Array(rsiDates.length).fill(70),
+                            x: indicatorDates,
+                            y: Array(indicatorDates.length).fill(70),
                             type: 'scatter',
                             mode: 'lines',
                             name: 'RSI 70',
@@ -502,8 +507,8 @@ class MomentumDashboard {
                         });
 
                         traces.push({
-                            x: rsiDates,
-                            y: Array(rsiDates.length).fill(30),
+                            x: indicatorDates,
+                            y: Array(indicatorDates.length).fill(30),
                             type: 'scatter',
                             mode: 'lines',
                             name: 'RSI 30',
