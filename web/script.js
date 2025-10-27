@@ -7,6 +7,9 @@ class MomentumDashboard {
         this.isLoading = false;
         this.currentPeriod = '90';
         this.priceData = null;
+        this.showMACD = true;
+        this.showRSI = true;
+        this.klinePanelOpen = false;
 
         this.init();
     }
@@ -50,6 +53,30 @@ class MomentumDashboard {
                 this.changePeriod(e.target.dataset.period);
             });
         });
+
+        // Indicator toggle buttons
+        document.querySelectorAll('.indicator-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const button = e.currentTarget;
+                const indicator = button.dataset.indicator;
+                this.toggleIndicator(indicator, button);
+            });
+        });
+
+        // K-line panel toggle
+        const chartToggleBtn = document.getElementById('chart-toggle-btn');
+        if (chartToggleBtn) {
+            chartToggleBtn.addEventListener('click', () => {
+                this.toggleKlinePanel();
+            });
+        }
+
+        const klineCloseBtn = document.getElementById('kline-close-btn');
+        if (klineCloseBtn) {
+            klineCloseBtn.addEventListener('click', () => {
+                this.closeKlinePanel();
+            });
+        }
 
         // Notification button
         const notificationBtn = document.querySelector('.notification-btn');
@@ -277,10 +304,259 @@ class MomentumDashboard {
     }
 
     loadCharts(stockId) {
-        this.loadKlineChart(stockId);
-        this.loadIndicatorsChart(stockId);
-        this.loadMomentumChart(stockId);
         this.loadPerformanceSummary(stockId);
+        this.loadMomentumChart(stockId);
+        // K-line chart loaded on demand when panel is opened
+    }
+
+    toggleKlinePanel() {
+        if (this.klinePanelOpen) {
+            this.closeKlinePanel();
+        } else {
+            this.openKlinePanel();
+        }
+    }
+
+    openKlinePanel() {
+        if (!this.selectedStock) {
+            this.showToast('請先選擇股票', 'warning');
+            return;
+        }
+
+        const panel = document.getElementById('kline-panel');
+        panel.classList.add('open');
+        this.klinePanelOpen = true;
+
+        // Update panel title with stock info
+        const klineStockInfo = document.getElementById('kline-stock-info');
+        klineStockInfo.textContent = `${this.selectedStock.name} (${this.selectedStock.id})`;
+
+        // Load K-line chart
+        this.loadIntegratedChart(this.selectedStock.id);
+
+        // Update toggle button
+        const toggleBtn = document.getElementById('chart-toggle-btn');
+        toggleBtn.classList.add('active');
+        toggleBtn.querySelector('span').textContent = '關閉K線';
+    }
+
+    closeKlinePanel() {
+        const panel = document.getElementById('kline-panel');
+        panel.classList.remove('open');
+        this.klinePanelOpen = false;
+
+        // Update toggle button
+        const toggleBtn = document.getElementById('chart-toggle-btn');
+        toggleBtn.classList.remove('active');
+        toggleBtn.querySelector('span').textContent = 'K線圖';
+    }
+
+    loadIntegratedChart(stockId) {
+        const container = document.getElementById('integrated-chart-container');
+        container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><span>載入圖表...</span></div>';
+
+        setTimeout(() => {
+            try {
+                if (!this.priceData || !this.priceData[stockId]) {
+                    container.innerHTML = `
+                        <div class="chart-placeholder">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>無法找到 ${stockId} 的價格數據</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const stockPriceData = this.priceData[stockId].price_data;
+                const period = parseInt(this.currentPeriod);
+
+                // Filter data by period
+                const dates = stockPriceData.dates.slice(-period);
+                const opens = stockPriceData.open.slice(-period);
+                const highs = stockPriceData.high.slice(-period);
+                const lows = stockPriceData.low.slice(-period);
+                const closes = stockPriceData.close.slice(-period);
+
+                container.innerHTML = '';
+                const chartDiv = document.createElement('div');
+                chartDiv.id = `integrated-${stockId}-${Date.now()}`;
+                chartDiv.style.height = '100%';
+                chartDiv.style.width = '100%';
+                container.appendChild(chartDiv);
+
+                const traces = [];
+                const layout = {
+                    paper_bgcolor: 'transparent',
+                    plot_bgcolor: 'transparent',
+                    font: { color: 'hsl(210, 40%, 98%)' },
+                    showlegend: true,
+                    legend: {
+                        x: 0,
+                        y: 1,
+                        bgcolor: 'rgba(0,0,0,0.5)',
+                        font: { color: 'hsl(210, 40%, 98%)' }
+                    },
+                    margin: { l: 50, r: 50, t: 20, b: 50 }
+                };
+
+                // Candlestick trace (always show)
+                traces.push({
+                    x: dates,
+                    open: opens,
+                    high: highs,
+                    low: lows,
+                    close: closes,
+                    type: 'candlestick',
+                    name: 'K線',
+                    increasing: { line: { color: '#ef4444' } },
+                    decreasing: { line: { color: '#10b981' } },
+                    xaxis: 'x',
+                    yaxis: 'y'
+                });
+
+                // Setup axes
+                layout.xaxis = {
+                    title: '日期',
+                    gridcolor: 'hsl(217, 32%, 17%)',
+                    color: 'hsl(215, 20%, 65%)',
+                    rangeslider: { visible: false }
+                };
+
+                layout.yaxis = {
+                    title: '價格',
+                    gridcolor: 'hsl(217, 32%, 17%)',
+                    color: 'hsl(215, 20%, 65%)',
+                    domain: [0.4, 1]
+                };
+
+                // Add technical indicators if enabled
+                const indicators = stockPriceData.indicators;
+                if (indicators) {
+                    let currentDomain = 0.35;
+                    const domainHeight = 0.15;
+
+                    // Add MACD if enabled
+                    if (this.showMACD && indicators.macd) {
+                        const macdDates = dates.slice(-indicators.macd.length);
+
+                        traces.push({
+                            x: macdDates,
+                            y: indicators.macd.slice(-period),
+                            type: 'scatter',
+                            mode: 'lines',
+                            name: 'MACD',
+                            line: { color: '#3b82f6', width: 2 },
+                            xaxis: 'x',
+                            yaxis: 'y2'
+                        });
+
+                        if (indicators.signal) {
+                            traces.push({
+                                x: macdDates,
+                                y: indicators.signal.slice(-period),
+                                type: 'scatter',
+                                mode: 'lines',
+                                name: 'Signal',
+                                line: { color: '#f59e0b', width: 2 },
+                                xaxis: 'x',
+                                yaxis: 'y2'
+                            });
+                        }
+
+                        layout.yaxis2 = {
+                            title: 'MACD',
+                            gridcolor: 'hsl(217, 32%, 17%)',
+                            color: 'hsl(215, 20%, 65%)',
+                            domain: [currentDomain - domainHeight, currentDomain]
+                        };
+
+                        currentDomain -= (domainHeight + 0.05);
+                    }
+
+                    // Add RSI if enabled
+                    if (this.showRSI && indicators.rsi) {
+                        const rsiDates = dates.slice(-indicators.rsi.length);
+
+                        traces.push({
+                            x: rsiDates,
+                            y: indicators.rsi.slice(-period),
+                            type: 'scatter',
+                            mode: 'lines',
+                            name: 'RSI',
+                            line: { color: '#a855f7', width: 2 },
+                            xaxis: 'x',
+                            yaxis: this.showMACD ? 'y3' : 'y2'
+                        });
+
+                        // Add RSI reference lines (30 and 70)
+                        traces.push({
+                            x: rsiDates,
+                            y: Array(rsiDates.length).fill(70),
+                            type: 'scatter',
+                            mode: 'lines',
+                            name: 'RSI 70',
+                            line: { color: '#ef4444', width: 1, dash: 'dash' },
+                            xaxis: 'x',
+                            yaxis: this.showMACD ? 'y3' : 'y2',
+                            showlegend: false
+                        });
+
+                        traces.push({
+                            x: rsiDates,
+                            y: Array(rsiDates.length).fill(30),
+                            type: 'scatter',
+                            mode: 'lines',
+                            name: 'RSI 30',
+                            line: { color: '#10b981', width: 1, dash: 'dash' },
+                            xaxis: 'x',
+                            yaxis: this.showMACD ? 'y3' : 'y2',
+                            showlegend: false
+                        });
+
+                        if (this.showMACD) {
+                            layout.yaxis3 = {
+                                title: 'RSI',
+                                gridcolor: 'hsl(217, 32%, 17%)',
+                                color: 'hsl(215, 20%, 65%)',
+                                domain: [0, 0.15],
+                                range: [0, 100]
+                            };
+                        } else {
+                            layout.yaxis2 = {
+                                title: 'RSI',
+                                gridcolor: 'hsl(217, 32%, 17%)',
+                                color: 'hsl(215, 20%, 65%)',
+                                domain: [0, 0.3],
+                                range: [0, 100]
+                            };
+                        }
+                    }
+
+                    // Adjust K-line domain based on indicators shown
+                    if (this.showMACD && this.showRSI) {
+                        layout.yaxis.domain = [0.45, 1];
+                    } else if (this.showMACD || this.showRSI) {
+                        layout.yaxis.domain = [0.35, 1];
+                    }
+                }
+
+                const config = {
+                    displayModeBar: false,
+                    responsive: true
+                };
+
+                Plotly.newPlot(chartDiv.id, traces, layout, config);
+
+            } catch (error) {
+                console.error('Error loading integrated chart:', error);
+                container.innerHTML = `
+                    <div class="chart-placeholder">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>載入圖表失敗</p>
+                    </div>
+                `;
+            }
+        }, 500);
     }
 
     loadKlineChart(stockId) {
@@ -715,12 +991,33 @@ class MomentumDashboard {
             btn.classList.remove('active');
         });
 
-        document.querySelector(`[data-period="${period}"]`).classList.add('active');
+        document.querySelectorAll(`[data-period="${period}"]`).forEach(btn => {
+            btn.classList.add('active');
+        });
 
-        // Reload chart if stock is selected
+        // Reload integrated chart if stock is selected
         if (this.selectedStock) {
-            this.loadKlineChart(this.selectedStock.id);
+            this.loadIntegratedChart(this.selectedStock.id);
         }
+    }
+
+    toggleIndicator(indicator, button) {
+        if (indicator === 'macd') {
+            this.showMACD = !this.showMACD;
+        } else if (indicator === 'rsi') {
+            this.showRSI = !this.showRSI;
+        }
+
+        // Update button state
+        button.classList.toggle('active');
+
+        // Reload integrated chart if stock is selected
+        if (this.selectedStock) {
+            this.loadIntegratedChart(this.selectedStock.id);
+        }
+
+        const status = button.classList.contains('active') ? '顯示' : '隱藏';
+        this.showToast(`${indicator.toUpperCase()} ${status}`, 'info');
     }
 
     toggleSort() {
@@ -898,6 +1195,239 @@ const additionalStyles = `
     font-size: 0.75rem;
     color: var(--muted-foreground);
     margin-top: 2px;
+}
+
+.signal-badges {
+    display: inline-flex;
+    gap: 0.25rem;
+    margin-left: 0.5rem;
+}
+
+.signal-badge {
+    display: inline-block;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.signal-badge.rsi-badge {
+    background: #a855f7;
+    color: white;
+}
+
+.signal-badge.macd-badge {
+    background: #3b82f6;
+    color: white;
+}
+
+.stock-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.chart-panel-large {
+    grid-column: 1 / -1;
+    min-height: 600px;
+}
+
+.chart-content-large {
+    min-height: 550px;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.control-group label {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+
+.period-btn, .indicator-toggle-btn {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid var(--border);
+    background: var(--muted);
+    color: var(--foreground);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.period-btn:hover, .indicator-toggle-btn:hover {
+    background: var(--accent);
+    border-color: var(--primary);
+}
+
+.period-btn.active, .indicator-toggle-btn.active {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+}
+
+.indicator-toggle-btn i {
+    margin-right: 0.25rem;
+}
+
+/* K-line Slide-out Panel */
+.kline-panel {
+    position: fixed;
+    top: 0;
+    right: -50%;
+    width: 50%;
+    height: 100vh;
+    background: var(--background);
+    border-left: 1px solid var(--border);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.kline-panel.open {
+    right: 0;
+}
+
+.kline-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+}
+
+.kline-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.kline-panel-title i {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.kline-panel-title h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--foreground);
+}
+
+.kline-stock-info {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    padding: 0.25rem 0.75rem;
+    background: var(--muted);
+    border-radius: var(--radius);
+}
+
+.kline-close-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: var(--muted);
+    color: var(--foreground);
+    border-radius: var(--radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.kline-close-btn:hover {
+    background: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.kline-panel-controls {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.kline-panel-content {
+    flex: 1;
+    padding: 1rem;
+    overflow: auto;
+}
+
+/* Chart toggle button in stock info card */
+.stock-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.chart-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--muted);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.chart-toggle-btn:hover {
+    background: var(--accent);
+    border-color: var(--primary);
+}
+
+.chart-toggle-btn.active {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+}
+
+.chart-toggle-btn i {
+    font-size: 1rem;
+}
+
+/* Responsive design for slide-out panel */
+@media (max-width: 1400px) {
+    .kline-panel {
+        width: 60%;
+        right: -60%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .kline-panel {
+        width: 70%;
+        right: -70%;
+    }
+}
+
+@media (max-width: 768px) {
+    .kline-panel {
+        width: 90%;
+        right: -90%;
+    }
 }
 
 .score-excellent { color: #10b981; }

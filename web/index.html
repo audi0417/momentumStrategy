@@ -117,53 +117,32 @@
                             <h3 id="selected-stock-name">請選擇股票</h3>
                             <p id="selected-stock-code">--</p>
                         </div>
-                        <div class="stock-badge">
-                            <span id="stock-status">待選擇</span>
+                        <div class="stock-actions">
+                            <button class="chart-toggle-btn" id="chart-toggle-btn" title="展開K線圖">
+                                <i class="fas fa-chart-candlestick"></i>
+                                <span>K線圖</span>
+                            </button>
+                            <div class="stock-badge">
+                                <span id="stock-status">待選擇</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Charts Section -->
                 <div class="charts-container">
-                    <!-- K-Line Chart -->
+                    <!-- Performance Summary - TOP -->
                     <div class="chart-panel">
                         <div class="chart-header">
                             <h3>
-                                <i class="fas fa-chart-candlestick"></i>
-                                K線圖與價格趨勢
+                                <i class="fas fa-trophy"></i>
+                                績效摘要
                             </h3>
-                            <div class="chart-controls">
-                                <button class="period-btn active" data-period="30">1個月</button>
-                                <button class="period-btn" data-period="90">3個月</button>
-                                <button class="period-btn" data-period="180">6個月</button>
-                            </div>
                         </div>
-                        <div class="chart-content" id="kline-container">
+                        <div class="chart-content" id="performance-container">
                             <div class="chart-placeholder">
-                                <i class="fas fa-chart-candlestick"></i>
-                                <p>選擇股票以查看K線圖</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Technical Indicators Chart -->
-                    <div class="chart-panel">
-                        <div class="chart-header">
-                            <h3>
-                                <i class="fas fa-signal"></i>
-                                技術指標
-                            </h3>
-                            <div class="chart-controls">
-                                <div class="indicator-badges">
-                                    <span class="indicator-badge macd">MACD</span>
-                                    <span class="indicator-badge rsi">RSI</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="chart-content" id="indicator-container">
-                            <div class="chart-placeholder">
-                                <i class="fas fa-signal"></i>
-                                <p>選擇股票以查看技術指標</p>
+                                <i class="fas fa-chart-bar"></i>
+                                <p>選擇股票以查看績效摘要</p>
                             </div>
                         </div>
                     </div>
@@ -186,25 +165,48 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Performance Summary -->
-                    <div class="chart-panel">
-                        <div class="chart-header">
-                            <h3>
-                                <i class="fas fa-trophy"></i>
-                                績效摘要
-                            </h3>
-                        </div>
-                        <div class="chart-content" id="performance-container">
-                            <div class="chart-placeholder">
-                                <i class="fas fa-chart-bar"></i>
-                                <p>選擇股票以查看績效摘要</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- Slide-out K-Line Chart Panel -->
+        <aside class="kline-panel" id="kline-panel">
+            <div class="kline-panel-header">
+                <div class="kline-panel-title">
+                    <i class="fas fa-chart-candlestick"></i>
+                    <h3>K線圖與技術指標</h3>
+                    <span class="kline-stock-info" id="kline-stock-info">--</span>
+                </div>
+                <button class="kline-close-btn" id="kline-close-btn" title="關閉">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="kline-panel-controls">
+                <div class="control-group">
+                    <label>時間週期：</label>
+                    <button class="period-btn active" data-period="30">1個月</button>
+                    <button class="period-btn" data-period="90">3個月</button>
+                    <button class="period-btn" data-period="180">6個月</button>
+                </div>
+                <div class="control-group">
+                    <label>技術指標：</label>
+                    <button class="indicator-toggle-btn active" data-indicator="macd">
+                        <i class="fas fa-chart-line"></i> MACD
+                    </button>
+                    <button class="indicator-toggle-btn active" data-indicator="rsi">
+                        <i class="fas fa-signal"></i> RSI
+                    </button>
+                </div>
+            </div>
+
+            <div class="kline-panel-content" id="integrated-chart-container">
+                <div class="chart-placeholder">
+                    <i class="fas fa-chart-candlestick"></i>
+                    <p>載入K線圖中...</p>
+                </div>
+            </div>
+        </aside>
     </main>
 
     <!-- Toast Notifications -->
