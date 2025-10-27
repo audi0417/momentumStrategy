@@ -1256,86 +1256,8 @@ const additionalStyles = `
 .score-poor { color: #f59e0b; }
 .score-bad { color: #ef4444; }
 
-.performance-summary {
-    padding: 1rem;
-    height: 100%;
-}
-
-.performance-header {
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-}
-
-.performance-header h4 {
-    margin: 0;
-    font-size: 1rem;
-    color: var(--foreground);
-}
-
-.performance-metrics {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 1rem;
-}
-
-.metric-card {
-    background: var(--muted);
-    border-radius: var(--radius);
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    transition: all 0.2s ease;
-}
-
-.metric-card:hover {
-    background: var(--accent);
-    transform: translateY(-2px);
-}
-
-.metric-icon {
-    width: 32px;
-    height: 32px;
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    flex-shrink: 0;
-}
-
-.metric-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.metric-label {
-    font-size: 0.75rem;
-    color: var(--muted-foreground);
-    margin-bottom: 0.25rem;
-}
-
-.metric-value {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--foreground);
-}
-
 .future-cell {
     opacity: 0.5;
-}
-
-@media (max-width: 768px) {
-    .performance-metrics {
-        grid-template-columns: 1fr;
-    }
-
-    .metric-card {
-        padding: 0.75rem;
-    }
 }
 `;
 
