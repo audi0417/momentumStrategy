@@ -7580,6 +7580,152 @@
         "days": 1,
         "signals": []
       }
+    },
+    "2025-11-10": {
+      "2515": {
+        "stock_name": "中工",
+        "momentum": 8.62619158054394,
+        "days": 10,
+        "signals": []
+      },
+      "1608": {
+        "stock_name": "華榮",
+        "momentum": 9.815069127954823,
+        "days": 5,
+        "signals": []
+      },
+      "3167": {
+        "stock_name": "大量",
+        "momentum": 9.041095890410954,
+        "days": 5,
+        "signals": []
+      },
+      "3443": {
+        "stock_name": "創意",
+        "momentum": 8.860759493670889,
+        "days": 4,
+        "signals": []
+      },
+      "5521": {
+        "stock_name": "工信",
+        "momentum": 15.294116151099102,
+        "days": 4,
+        "signals": []
+      },
+      "1314": {
+        "stock_name": "中石化",
+        "momentum": 28.337873030870455,
+        "days": 3,
+        "signals": []
+      },
+      "4989": {
+        "stock_name": "榮科",
+        "momentum": 11.77944052256188,
+        "days": 3,
+        "signals": []
+      },
+      "9907": {
+        "stock_name": "統一實",
+        "momentum": 9.917361885624864,
+        "days": 3,
+        "signals": []
+      },
+      "2337": {
+        "stock_name": "旺宏",
+        "momentum": 13.893373606017834,
+        "days": 2,
+        "signals": []
+      },
+      "2408": {
+        "stock_name": "南亞科",
+        "momentum": 7.299270072992692,
+        "days": 2,
+        "signals": []
+      },
+      "2455": {
+        "stock_name": "全新",
+        "momentum": 7.95847750865053,
+        "days": 2,
+        "signals": []
+      },
+      "6505": {
+        "stock_name": "台塑化",
+        "momentum": 13.89521244213434,
+        "days": 2,
+        "signals": []
+      },
+      "6706": {
+        "stock_name": "惠特",
+        "momentum": 19.07515196497711,
+        "days": 2,
+        "signals": []
+      },
+      "8110": {
+        "stock_name": "華東",
+        "momentum": 18.237708329962253,
+        "days": 2,
+        "signals": []
+      },
+      "1419": {
+        "stock_name": "新紡",
+        "momentum": 8.687938969174125,
+        "days": 1,
+        "signals": []
+      },
+      "1476": {
+        "stock_name": "儒鴻",
+        "momentum": 7.701564380264747,
+        "days": 1,
+        "signals": []
+      },
+      "1477": {
+        "stock_name": "聚陽",
+        "momentum": 9.259259259259256,
+        "days": 1,
+        "signals": []
+      },
+      "1718": {
+        "stock_name": "中纖",
+        "momentum": 10.645166847634059,
+        "days": 1,
+        "signals": []
+      },
+      "2439": {
+        "stock_name": "美律",
+        "momentum": 7.804878048780495,
+        "days": 1,
+        "signals": []
+      },
+      "2451": {
+        "stock_name": "創見",
+        "momentum": 11.654135338345872,
+        "days": 1,
+        "signals": []
+      },
+      "3002": {
+        "stock_name": "歐格",
+        "momentum": 19.877051054486316,
+        "days": 1,
+        "signals": []
+      },
+      "3135": {
+        "stock_name": "凌航",
+        "momentum": 14.569541721799428,
+        "days": 1,
+        "signals": []
+      },
+      "8131": {
+        "stock_name": "福懋科",
+        "momentum": 7.1808533843366495,
+        "days": 1,
+        "signals": []
+      },
+      "8163": {
+        "stock_name": "達方",
+        "momentum": 7.598380373676794,
+        "days": 1,
+        "signals": []
+      }
     }
   }
 }
