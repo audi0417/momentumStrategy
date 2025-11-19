@@ -9409,6 +9409,32 @@
         "days": 1,
         "signals": []
       }
+    },
+    "2025-11-20": {
+      "2486": {
+        "stock_name": "一詮",
+        "momentum": 7.734202873738516,
+        "days": 1,
+        "signals": []
+      },
+      "6209": {
+        "stock_name": "今國光",
+        "momentum": 16.016425287196956,
+        "days": 1,
+        "signals": []
+      },
+      "2413": {
+        "stock_name": "環科",
+        "momentum": 20.095697797121794,
+        "days": 1,
+        "signals": []
+      },
+      "3543": {
+        "stock_name": "州巧",
+        "momentum": 8.156030319539065,
+        "days": 1,
+        "signals": []
+      }
     }
   }
 }
