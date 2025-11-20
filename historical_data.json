@@ -9435,6 +9435,90 @@
         "days": 1,
         "signals": []
       }
+    },
+    "2025-11-21": {
+      "2486": {
+        "stock_name": "一詮",
+        "momentum": 7.298471378551752,
+        "days": 2,
+        "signals": []
+      },
+      "6209": {
+        "stock_name": "今國光",
+        "momentum": 8.78504815502701,
+        "days": 2,
+        "signals": []
+      },
+      "2413": {
+        "stock_name": "環科",
+        "momentum": 20.924580554993,
+        "days": 2,
+        "signals": []
+      },
+      "2421": {
+        "stock_name": "建準",
+        "momentum": 7.670454545454541,
+        "days": 1,
+        "signals": []
+      },
+      "2428": {
+        "stock_name": "興勤",
+        "momentum": 8.493150684931505,
+        "days": 1,
+        "signals": [
+          "macd"
+        ]
+      },
+      "3026": {
+        "stock_name": "禾伸堂",
+        "momentum": 7.109004739336489,
+        "days": 1,
+        "signals": [
+          "rsi"
+        ]
+      },
+      "3665": {
+        "stock_name": "貿聯-KY",
+        "momentum": 10.526315789473696,
+        "days": 1,
+        "signals": []
+      },
+      "5243": {
+        "stock_name": "乙盛-KY",
+        "momentum": 10.759493670886066,
+        "days": 1,
+        "signals": []
+      },
+      "6139": {
+        "stock_name": "亞翔",
+        "momentum": 9.55794504181602,
+        "days": 1,
+        "signals": []
+      },
+      "6442": {
+        "stock_name": "光聖",
+        "momentum": 11.05527638190955,
+        "days": 1,
+        "signals": []
+      },
+      "6515": {
+        "stock_name": "穎崴",
+        "momentum": 7.061503416856496,
+        "days": 1,
+        "signals": []
+      },
+      "6533": {
+        "stock_name": "晶心科",
+        "momentum": 10.416666666666675,
+        "days": 1,
+        "signals": []
+      },
+      "6691": {
+        "stock_name": "洋基工程",
+        "momentum": 7.437070938215107,
+        "days": 1,
+        "signals": []
+      }
     }
   }
 }
