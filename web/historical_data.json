@@ -9519,6 +9519,22 @@
         "days": 1,
         "signals": []
       }
+    },
+    "2025-11-24": {
+      "2472": {
+        "stock_name": "立隆電",
+        "momentum": 9.485370000619753,
+        "days": 1,
+        "signals": [
+          "macd"
+        ]
+      },
+      "6890": {
+        "stock_name": "來億-KY",
+        "momentum": 9.543568464730301,
+        "days": 1,
+        "signals": []
+      }
     }
   }
 }
