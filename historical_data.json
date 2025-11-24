@@ -9535,6 +9535,100 @@
         "days": 1,
         "signals": []
       }
+    },
+    "2025-11-25": {
+      "6890": {
+        "stock_name": "來億-KY",
+        "momentum": 23.093681917211327,
+        "days": 2,
+        "signals": []
+      },
+      "1419": {
+        "stock_name": "新紡",
+        "momentum": 15.085531085331748,
+        "days": 1,
+        "signals": []
+      },
+      "1587": {
+        "stock_name": "吉茂",
+        "momentum": 8.610085777664246,
+        "days": 1,
+        "signals": []
+      },
+      "1736": {
+        "stock_name": "喬山",
+        "momentum": 11.340206185567014,
+        "days": 1,
+        "signals": []
+      },
+      "1802": {
+        "stock_name": "台玻",
+        "momentum": 7.1428597968673735,
+        "days": 1,
+        "signals": []
+      },
+      "2006": {
+        "stock_name": "東和鋼鐵",
+        "momentum": 10.702337446210697,
+        "days": 1,
+        "signals": []
+      },
+      "2360": {
+        "stock_name": "致茂",
+        "momentum": 8.579088471849872,
+        "days": 1,
+        "signals": []
+      },
+      "2413": {
+        "stock_name": "環科",
+        "momentum": 14.004371125463377,
+        "days": 1,
+        "signals": []
+      },
+      "2485": {
+        "stock_name": "兆赫",
+        "momentum": 7.954543114693746,
+        "days": 1,
+        "signals": []
+      },
+      "6442": {
+        "stock_name": "光聖",
+        "momentum": 19.41747572815533,
+        "days": 1,
+        "signals": []
+      },
+      "6446": {
+        "stock_name": "藥華藥",
+        "momentum": 7.497243660418973,
+        "days": 1,
+        "signals": []
+      },
+      "6515": {
+        "stock_name": "穎崴",
+        "momentum": 14.583333333333325,
+        "days": 1,
+        "signals": [
+          "macd"
+        ]
+      },
+      "6919": {
+        "stock_name": "康霈*",
+        "momentum": 12.244897959183664,
+        "days": 1,
+        "signals": []
+      },
+      "6944": {
+        "stock_name": "兆聯實業",
+        "momentum": 11.284046692607008,
+        "days": 1,
+        "signals": []
+      },
+      "8033": {
+        "stock_name": "雷虎",
+        "momentum": 10.407239819004532,
+        "days": 1,
+        "signals": []
+      }
     }
   }
 }
