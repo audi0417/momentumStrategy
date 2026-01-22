@@ -30,10 +30,15 @@ import json
 import datetime
 import requests
 import certifi
+import urllib3
+from io import StringIO
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from requests.exceptions import ChunkedEncodingError
 from urllib3.exceptions import ProtocolError
+
+# 禁用 SSL 警告（因為 TWSE 網站憑證有問題）
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def get_taiwan_datetime():
     """獲取台灣時區的當前日期時間"""
     from datetime import datetime, timezone, timedelta
@@ -555,8 +560,10 @@ def robust_get(url, headers=None, params=None, max_retries=3, timeout=10, delay=
 
     for attempt in range(max_retries):
         try:
+            # 使用 verify=False 繞過 TWSE 網站的 SSL 憑證問題
+            # (Missing Subject Key Identifier)
             response = session.get(
-                url, headers=headers, params=params, timeout=timeout, verify=certifi.where()
+                url, headers=headers, params=params, timeout=timeout, verify=False
             )
             response.raise_for_status()
             return response
@@ -582,8 +589,9 @@ pd.options.mode.chained_assignment = None  # 關閉警告
 # 國內上市證券識別碼一覽表
 url = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=2"
 res = robust_get(url)
-# res = requests.get(url, verify=certifi.where())
-TWSE_listed = pd.read_html(res.text)[0]
+res.encoding = 'MS950'  # 設定正確的 Big5 編碼
+# 使用 StringIO 避免 FutureWarning
+TWSE_listed = pd.read_html(StringIO(res.text))[0]
 TWSE_listed.columns = list(TWSE_listed.iloc[0].values)
 TWSE_listed = TWSE_listed.iloc[2:]
 TWSE_listed.reset_index(drop=True, inplace=True)
@@ -591,8 +599,9 @@ TWSE_listed.reset_index(drop=True, inplace=True)
 # 國內上櫃證券識別碼一覽表
 url = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=4"
 res = robust_get(url)
-# res = requests.get(url, verify=certifi.where())  # ✅ 加上 verify
-TPEX_listed = pd.read_html(res.text)[0]
+res.encoding = 'MS950'  # 設定正確的 Big5 編碼
+# 使用 StringIO 避免 FutureWarning
+TPEX_listed = pd.read_html(StringIO(res.text))[0]
 TPEX_listed.columns = list(TPEX_listed.iloc[0].values)
 TPEX_listed = TPEX_listed.iloc[2:]
 TPEX_listed.reset_index(drop=True, inplace=True)
