@@ -35092,6 +35092,128 @@
         "days": 1,
         "signals": []
       }
+    },
+    "2026-03-10": {
+      "6505": {
+        "stock_name": "台塑化",
+        "momentum": 15.986390872700884,
+        "days": 2,
+        "signals": []
+      },
+      "6830": {
+        "stock_name": "汎銓",
+        "momentum": 24.476650563607084,
+        "days": 2,
+        "signals": []
+      },
+      "1582": {
+        "stock_name": "信錦",
+        "momentum": 12.271542706433136,
+        "days": 2,
+        "signals": []
+      },
+      "1308": {
+        "stock_name": "亞聚",
+        "momentum": 8.275860753552667,
+        "days": 2,
+        "signals": []
+      },
+      "1305": {
+        "stock_name": "華夏",
+        "momentum": 8.494211565028188,
+        "days": 2,
+        "signals": []
+      },
+      "1310": {
+        "stock_name": "台苯",
+        "momentum": 15.731470145405723,
+        "days": 2,
+        "signals": []
+      },
+      "1309": {
+        "stock_name": "台達化",
+        "momentum": 14.606739726927698,
+        "days": 2,
+        "signals": []
+      },
+      "1314": {
+        "stock_name": "中石化",
+        "momentum": 16.64685609519234,
+        "days": 2,
+        "signals": []
+      },
+      "2103": {
+        "stock_name": "台橡",
+        "momentum": 8.142495738070643,
+        "days": 2,
+        "signals": []
+      },
+      "2426": {
+        "stock_name": "鼎元",
+        "momentum": 26.19646728291802,
+        "days": 2,
+        "signals": []
+      },
+      "3036": {
+        "stock_name": "文曄",
+        "momentum": 21.067415730337082,
+        "days": 2,
+        "signals": []
+      },
+      "4960": {
+        "stock_name": "誠美材",
+        "momentum": 18.339104547983776,
+        "days": 2,
+        "signals": []
+      },
+      "6715": {
+        "stock_name": "嘉基",
+        "momentum": 23.87267904509285,
+        "days": 2,
+        "signals": []
+      },
+      "1304": {
+        "stock_name": "台聚",
+        "momentum": 8.235295613606763,
+        "days": 1,
+        "signals": []
+      },
+      "2616": {
+        "stock_name": "山隆",
+        "momentum": 45.73170838080867,
+        "days": 1,
+        "signals": []
+      },
+      "3481": {
+        "stock_name": "群創",
+        "momentum": 7.129088322660748,
+        "days": 1,
+        "signals": []
+      },
+      "3535": {
+        "stock_name": "晶彩科",
+        "momentum": 16.666666666666675,
+        "days": 1,
+        "signals": []
+      },
+      "8271": {
+        "stock_name": "宇瞻",
+        "momentum": 7.964601769911495,
+        "days": 1,
+        "signals": []
+      },
+      "9908": {
+        "stock_name": "大台北",
+        "momentum": 14.427862144303983,
+        "days": 1,
+        "signals": []
+      },
+      "9937": {
+        "stock_name": "全國",
+        "momentum": 7.130724684950707,
+        "days": 1,
+        "signals": []
+      }
     }
   }
 }
