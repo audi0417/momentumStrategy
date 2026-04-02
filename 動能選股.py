@@ -27,6 +27,7 @@ import datetime
 import logging
 import os
 import json
+import math
 import datetime
 import requests
 import certifi
@@ -244,14 +245,16 @@ def update_momentum_stocks(momentum_stocks, rsi_stocks=None, macd_stocks=None):
                 print(f"股票 {stock_id} 重新出現，重設為 1 天")
 
             # 更新信號日期和信號標記
-            data["stocks"][stock_id]["momentum"] = float(momentum)
+            momentum_val = float(momentum)
+            data["stocks"][stock_id]["momentum"] = None if math.isnan(momentum_val) else momentum_val
             data["stocks"][stock_id]["last_signal_date"] = signal_date
             data["stocks"][stock_id]["signals"] = signals
         else:
             # 新增記錄
+            momentum_val = float(momentum)
             data["stocks"][stock_id] = {
                 "stock_name": stock_name,
-                "momentum": float(momentum),
+                "momentum": None if math.isnan(momentum_val) else momentum_val,
                 "days": 1,
                 "last_signal_date": signal_date,  # 使用信號日期
                 "signals": signals
