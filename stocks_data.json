@@ -1,146 +1,123 @@
 {
-  "last_update": "2026-04-02",
+  "last_update": "2026-04-03",
   "stocks": {
     "1309": {
       "stock_name": "台達化",
-      "momentum": 17.121592199767456,
-      "days": 5,
-      "last_signal_date": "2026-04-01",
-      "signals": []
-    },
-    "1905": {
-      "stock_name": "華紙",
-      "momentum": 19.285719735281816,
-      "days": 5,
-      "last_signal_date": "2026-04-01",
-      "signals": []
-    },
-    "2313": {
-      "stock_name": "華通",
-      "momentum": 8.35030549898168,
-      "days": 5,
-      "last_signal_date": "2026-04-01",
+      "momentum": 17.15576166976622,
+      "days": 6,
+      "last_signal_date": "2026-04-02",
       "signals": []
     },
     "3062": {
       "stock_name": "建漢",
-      "momentum": 28.09429271842514,
-      "days": 5,
-      "last_signal_date": "2026-04-01",
-      "signals": []
-    },
-    "1528": {
-      "stock_name": "恩德",
-      "momentum": 12.742984067170958,
-      "days": 4,
-      "last_signal_date": "2026-04-01",
-      "signals": []
-    },
-    "1582": {
-      "stock_name": "信錦",
-      "momentum": 16.129032258064523,
-      "days": 4,
-      "last_signal_date": "2026-04-01",
-      "signals": []
-    },
-    "4906": {
-      "stock_name": "正文",
-      "momentum": 8.333342018892132,
-      "days": 4,
-      "last_signal_date": "2026-04-01",
+      "momentum": 11.091228584979373,
+      "days": 6,
+      "last_signal_date": "2026-04-02",
       "signals": []
     },
     "5243": {
       "stock_name": "乙盛-KY",
-      "momentum": 20.135137197133666,
-      "days": 4,
-      "last_signal_date": "2026-04-01",
+      "momentum": 25.10012688833878,
+      "days": 5,
+      "last_signal_date": "2026-04-02",
       "signals": []
     },
     "1304": {
       "stock_name": "台聚",
-      "momentum": 8.8328049516454,
-      "days": 3,
-      "last_signal_date": "2026-04-01",
-      "signals": []
-    },
-    "1723": {
-      "stock_name": "中碳",
-      "momentum": 18.11988439492613,
-      "days": 3,
-      "last_signal_date": "2026-04-01",
-      "signals": []
-    },
-    "3545": {
-      "stock_name": "敦泰",
-      "momentum": 11.697253365376792,
-      "days": 3,
-      "last_signal_date": "2026-04-01",
+      "momentum": 10.493819602032906,
+      "days": 4,
+      "last_signal_date": "2026-04-02",
       "signals": []
     },
     "6830": {
       "stock_name": "汎銓",
-      "momentum": 8.438818565400851,
-      "days": 3,
-      "last_signal_date": "2026-04-01",
+      "momentum": 30.034522439585732,
+      "days": 4,
+      "last_signal_date": "2026-04-02",
       "signals": []
     },
     "2409": {
       "stock_name": "友達",
-      "momentum": 7.770267592632862,
-      "days": 1,
-      "last_signal_date": "2026-04-01",
-      "signals": []
-    },
-    "2484": {
-      "stock_name": "希華",
-      "momentum": 11.209962903087757,
-      "days": 1,
-      "last_signal_date": "2026-04-01",
-      "signals": []
-    },
-    "2615": {
-      "stock_name": "萬海",
-      "momentum": 7.114098056050766,
-      "days": 1,
-      "last_signal_date": "2026-04-01",
+      "momentum": 17.013894637793815,
+      "days": 2,
+      "last_signal_date": "2026-04-02",
       "signals": []
     },
     "3167": {
       "stock_name": "大量",
-      "momentum": 15.879828326180267,
-      "days": 1,
-      "last_signal_date": "2026-04-01",
+      "momentum": 19.758064516129025,
+      "days": 2,
+      "last_signal_date": "2026-04-02",
       "signals": []
     },
     "6213": {
       "stock_name": "聯茂",
-      "momentum": 13.194444444444443,
-      "days": 1,
-      "last_signal_date": "2026-04-01",
+      "momentum": 7.594936708860756,
+      "days": 2,
+      "last_signal_date": "2026-04-02",
       "signals": []
     },
     "6919": {
       "stock_name": "康霈*",
-      "momentum": 10.864489740113047,
-      "days": 1,
-      "last_signal_date": "2026-04-01",
-      "signals": [
-        "macd"
-      ]
-    },
-    "7721": {
-      "stock_name": "微程式",
-      "momentum": 38.06104214103545,
-      "days": 1,
-      "last_signal_date": "2026-04-01",
+      "momentum": 17.980303758905116,
+      "days": 2,
+      "last_signal_date": "2026-04-02",
       "signals": []
     },
-    "8996": {
-      "stock_name": "高力",
-      "momentum": 8.038026273056897,
+    "1305": {
+      "stock_name": "華夏",
+      "momentum": 7.164183659340018,
       "days": 1,
-      "last_signal_date": "2026-04-01",
+      "last_signal_date": "2026-04-02",
+      "signals": []
+    },
+    "2101": {
+      "stock_name": "南港",
+      "momentum": 9.104051054322838,
+      "days": 1,
+      "last_signal_date": "2026-04-02",
+      "signals": []
+    },
+    "2399": {
+      "stock_name": "映泰",
+      "momentum": 9.032255603421113,
+      "days": 1,
+      "last_signal_date": "2026-04-02",
+      "signals": []
+    },
+    "3054": {
+      "stock_name": "立萬利",
+      "momentum": 8.534626702070657,
+      "days": 1,
+      "last_signal_date": "2026-04-02",
+      "signals": []
+    },
+    "3714": {
+      "stock_name": "富采",
+      "momentum": 11.293634319992618,
+      "days": 1,
+      "last_signal_date": "2026-04-02",
+      "signals": []
+    },
+    "6658": {
+      "stock_name": "聯策",
+      "momentum": 9.281432133226586,
+      "days": 1,
+      "last_signal_date": "2026-04-02",
+      "signals": []
+    },
+    "8039": {
+      "stock_name": "台虹",
+      "momentum": 8.444444444444454,
+      "days": 1,
+      "last_signal_date": "2026-04-02",
+      "signals": []
+    },
+    "8438": {
+      "stock_name": "昶昕",
+      "momentum": 8.371385472563798,
+      "days": 1,
+      "last_signal_date": "2026-04-02",
       "signals": []
     }
   }
