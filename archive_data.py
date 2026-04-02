@@ -1,5 +1,6 @@
 
 import json
+import math
 import os
 import pandas as pd
 import requests
@@ -112,9 +113,12 @@ def archive_stock_data():
             if signal_date not in historical_data["dates"]:
                 historical_data["dates"][signal_date] = {}
             for stock_id, stock_info in daily_data.get("stocks", {}).items():
+                momentum_val = stock_info["momentum"]
+                if isinstance(momentum_val, float) and math.isnan(momentum_val):
+                    momentum_val = None
                 historical_data["dates"][signal_date][stock_id] = {
                     "stock_name": stock_info["stock_name"],
-                    "momentum": stock_info["momentum"],
+                    "momentum": momentum_val,
                     "days": stock_info["days"],
                     "signals": stock_info.get("signals", [])  # 加入信號標記
                 }

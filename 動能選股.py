@@ -27,6 +27,7 @@ import datetime
 import logging
 import os
 import json
+import math
 import datetime
 import requests
 import certifi
@@ -244,14 +245,16 @@ def update_momentum_stocks(momentum_stocks, rsi_stocks=None, macd_stocks=None):
                 print(f"股票 {stock_id} 重新出現，重設為 1 天")
 
             # 更新信號日期和信號標記
-            data["stocks"][stock_id]["momentum"] = float(momentum)
+            momentum_val = float(momentum)
+            data["stocks"][stock_id]["momentum"] = None if math.isnan(momentum_val) else momentum_val
             data["stocks"][stock_id]["last_signal_date"] = signal_date
             data["stocks"][stock_id]["signals"] = signals
         else:
             # 新增記錄
+            momentum_val = float(momentum)
             data["stocks"][stock_id] = {
                 "stock_name": stock_name,
-                "momentum": float(momentum),
+                "momentum": None if math.isnan(momentum_val) else momentum_val,
                 "days": 1,
                 "last_signal_date": signal_date,  # 使用信號日期
                 "signals": signals
@@ -849,9 +852,15 @@ def calculate_momentum(df):
 
         # 檢查數據中是否有NaN
         if close_prices.isnull().any():
-            print("數據中包含NaN值，可能影響動能計算準確性")
+            print("數據中包含NaN值，跳過此股票")
+            return None
 
         momentum = (close_prices.iloc[-1] / close_prices.iloc[-5] - 1) * 100
+
+        if math.isnan(momentum):
+            print("動能計算結果為NaN，跳過此股票")
+            return None
+
         return momentum
     except Exception as e:
         print(f"計算動能時發生錯誤: {str(e)}")

@@ -24055,7 +24055,7 @@
       },
       "7780": {
         "stock_name": "大研生醫*",
-        "momentum": NaN,
+        "momentum": null,
         "days": 4,
         "signals": []
       },
