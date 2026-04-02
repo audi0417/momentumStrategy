@@ -852,9 +852,15 @@ def calculate_momentum(df):
 
         # 檢查數據中是否有NaN
         if close_prices.isnull().any():
-            print("數據中包含NaN值，可能影響動能計算準確性")
+            print("數據中包含NaN值，跳過此股票")
+            return None
 
         momentum = (close_prices.iloc[-1] / close_prices.iloc[-5] - 1) * 100
+
+        if math.isnan(momentum):
+            print("動能計算結果為NaN，跳過此股票")
+            return None
+
         return momentum
     except Exception as e:
         print(f"計算動能時發生錯誤: {str(e)}")
