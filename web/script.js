@@ -162,8 +162,10 @@ class MomentumDashboard {
                         signals: []
                     };
                 }
-                allStocks[stockId].scores[date] = stocksOnDate[stockId].momentum;
-                allStocks[stockId].days[date] = stocksOnDate[stockId].days;
+                if (stocksOnDate[stockId].momentum != null) {
+                    allStocks[stockId].scores[date] = stocksOnDate[stockId].momentum;
+                    allStocks[stockId].days[date] = stocksOnDate[stockId].days;
+                }
 
                 // 保存最新日期的信號
                 if (date === latestDate && stocksOnDate[stockId].signals) {
@@ -782,7 +784,7 @@ class MomentumDashboard {
 
         dates.forEach(date => {
             const stockInfo = this.stockData.dates[date][stockId];
-            if (stockInfo) {
+            if (stockInfo && stockInfo.momentum != null) {
                 result.push({
                     date: date,
                     momentum: stockInfo.momentum,
@@ -892,9 +894,11 @@ class MomentumDashboard {
         const latestDate = dates.sort().reverse()[0];
         const latestData = this.stockData.dates[latestDate];
 
-        const scores = Object.values(latestData).map(stock => stock.momentum);
+        const scores = Object.values(latestData).map(stock => stock.momentum).filter(score => score != null);
         const strongStocks = scores.filter(score => score > 10).length;
-        const avgMomentum = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+        const avgMomentum = scores.length > 0
+            ? scores.reduce((sum, score) => sum + score, 0) / scores.length
+            : 0;
 
         document.getElementById('strong-stocks').textContent = strongStocks;
         document.getElementById('avg-momentum').textContent = avgMomentum.toFixed(2);
@@ -1015,31 +1019,6 @@ const additionalStyles = `
     font-size: 0.75rem;
     color: var(--muted-foreground);
     margin-top: 2px;
-}
-
-.signal-badges {
-    display: inline-flex;
-    gap: 0.25rem;
-    margin-left: 0.5rem;
-}
-
-.signal-badge {
-    display: inline-block;
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-.signal-badge.rsi-badge {
-    background: #a855f7;
-    color: white;
-}
-
-.signal-badge.macd-badge {
-    background: #3b82f6;
-    color: white;
 }
 
 .stock-name-cell {
