@@ -162,8 +162,10 @@ class MomentumDashboard {
                         signals: []
                     };
                 }
-                allStocks[stockId].scores[date] = stocksOnDate[stockId].momentum;
-                allStocks[stockId].days[date] = stocksOnDate[stockId].days;
+                if (stocksOnDate[stockId].momentum != null) {
+                    allStocks[stockId].scores[date] = stocksOnDate[stockId].momentum;
+                    allStocks[stockId].days[date] = stocksOnDate[stockId].days;
+                }
 
                 // 保存最新日期的信號
                 if (date === latestDate && stocksOnDate[stockId].signals) {
@@ -782,7 +784,7 @@ class MomentumDashboard {
 
         dates.forEach(date => {
             const stockInfo = this.stockData.dates[date][stockId];
-            if (stockInfo) {
+            if (stockInfo && stockInfo.momentum != null) {
                 result.push({
                     date: date,
                     momentum: stockInfo.momentum,
@@ -892,7 +894,7 @@ class MomentumDashboard {
         const latestDate = dates.sort().reverse()[0];
         const latestData = this.stockData.dates[latestDate];
 
-        const scores = Object.values(latestData).map(stock => stock.momentum);
+        const scores = Object.values(latestData).map(stock => stock.momentum).filter(score => score != null);
         const strongStocks = scores.filter(score => score > 10).length;
         const avgMomentum = scores.reduce((sum, score) => sum + score, 0) / scores.length;
 
