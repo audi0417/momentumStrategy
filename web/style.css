@@ -319,6 +319,8 @@ body {
     overflow: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
 }
 
 .table-container::-webkit-scrollbar {
@@ -739,9 +741,24 @@ tbody tr.selected {
 @media (max-width: 1200px) {
     .dashboard-layout {
         grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: auto auto;
+        height: auto;
     }
-    
+
+    .left-panel {
+        height: auto;
+        min-height: 400px;
+    }
+
+    .table-container {
+        max-height: 450px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .right-panel {
+        height: auto;
+    }
+
     .search-container {
         width: 16rem;
     }
