@@ -7,5 +7,6 @@ rich
 tqdm
 yfinance
 lxml
+html5lib
 fastapi
 uvicorn
