@@ -202,10 +202,17 @@ def Signal_macd(
         return None
 
 # ---------------------------------------------------------------------------
-# 成交量查詢 (惰性快取：僅對指標通過的股票查詢)
+# 成交量查詢 (惰性快取 + 跨函數共用交易日)
 # ---------------------------------------------------------------------------
 _TURNOVER_CACHE: dict[str, str] = {}
 _TPEX_DATA: list[list[str]] = []
+_LAST_TRADING_DAY: str | None = None
+_HOLIDAYS: list[dict[str, str]] = []
+
+def set_last_trading_day(day: str | None, holidays: list[dict[str, str]]) -> None:
+    global _LAST_TRADING_DAY, _HOLIDAYS
+    _LAST_TRADING_DAY = day
+    _HOLIDAYS = holidays
 
 def init_turnover_cache() -> None:
     """初始化：預先批次抓取上櫃成交量 (單次 API)。"""
@@ -234,10 +241,9 @@ def get_turnover(stock_num: str, all_stock_df: pd.DataFrame) -> str:
         _TURNOVER_CACHE[stock_num] = "0"
         return "0"
 
-    # 上市：直接 API 查 + 快取
-    from datetime import datetime as dt
-    last_day = utils.get_previous_trading_day() or utils.get_current_trading_date()
-    fmt_date = dt.strptime(last_day, "%Y-%m-%d").strftime("%Y%m%d")
+    # 上市：直接 API 查 + 快取 (使用預先計算的交易日，避免重複呼叫 holiday API)
+    last_day = _LAST_TRADING_DAY or utils.get_current_trading_date()
+    fmt_date = datetime.datetime.strptime(last_day, "%Y-%m-%d").strftime("%Y%m%d")
     try:
         resp = requests.get(
             "https://www.twse.com.tw/exchangeReport/STOCK_DAY",
@@ -523,8 +529,10 @@ def main() -> None:
             return
         logger.info("成功取得 %s 支股票資料", len(stock_index))
 
-        # ---- 2. 初始化成交量快取 (僅預載上櫃，上市採惰性查詢) ---------------
+        # ---- 2. 初始化成交量快取 + 交易日快取 (避免重複呼叫 holiday API) -------
         init_turnover_cache()
+        last_trading_day = utils.get_previous_trading_day(holiday_schedule=holidays)
+        set_last_trading_day(last_trading_day, holidays)
 
         # ---- 3. 篩選 ---------------------------------------------------
         logger.info("動能篩選…")
