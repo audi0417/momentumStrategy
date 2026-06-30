@@ -221,52 +221,19 @@ def get_all_stocks() -> pd.DataFrame:
     return df.dropna(subset=["股票代號", "股票名稱"])
 
 # ---------------------------------------------------------------------------
-# Turnover pre‑fetch (批次快取)
+# Turnover helpers (惰性載入 + 快取)
 # ---------------------------------------------------------------------------
-def pre_fetch_turnovers(
-    stock_ids: list[str],
-    all_stock: pd.DataFrame,
-    tpex_turnover: list[list[str]],
-) -> dict[str, str]:
-    """批次查詢所有股票的成交金額，回傳 {stock_id: turnover_str}。"""
-    cache: dict[str, str] = {}
-    current_date = get_current_trading_date()
-    last_trading_day = get_previous_trading_day(current_date)
-
-    for sid in stock_ids:
-        try:
-            market = all_stock.loc[
-                all_stock["股票代號"] == sid, "市場別"
-            ].values[0]
-        except IndexError:
-            continue
-
-        if market == "上櫃":
-            # 從已取得的上櫃資料查
-            for row in tpex_turnover:
-                if row[0] == sid:
-                    cache[sid] = row[10]
-                    break
-        else:
-            # 上市 ── TWSE STOCK_DAY API
-            date_obj = datetime.datetime.strptime(
-                last_trading_day, "%Y-%m-%d"
-            ).date() if last_trading_day else get_taiwan_datetime().date()
-            fmt_date = date_obj.strftime("%Y%m%d")
-            try:
-                resp = requests.get(
-                    "https://www.twse.com.tw/exchangeReport/STOCK_DAY",
-                    params={"date": fmt_date, "stockNo": sid},
-                    timeout=15,
-                )
-                if resp.status_code == 200:
-                    data = resp.json()
-                    if data.get("stat") == "OK" and data.get("data"):
-                        # 取最後一筆的成交金額 (index 2)
-                        cache[sid] = data["data"][-1][2]
-            except Exception:
-                pass
-    return cache
+def fetch_tpex_turnover() -> list[list[str]]:
+    """一次取得所有上櫃股票成交資料 (單一 API 呼叫)。"""
+    try:
+        resp = robust_get(
+            "https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes",
+            params={"response": "json", "date": datetime.datetime.now().strftime("%Y%m%d")},
+        )
+        return resp.json()["tables"][0]["data"]
+    except Exception as exc:
+        logger.warning("TPEx 成交量 API 失敗: %s", exc)
+        return []
 
 # ---------------------------------------------------------------------------
 # Format helpers

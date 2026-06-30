@@ -202,28 +202,58 @@ def Signal_macd(
         return None
 
 # ---------------------------------------------------------------------------
-# 成交量快取 (預先批次載入)
+# 成交量查詢 (惰性快取：僅對指標通過的股票查詢)
 # ---------------------------------------------------------------------------
 _TURNOVER_CACHE: dict[str, str] = {}
+_TPEX_DATA: list[list[str]] = []
 
-def cache_turnovers(stock_ids: list[str], all_stock: pd.DataFrame) -> None:
-    """批次查詢成交量並存入全域快取 (僅執行一次)。"""
-    global _TURNOVER_CACHE
-    # 先取得上櫃成交量 (一次)
-    url = "https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes"
-    date_str = datetime.datetime.now().strftime("%Y%m%d")
+def init_turnover_cache() -> None:
+    """初始化：預先批次抓取上櫃成交量 (單次 API)。"""
+    global _TPEX_DATA
+    _TPEX_DATA = utils.fetch_tpex_turnover()
+    logger.info("上櫃成交量預載 %s 筆", len(_TPEX_DATA))
+
+def get_turnover(stock_num: str, all_stock_df: pd.DataFrame) -> str:
+    """取得單一股票成交金額 (惰性載入 + 快取)。"""
+    if stock_num in _TURNOVER_CACHE:
+        return _TURNOVER_CACHE[stock_num]
+
     try:
-        resp = utils.robust_get(url, params={"response": "json", "date": date_str})
-        tpex_data = resp.json()["tables"][0]["data"]
+        market = all_stock_df.loc[all_stock_df["股票代號"] == stock_num, "市場別"].values[0]
+    except IndexError:
+        _TURNOVER_CACHE[stock_num] = "0"
+        return "0"
+
+    # 上櫃：從批次資料查
+    if market == "上櫃":
+        for row in _TPEX_DATA:
+            if row[0] == stock_num:
+                val = row[10]
+                _TURNOVER_CACHE[stock_num] = val
+                return val
+        _TURNOVER_CACHE[stock_num] = "0"
+        return "0"
+
+    # 上市：直接 API 查 + 快取
+    from datetime import datetime as dt
+    last_day = utils.get_previous_trading_day() or utils.get_current_trading_date()
+    fmt_date = dt.strptime(last_day, "%Y-%m-%d").strftime("%Y%m%d")
+    try:
+        resp = requests.get(
+            "https://www.twse.com.tw/exchangeReport/STOCK_DAY",
+            params={"date": fmt_date, "stockNo": stock_num},
+            timeout=15,
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            if data.get("stat") == "OK" and data.get("data"):
+                val = data["data"][-1][2]
+                _TURNOVER_CACHE[stock_num] = val
+                return val
     except Exception:
-        tpex_data = []
-
-    _TURNOVER_CACHE = utils.pre_fetch_turnovers(stock_ids, all_stock, tpex_data)
-    logger.info("成交量快取完成：%s 筆", len(_TURNOVER_CACHE))
-
-def get_turnover(stock_num: str) -> str:
-    """從快取取出成交量字串。"""
-    return _TURNOVER_CACHE.get(stock_num, "0")
+        pass
+    _TURNOVER_CACHE[stock_num] = "0"
+    return "0"
 
 # ---------------------------------------------------------------------------
 # 通用篩選器
@@ -233,7 +263,6 @@ def filter_stocks(
     indicator_fn: Any,
     condition_args: dict[str, Any] | None = None,
     min_value: float | None = None,
-    turnover_cache: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """通用篩選：數據長度檢查 → 指標計算 → 成交量門檻。"""
     result: dict[str, Any] = {}
@@ -261,8 +290,10 @@ def filter_stocks(
                 continue
             indicator_val = val
 
-        # 成交量檢查
-        turnover_str = turnover_cache.get(sid, "0") if turnover_cache else get_turnover(sid)
+        # 成交量檢查 (惰性查詢 + 自動快取)
+        if sid not in _TURNOVER_CACHE:
+            get_turnover(sid, all_stock)
+        turnover_str = _TURNOVER_CACHE.get(sid, "0")
         try:
             turnover_num = int(turnover_str.replace(",", ""))
         except (ValueError, AttributeError):
@@ -305,7 +336,7 @@ def display_results(
 
     for stock, val in items:
         name = all_stock.loc[all_stock["股票代號"] == stock, "股票名稱"].values[0]
-        tv = utils.format_number(get_turnover(stock))
+        tv = utils.format_number(get_turnover(stock, all_stock))
         days = ""
         if stock_data and stock in stock_data.get("stocks", {}):
             days = f", 連續 {stock_data['stocks'][stock]['days']} 天"
@@ -341,7 +372,7 @@ def build_mail_content(
         if d:
             for s, v in (sorted(d.items(), key=lambda x: x[1], reverse=True) if is_dict else [(s, None) for s in d]):
                 name = all_stock.loc[all_stock["股票代號"] == s, "股票名稱"].values[0]
-                tv = utils.format_number(get_turnover(s))
+                tv = utils.format_number(get_turnover(s, all_stock))
                 d_info = stock_data["stocks"][s]["days"] if s in stock_data.get("stocks", {}) else 1
                 if is_dict:
                     lines.append(f"• {s} {name}: {vname} {v:.2f}%, 成交量 {tv}, 連續 {d_info} 天")
@@ -492,31 +523,26 @@ def main() -> None:
             return
         logger.info("成功取得 %s 支股票資料", len(stock_index))
 
-        # ---- 2. 預先批次查詢成交量 ---------------------------------------
-        logger.info("預先查詢成交量…")
-        cache_turnovers(list(stock_index.keys()), all_stock)
-        # 建立成交量子集供篩選用
-        tv_subset = {k: v for k, v in _TURNOVER_CACHE.items() if k in stock_index}
+        # ---- 2. 初始化成交量快取 (僅預載上櫃，上市採惰性查詢) ---------------
+        init_turnover_cache()
 
         # ---- 3. 篩選 ---------------------------------------------------
         logger.info("動能篩選…")
         momentum_stocks = filter_stocks(
             stock_index, calculate_momentum,
-            min_value=utils.MIN_MOMENTUM, turnover_cache=tv_subset,
+            min_value=utils.MIN_MOMENTUM,
         )
 
         logger.info("RSI 篩選…")
         rsi_stocks = filter_stocks(
             stock_index, Signal_rsi,
             condition_args={"shortTern": 5, "longTern": 80},
-            turnover_cache=tv_subset,
         )
 
         logger.info("MACD 篩選…")
         macd_stocks = filter_stocks(
             stock_index, Signal_macd,
             condition_args={"fastperiod": 12, "slowperiod": 26, "signalperiod": 9},
-            turnover_cache=tv_subset,
         )
 
         # ---- 4. 更新連續天數 --------------------------------------------
