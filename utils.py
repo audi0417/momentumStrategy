@@ -32,6 +32,7 @@ from urllib3.util.retry import Retry
 MIN_DATA_LENGTH = 90          # 最少數據天數
 MIN_MOMENTUM = 7              # 動能門檻 (%)
 MIN_TURNOVER = 100_000_000    # 最低成交量 1 億
+FALLBACK_TRIGGER_RATIO = 0.1  # yfinance 缺漏超過此比例即啟用官方行情備援
 TW_OFFSET = datetime.timedelta(hours=8)
 
 # ---------------------------------------------------------------------------
@@ -364,6 +365,247 @@ def build_turnover_map(date: str | None = None) -> dict[str, str]:
     if not turnover:
         raise RuntimeError(f"{date} 上市與上櫃成交量皆取得失敗，篩選結果必然為 0")
     return turnover
+
+
+# ---------------------------------------------------------------------------
+# Official OHLC — yfinance 的備援價格來源
+# ---------------------------------------------------------------------------
+OHLC_COLUMNS = ["Open", "High", "Low", "Close", "Volume"]
+
+# 還原因子 = 除權息參考價 / 除權息前收盤價。
+#
+# 不要試圖從每日行情的「漲跌價差」反推：除權息當日 TWSE 的漲跌(+/-) 會標記為
+# 'X' (不計算漲跌)、漲跌價差固定 0.00，反推只會拿回當日收盤價本身。實測 2348
+# (2026-08-04 除權息) 反推得 0.91129，官方 TWT49U 為 66.09/74.40 = 0.88831。
+# 因此上市改讀 TWT49U，上櫃改讀每日行情裡的「次日參考價」。
+_EX_RIGHTS_TOL = 0.005
+
+
+def _to_float(value: Any) -> float | None:
+    """行情字串 → float。'--'、'' 等無成交標記回 None。"""
+    try:
+        return float(str(value).replace(",", ""))
+    except (ValueError, TypeError):
+        return None
+
+
+def fetch_twse_ohlc(date: str) -> dict[str, dict[str, float]]:
+    """上市：一次取得全部個股 OHLC + 成交股數 + 當日漲跌 (原始價，未還原)。"""
+    fmt_date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y%m%d")
+    payload = robust_get(
+        "https://www.twse.com.tw/exchangeReport/MI_INDEX",
+        params={"response": "json", "date": fmt_date, "type": "ALLBUT0999"},
+    ).json()
+    if payload.get("stat") != "OK":
+        raise RuntimeError(f"stat={payload.get('stat')}")
+
+    for table in payload.get("tables", []):
+        fields = table.get("fields") or []
+        if "證券代號" not in fields or "收盤價" not in fields:
+            continue
+        idx = {name: fields.index(name) for name in (
+            "證券代號", "開盤價", "最高價", "最低價", "收盤價",
+            "成交股數", "漲跌(+/-)",
+        )}
+        rows: dict[str, dict[str, float]] = {}
+        for row in table["data"]:
+            close = _to_float(row[idx["收盤價"]])
+            if close is None:
+                continue  # 當日無成交
+            rows[row[idx["證券代號"]]] = {
+                "Open": _to_float(row[idx["開盤價"]]) or close,
+                "High": _to_float(row[idx["最高價"]]) or close,
+                "Low": _to_float(row[idx["最低價"]]) or close,
+                "Close": close,
+                "Volume": _to_float(row[idx["成交股數"]]) or 0.0,
+                # 'X' = 除權息當日不計算漲跌，用來標記需要向 TWT49U 取還原因子
+                "ExRights": "X" in str(row[idx["漲跌(+/-)"]]),
+            }
+        return rows
+    raise RuntimeError("找不到每日收盤行情表格")
+
+
+def fetch_tpex_ohlc(date: str) -> dict[str, dict[str, float]]:
+    """上櫃：同 fetch_twse_ohlc。日期必須用 YYYY/MM/DD，否則 API 靜默回傳最新交易日。"""
+    fmt_date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y/%m/%d")
+    payload = robust_get(
+        "https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes",
+        params={"response": "json", "date": fmt_date},
+    ).json()
+
+    actual, expected = payload.get("date", ""), date.replace("-", "")
+    if actual and actual != expected:
+        raise RuntimeError(f"回傳日期 {actual} 與預期 {expected} 不符")
+
+    rows: dict[str, dict[str, float]] = {}
+    # 欄位序: 0代號 2收盤 3漲跌 4開盤 5最高 6最低 8成交股數
+    for row in payload["tables"][0]["data"]:
+        close = _to_float(row[2])
+        if close is None:
+            continue
+        rows[row[0]] = {
+            "Open": _to_float(row[4]) or close,
+            "High": _to_float(row[5]) or close,
+            "Low": _to_float(row[6]) or close,
+            "Close": close,
+            "Volume": _to_float(row[8]) or 0.0,
+            # 次日參考價：除權息時 != 收盤價，是上櫃唯一免額外請求的還原依據
+            "NextRef": _to_float(row[16]),
+        }
+    if not rows:
+        raise RuntimeError("回傳 0 筆")
+    return rows
+
+
+def fetch_official_ohlc(date: str) -> dict[str, dict[str, float]]:
+    """合併上市 + 上櫃當日行情。兩邊皆失敗時拋錯 — 代表該日非交易日或來源全掛。"""
+    merged: dict[str, dict[str, float]] = {}
+    for market, fetch in (("上市", fetch_twse_ohlc), ("上櫃", fetch_tpex_ohlc)):
+        try:
+            merged.update(fetch(date))
+        except Exception as exc:
+            logger.warning("%s %s OHLC 取得失敗: %s", market, date, exc)
+    if not merged:
+        raise RuntimeError(f"{date} 上市與上櫃行情皆取得失敗")
+    return merged
+
+
+def fetch_twse_ex_rights(start: str, end: str) -> dict[tuple[str, datetime.date], float]:
+    """上市除權息還原因子 {(股票代號, 除權息日): 參考價/前收盤價}。
+
+    注意參數名是 startDate — 送 strDate 會拿到「結束日期小於開始日期」的假錯誤。
+    """
+    payload = robust_get(
+        "https://www.twse.com.tw/rwd/zh/exRight/TWT49U",
+        params={
+            "response": "json",
+            "startDate": datetime.datetime.strptime(start, "%Y-%m-%d").strftime("%Y%m%d"),
+            "endDate": datetime.datetime.strptime(end, "%Y-%m-%d").strftime("%Y%m%d"),
+        },
+    ).json()
+    if payload.get("stat") != "OK":
+        raise RuntimeError(f"stat={payload.get('stat')}")
+
+    factors: dict[tuple[str, datetime.date], float] = {}
+    for row in payload.get("data") or []:
+        prev_close, ref = _to_float(row[3]), _to_float(row[4])
+        if not prev_close or not ref:
+            continue
+        try:
+            # 民國日期 "115年08月04日"
+            roc_y, rest = row[0].split("年")
+            month, day = rest.replace("日", "").split("月")
+            ex_date = datetime.date(int(roc_y) + 1911, int(month), int(day))
+        except (ValueError, IndexError):
+            continue
+        factors[(row[1], ex_date)] = ref / prev_close
+
+    logger.info("上市除權息 %s ~ %s：%s 筆", start, end, len(factors))
+    return factors
+
+
+def _back_adjust(
+    bars: list[tuple[datetime.date, dict[str, float]]],
+    twse_factors: dict[tuple[str, datetime.date], float],
+    stock_id: str,
+) -> pd.DataFrame:
+    """把原始價序列還原成可比價序列，對齊 yfinance 的 auto_adjust 語意。
+
+    *bars* 需已按日期遞增排序。除權息當日的還原因子回頭套用到所有更早的 K 棒
+    (成交量不調整，與 yfinance 一致)。上市取自 TWT49U；上櫃用前一日的次日參考價。
+    """
+    factors = [1.0] * len(bars)
+    for i in range(1, len(bars)):
+        day, bar = bars[i]
+        prev_bar = bars[i - 1][1]
+
+        if bar.get("ExRights"):  # 上市
+            factor = twse_factors.get((stock_id, day))
+            if factor is None:
+                logger.warning("%s %s 除權息但 TWT49U 無資料，該檔不還原", stock_id, day)
+                continue
+            factors[i] = factor
+        else:  # 上櫃：前一日的次日參考價 != 前一日收盤價 即為除權息
+            next_ref, prev_close = prev_bar.get("NextRef"), prev_bar["Close"]
+            if next_ref and prev_close and abs(next_ref - prev_close) > _EX_RIGHTS_TOL:
+                factors[i] = next_ref / prev_close
+
+    # 由後往前累乘：第 i 根 K 棒要吃掉它「之後」所有除權息的影響
+    cumulative = 1.0
+    scale = [1.0] * len(bars)
+    for i in range(len(bars) - 1, -1, -1):
+        scale[i] = cumulative
+        cumulative *= factors[i]
+
+    index, records = [], []
+    for (day, bar), s in zip(bars, scale):
+        index.append(pd.Timestamp(day))
+        records.append({
+            "Open": bar["Open"] * s,
+            "High": bar["High"] * s,
+            "Low": bar["Low"] * s,
+            "Close": bar["Close"] * s,
+            "Volume": bar["Volume"],
+        })
+    return pd.DataFrame(records, index=pd.DatetimeIndex(index), columns=OHLC_COLUMNS)
+
+
+def build_official_price_index(
+    start: str,
+    end: str,
+    stock_ids: set[str] | None = None,
+    holidays: list[dict[str, str]] | None = None,
+) -> dict[str, pd.DataFrame]:
+    """以官方每日行情組出 {股票代號: 還原價 DataFrame}，schema 對齊 yfinance。
+
+    *end* 為含括。逐日抓取全市場快照再轉置成個股時間序列 — 官方沒有「一次取
+    N 天」的介面，但每日快照是全市場的，所以成本是天數而非股票數。
+    抓不到資料的日期直接跳過，因此結果只會包含官方確認過的交易日，
+    不會出現 yfinance 那種臨時休市日的假 K 棒。
+    """
+    if holidays is None:
+        holidays = get_holiday_schedule()
+
+    start_d = datetime.datetime.strptime(start, "%Y-%m-%d").date()
+    end_d = datetime.datetime.strptime(end, "%Y-%m-%d").date()
+
+    per_stock: dict[str, list[tuple[datetime.date, dict[str, float]]]] = {}
+    day, fetched, skipped = start_d, 0, 0
+    while day <= end_d:
+        if day.weekday() >= 5 or is_holiday(day, holidays):
+            day += datetime.timedelta(days=1)
+            continue
+        try:
+            snapshot = fetch_official_ohlc(day.strftime("%Y-%m-%d"))
+            fetched += 1
+        except Exception:
+            logger.info("%s 無官方行情，視為非交易日", day)
+            skipped += 1
+            day += datetime.timedelta(days=1)
+            continue
+        for sid, bar in snapshot.items():
+            if stock_ids is not None and sid not in stock_ids:
+                continue
+            per_stock.setdefault(sid, []).append((day, bar))
+        day += datetime.timedelta(days=1)
+
+    logger.info(
+        "官方行情 %s ~ %s：%s 個交易日 (跳過 %s 日)，%s 檔",
+        start, end, fetched, skipped, len(per_stock),
+    )
+    if not fetched:
+        raise RuntimeError(f"{start} ~ {end} 完全取不到官方行情")
+
+    try:
+        twse_factors = fetch_twse_ex_rights(start, end)
+    except Exception as exc:
+        logger.error("上市除權息表取得失敗 (%s)，除權息個股將不還原", exc)
+        twse_factors = {}
+
+    return {
+        sid: _back_adjust(bars, twse_factors, sid)
+        for sid, bars in per_stock.items()
+    }
 
 
 def verify_trading_day(

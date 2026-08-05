@@ -490,15 +490,35 @@ def main() -> None:
 
         logger.info("開始下載股價資料 (平行下載, 8 workers)…")
         stock_index = parallel_get_stock_data(max_workers=8)
-        if not stock_index:
-            console.print("[red]未取得任何股票資料，結束[/red]")
-            return
 
         # yfinance 對臨時休市日仍會回傳 K 棒，截到確認過的訊號日為止
         cutoff = datetime.datetime.strptime(last_trading_day, "%Y-%m-%d").date()
         stock_index = {
             sid: df[df.index.date <= cutoff] for sid, df in stock_index.items()
         }
+
+        # yfinance 掛掉或大量缺漏時，改用官方每日行情補齊。
+        # 兩來源不混用同一檔股票 — 官方是原始價自行還原、yfinance 是它自己的還原價，
+        # 逐根拼接會在除權息日產生假跳空。
+        wanted = set(all_stock["股票代號"])
+        missing = wanted - set(stock_index)
+        if len(missing) > len(wanted) * utils.FALLBACK_TRIGGER_RATIO:
+            console.print(
+                f"[yellow]⚠ yfinance 缺 {len(missing)}/{len(wanted)} 檔，改用官方行情備援[/yellow]"
+            )
+            start = (cutoff - datetime.timedelta(days=180)).strftime("%Y-%m-%d")
+            try:
+                official = utils.build_official_price_index(
+                    start, last_trading_day, stock_ids=missing, holidays=holidays,
+                )
+                stock_index.update(official)
+                logger.info("官方行情補回 %s 檔", len(official))
+            except Exception as exc:
+                logger.error("官方行情備援失敗: %s", exc)
+
+        if not stock_index:
+            console.print("[red]未取得任何股票資料，結束[/red]")
+            return
         logger.info("成功取得 %s 支股票資料 (截至 %s)", len(stock_index), last_trading_day)
 
         # ---- 3. 篩選 ---------------------------------------------------
