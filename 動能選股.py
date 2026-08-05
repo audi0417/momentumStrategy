@@ -21,6 +21,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+import requests
 import yfinance as yf
 from rich.console import Console
 from rich.progress import BarColumn, Progress, TextColumn, TaskProgressColumn
@@ -104,7 +105,7 @@ def calculate_momentum(df: pd.DataFrame) -> float | None:
     """5 日動能 = (close[-1] / close[-5] - 1) * 100 (%)。"""
     try:
         close = df["Close"] if "Close" in df.columns else df["close"]
-        if len(close) < 5 or close.isnull().any():
+        if len(close) < 5 or close.iloc[-5:].isnull().any():
             return None
         val = (close.iloc[-1] / close.iloc[-5] - 1) * 100
         return None if math.isnan(val) else val
@@ -235,7 +236,7 @@ def get_turnover(stock_num: str, all_stock_df: pd.DataFrame) -> str:
     if market == "上櫃":
         for row in _TPEX_DATA:
             if row[0] == stock_num:
-                val = row[10]
+                val = row[9]  # 成交金額(元)；row[10] 是成交筆數
                 _TURNOVER_CACHE[stock_num] = val
                 return val
         _TURNOVER_CACHE[stock_num] = "0"
@@ -393,7 +394,7 @@ def build_mail_content(
         for s in final_stocks:
             name = all_stock.loc[all_stock["股票代號"] == s, "股票名稱"].values[0]
             m = momentum_stocks[s]
-            tv = utils.format_number(get_turnover(s))
+            tv = utils.format_number(get_turnover(s, all_stock))
             lines.append(f"• {s} {name}: 動能 {m:.2f}%, 成交量 {tv}")
     else:
         lines.append("本日無股票符合所有條件")

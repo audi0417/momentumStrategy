@@ -30,10 +30,16 @@ def generate_stock_data() -> None:
         with open(meta_path, encoding="utf-8") as f:
             metadata = json.load(f)
 
-    # 所有曾出現的股票
+    # 所有曾出現的股票；股票名稱取最近一次出現的紀錄
     all_stocks: set[str] = set()
-    for date_data in momentum_data["dates"].values():
+    stock_names: dict[str, str] = {}
+    for date in sorted(momentum_data["dates"]):
+        date_data = momentum_data["dates"][date]
         all_stocks.update(date_data.keys())
+        for sid, info in date_data.items():
+            name = info.get("stock_name")
+            if name:
+                stock_names[sid] = name
     utils.logger.info("共 %s 支股票待處理", len(all_stocks))
 
     end_date = datetime.now()
@@ -95,7 +101,7 @@ def generate_stock_data() -> None:
                 "rsi": rsi.tail(90).fillna(50).round(2).tolist(),
             }
 
-            name = list(momentum_data["dates"].values())[0].get(sid, {}).get("stock_name", f"股票{sid}")
+            name = stock_names.get(sid, f"股票{sid}")
             out[sid] = {"name": name, "price_data": stock_entry, "indicators": ind90}
             utils.logger.info("  ✓ %s (%s)", sid, name)
         except Exception as exc:

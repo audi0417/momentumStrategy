@@ -1,12 +1,18 @@
-bs4
-mplfinance
-numpy
-pandas
-requests
-rich
-tqdm
-yfinance
-lxml
-html5lib
-fastapi
-uvicorn
+# 版本鎖定於 2026-08-05 本機驗證通過的組合 (Python 3.11)
+# 升級時請先手動 workflow_dispatch 跑一次，確認篩選結果非 0 再合併
+bs4==0.0.2
+beautifulsoup4==4.15.0
+mplfinance==0.12.10b0
+numpy==2.4.6
+pandas==3.0.5
+requests==2.34.2
+rich==15.0.0
+tqdm==4.70.0
+yfinance==1.5.2
+lxml==6.1.1
+html5lib==1.1
+fastapi==0.141.1
+uvicorn==0.52.1
+# utils.py 直接 import，明確列出以免受間接依賴的版本變動影響
+certifi==2026.7.22
+urllib3==2.7.0
