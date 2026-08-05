@@ -223,14 +223,30 @@ def get_all_stocks() -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # Turnover helpers (惰性載入 + 快取)
 # ---------------------------------------------------------------------------
-def fetch_tpex_turnover() -> list[list[str]]:
-    """一次取得所有上櫃股票成交資料 (單一 API 呼叫)。"""
+def fetch_tpex_turnover(date: str | None = None) -> list[list[str]]:
+    """一次取得所有上櫃股票成交資料 (單一 API 呼叫)。
+
+    *date* 為 YYYY-MM-DD，預設取前一個交易日 — 與股價 (yfinance end 為開區間)
+    及上市成交量的基準一致。不可用 datetime.now()：本機執行時會送出當日盤中日期。
+    """
+    if date is None:
+        date = get_previous_trading_day()
+    # 必須用 YYYY/MM/DD；送 YYYYMMDD 會被 API 忽略並回傳「最新交易日」
+    fmt_date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y/%m/%d")
     try:
         resp = robust_get(
             "https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes",
-            params={"response": "json", "date": datetime.datetime.now().strftime("%Y%m%d")},
+            params={"response": "json", "date": fmt_date},
         )
-        return resp.json()["tables"][0]["data"]
+        payload = resp.json()
+        actual = payload.get("date", "")
+        expected = date.replace("-", "")
+        if actual and actual != expected:
+            logger.warning("TPEx 回傳日期 %s 與預期 %s 不符", actual, expected)
+        rows = payload["tables"][0]["data"]
+        if not rows:
+            logger.warning("TPEx %s 無成交資料，上櫃成交量將全部視為 0", fmt_date)
+        return rows
     except Exception as exc:
         logger.warning("TPEx 成交量 API 失敗: %s", exc)
         return []

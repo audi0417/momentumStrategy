@@ -215,11 +215,11 @@ def set_last_trading_day(day: str | None, holidays: list[dict[str, str]]) -> Non
     _LAST_TRADING_DAY = day
     _HOLIDAYS = holidays
 
-def init_turnover_cache() -> None:
+def init_turnover_cache(date: str | None = None) -> None:
     """初始化：預先批次抓取上櫃成交量 (單次 API)。"""
     global _TPEX_DATA
-    _TPEX_DATA = utils.fetch_tpex_turnover()
-    logger.info("上櫃成交量預載 %s 筆", len(_TPEX_DATA))
+    _TPEX_DATA = utils.fetch_tpex_turnover(date)
+    logger.info("上櫃成交量預載 %s 筆 (基準日 %s)", len(_TPEX_DATA), date)
 
 def get_turnover(stock_num: str, all_stock_df: pd.DataFrame) -> str:
     """取得單一股票成交金額 (惰性載入 + 快取)。"""
@@ -531,9 +531,9 @@ def main() -> None:
         logger.info("成功取得 %s 支股票資料", len(stock_index))
 
         # ---- 2. 初始化成交量快取 + 交易日快取 (避免重複呼叫 holiday API) -------
-        init_turnover_cache()
         last_trading_day = utils.get_previous_trading_day(holiday_schedule=holidays)
         set_last_trading_day(last_trading_day, holidays)
+        init_turnover_cache(last_trading_day)
 
         # ---- 3. 篩選 ---------------------------------------------------
         logger.info("動能篩選…")
