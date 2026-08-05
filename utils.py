@@ -66,8 +66,19 @@ def get_current_trading_date() -> str:
 # ---------------------------------------------------------------------------
 # Holiday / trading‑day helpers
 # ---------------------------------------------------------------------------
+_HOLIDAY_CACHE: list[dict[str, str]] | None = None
+
+
 def get_holiday_schedule() -> list[dict[str, str]]:
-    """從 TWSE API 取得假日行事曆。"""
+    """從 TWSE API 取得假日行事曆 (行程內只取一次)。"""
+    global _HOLIDAY_CACHE
+    if _HOLIDAY_CACHE is not None:
+        return _HOLIDAY_CACHE
+    _HOLIDAY_CACHE = _fetch_holiday_schedule()
+    return _HOLIDAY_CACHE
+
+
+def _fetch_holiday_schedule() -> list[dict[str, str]]:
     try:
         resp = requests.get(
             "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule",
@@ -194,7 +205,33 @@ def robust_get(
 # Stock list
 # ---------------------------------------------------------------------------
 def get_all_stocks() -> pd.DataFrame:
-    """TWSE + TPEX 上市上櫃普通股清單。"""
+    """TWSE + TPEX 上市上櫃普通股清單，isin 失敗時退回 OpenAPI。"""
+    try:
+        return _get_all_stocks_isin()
+    except Exception as exc:
+        logger.warning("isin 股票清單失敗 (%s)，改用 OpenAPI 備援", exc)
+        return _get_all_stocks_openapi()
+
+
+def _get_all_stocks_openapi() -> pd.DataFrame:
+    """備援：公開發行公司基本資料 (無普通股 CFICode 可濾，改以 4 碼數字代號判斷)。"""
+    sources = [
+        ("https://openapi.twse.com.tw/v1/opendata/t187ap03_L", "公司代號", "公司簡稱", "上市"),
+        ("https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",
+         "SecuritiesCompanyCode", "CompanyAbbreviation", "上櫃"),
+    ]
+    records = []
+    for url, code_key, name_key, market in sources:
+        for row in robust_get(url).json():
+            code, name = row.get(code_key), row.get(name_key)
+            if code and name and code.isdigit() and len(code) == 4:
+                records.append({"股票代號": code, "股票名稱": name.strip(), "市場別": market})
+    df = pd.DataFrame(records)
+    logger.info("OpenAPI 備援股票清單 %s 支", len(df))
+    return df
+
+
+def _get_all_stocks_isin() -> pd.DataFrame:
     def _fetch(mode: int) -> pd.DataFrame:
         url = f"https://isin.twse.com.tw/isin/C_public.jsp?strMode={mode}"
         resp = robust_get(url)
@@ -221,18 +258,57 @@ def get_all_stocks() -> pd.DataFrame:
     return df.dropna(subset=["股票代號", "股票名稱"])
 
 # ---------------------------------------------------------------------------
-# Turnover helpers (惰性載入 + 快取)
+# Turnover — 每個市場各一次批次查詢，主來源失敗時退回 OpenAPI
+#
+# 主來源 (MI_INDEX / dailyQuotes) 可指定歷史日期；
+# 備援 (OpenAPI) 不吃日期參數、只回傳最新交易日，因此僅在該日就是最新交易日時可用。
 # ---------------------------------------------------------------------------
-def fetch_tpex_turnover(date: str | None = None) -> list[list[str]]:
-    """一次取得所有上櫃股票成交資料 (單一 API 呼叫)。
+def _to_int(amount: str) -> int:
+    """成交金額字串 → int，失敗回 0。"""
+    try:
+        return int(str(amount).replace(",", ""))
+    except (ValueError, TypeError):
+        return 0
 
-    *date* 為 YYYY-MM-DD，預設取前一個交易日 — 與股價 (yfinance end 為開區間)
-    及上市成交量的基準一致。不可用 datetime.now()：本機執行時會送出當日盤中日期。
-    """
+
+def fetch_twse_turnover(date: str | None = None) -> dict[str, str]:
+    """上市：一次取得全部個股成交金額 {代號: 金額字串}。"""
+    if date is None:
+        date = get_previous_trading_day()
+    fmt_date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y%m%d")
+
+    try:
+        resp = robust_get(
+            "https://www.twse.com.tw/exchangeReport/MI_INDEX",
+            params={"response": "json", "date": fmt_date, "type": "ALLBUT0999"},
+        )
+        payload = resp.json()
+        if payload.get("stat") != "OK":
+            raise RuntimeError(f"stat={payload.get('stat')}")
+        for table in payload.get("tables", []):
+            fields = table.get("fields") or []
+            if "證券代號" in fields and "成交金額" in fields:
+                code_i, amount_i = fields.index("證券代號"), fields.index("成交金額")
+                rows = {row[code_i]: row[amount_i] for row in table["data"]}
+                logger.info("上市成交量 %s：MI_INDEX %s 檔", fmt_date, len(rows))
+                return rows
+        raise RuntimeError("找不到每日收盤行情表格")
+    except Exception as exc:
+        logger.warning("上市成交量 MI_INDEX 失敗 (%s)，改用 OpenAPI 備援", exc)
+
+    return _fallback_openapi_turnover(
+        "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL",
+        date, code_key="Code", amount_key="TradeValue", market="上市",
+    )
+
+
+def fetch_tpex_turnover(date: str | None = None) -> dict[str, str]:
+    """上櫃：一次取得全部個股成交金額 {代號: 金額字串}。"""
     if date is None:
         date = get_previous_trading_day()
     # 必須用 YYYY/MM/DD；送 YYYYMMDD 會被 API 忽略並回傳「最新交易日」
     fmt_date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y/%m/%d")
+
     try:
         resp = robust_get(
             "https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes",
@@ -242,14 +318,89 @@ def fetch_tpex_turnover(date: str | None = None) -> list[list[str]]:
         actual = payload.get("date", "")
         expected = date.replace("-", "")
         if actual and actual != expected:
-            logger.warning("TPEx 回傳日期 %s 與預期 %s 不符", actual, expected)
+            raise RuntimeError(f"回傳日期 {actual} 與預期 {expected} 不符")
         rows = payload["tables"][0]["data"]
         if not rows:
-            logger.warning("TPEx %s 無成交資料，上櫃成交量將全部視為 0", fmt_date)
-        return rows
+            raise RuntimeError("回傳 0 筆")
+        logger.info("上櫃成交量 %s：dailyQuotes %s 檔", fmt_date, len(rows))
+        return {row[0]: row[9] for row in rows}  # row[9] = 成交金額(元)
     except Exception as exc:
-        logger.warning("TPEx 成交量 API 失敗: %s", exc)
-        return []
+        logger.warning("上櫃成交量 dailyQuotes 失敗 (%s)，改用 OpenAPI 備援", exc)
+
+    return _fallback_openapi_turnover(
+        "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
+        date, code_key="SecuritiesCompanyCode", amount_key="TransactionAmount",
+        market="上櫃",
+    )
+
+
+def _fallback_openapi_turnover(
+    url: str, date: str, code_key: str, amount_key: str, market: str
+) -> dict[str, str]:
+    """OpenAPI 備援：不吃日期參數，只在 *date* 就是最新交易日時採用。"""
+    latest = get_previous_trading_day()
+    if date != latest:
+        logger.error(
+            "%s成交量：備援 OpenAPI 只提供最新交易日 (%s)，無法取得 %s",
+            market, latest, date,
+        )
+        return {}
+    try:
+        rows = robust_get(url).json()
+        result = {r[code_key]: r[amount_key] for r in rows if r.get(code_key)}
+        logger.info("%s成交量 %s：OpenAPI 備援 %s 檔", market, date, len(result))
+        return result
+    except Exception as exc:
+        logger.error("%s成交量備援亦失敗: %s", market, exc)
+        return {}
+
+
+def build_turnover_map(date: str | None = None) -> dict[str, str]:
+    """合併上市 + 上櫃成交金額。兩邊皆空時拋錯 — 這是「篩選結果恆為 0」的病徵。"""
+    if date is None:
+        date = get_previous_trading_day()
+    turnover = fetch_twse_turnover(date)
+    turnover.update(fetch_tpex_turnover(date))
+    if not turnover:
+        raise RuntimeError(f"{date} 上市與上櫃成交量皆取得失敗，篩選結果必然為 0")
+    return turnover
+
+
+def verify_trading_day(
+    date: str,
+    holidays: list[dict[str, str]] | None = None,
+    max_steps: int = 3,
+) -> tuple[str, dict[str, str]]:
+    """從 *date* 起往前找到第一個有官方成交資料的交易日，回傳 (該日, 成交金額表)。
+
+    TWSE 假日行事曆只涵蓋國定假日，不含臨時休市 (例如颱風假)，而 yfinance 對這類
+    日期仍會回傳 K 棒 — 實測 2026-07-10 三個官方來源皆無資料，yfinance 卻有。
+    因此改以「官方是否有成交資料」作為交易日的判準。
+    """
+    if holidays is None:
+        holidays = get_holiday_schedule()
+
+    for _ in range(max_steps):
+        try:
+            return date, build_turnover_map(date)
+        except Exception as exc:
+            logger.warning("%s 查無官方成交資料 (%s)，往前一個交易日", date, exc)
+            date = get_previous_trading_day(date, holidays)
+
+    raise RuntimeError(f"往前找 {max_steps} 個交易日仍取不到成交資料，最後嘗試 {date}")
+
+
+def resolve_trading_day(
+    current_date: str | None = None,
+    holidays: list[dict[str, str]] | None = None,
+    max_steps: int = 3,
+) -> tuple[str, dict[str, str]]:
+    """回傳 (經官方成交資料確認過的前一交易日, 該日成交金額表)。"""
+    if holidays is None:
+        holidays = get_holiday_schedule()
+    return verify_trading_day(
+        get_previous_trading_day(current_date, holidays), holidays, max_steps
+    )
 
 # ---------------------------------------------------------------------------
 # Format helpers

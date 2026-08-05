@@ -21,7 +21,6 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-import requests
 import yfinance as yf
 from rich.console import Console
 from rich.progress import BarColumn, Progress, TextColumn, TaskProgressColumn
@@ -45,11 +44,19 @@ def _get_holidays() -> list[dict[str, str]]:
 # ---------------------------------------------------------------------------
 # Stock data download  (平行下載)
 # ---------------------------------------------------------------------------
-def get_stock_data(stock_info: tuple[str, str], max_retries: int = 3) -> tuple[str, pd.DataFrame | None]:
-    """下載單一股票歷史資料，回傳 (stock_id, DataFrame | None)。"""
+def get_stock_data(
+    stock_info: tuple[str, str],
+    max_retries: int = 3,
+    start: str | None = None,
+) -> tuple[str, pd.DataFrame | None]:
+    """下載單一股票歷史資料，回傳 (stock_id, DataFrame | None)。
+
+    *start* 預設為 180 天前 (YYYY-MM-DD)；回填歷史時可指定更早的起點。
+    """
     stock_num, market_type = stock_info
     end_date = utils.get_current_trading_date()
-    start = (datetime.datetime.strptime(end_date, "%Y-%m-%d") - datetime.timedelta(days=180)).strftime("%Y-%m-%d")
+    if start is None:
+        start = (datetime.datetime.strptime(end_date, "%Y-%m-%d") - datetime.timedelta(days=180)).strftime("%Y-%m-%d")
 
     suffix = ".TWO" if market_type in ("上櫃",) else ".TW"
     ticker_str = f"{stock_num}{suffix}"
@@ -66,7 +73,7 @@ def get_stock_data(stock_info: tuple[str, str], max_retries: int = 3) -> tuple[s
     console.print(f"[yellow]⚠ {stock_num} 無法獲取資料 (已重試 {max_retries} 次)[/yellow]")
     return stock_num, None
 
-def parallel_get_stock_data(max_workers: int = 8) -> dict[str, pd.DataFrame]:
+def parallel_get_stock_data(max_workers: int = 8, start: str | None = None) -> dict[str, pd.DataFrame]:
     """平行下載所有股票資料。"""
     all_stock = utils.get_all_stocks()
     stock_info_list = [
@@ -89,7 +96,7 @@ def parallel_get_stock_data(max_workers: int = 8) -> dict[str, pd.DataFrame]:
         for i in range(0, total, batch_size):
             batch = stock_info_list[i : i + batch_size]
             with ThreadPoolExecutor(max_workers=max_workers) as pool:
-                fut = {pool.submit(get_stock_data, s): s for s in batch}
+                fut = {pool.submit(get_stock_data, s, start=start): s for s in batch}
                 for f in as_completed(fut):
                     sid, data = f.result()
                     if data is not None:
@@ -203,64 +210,19 @@ def Signal_macd(
         return None
 
 # ---------------------------------------------------------------------------
-# 成交量查詢 (惰性快取 + 跨函數共用交易日)
+# 成交量查詢 (每個市場各一次批次查詢，之後純記憶體查表)
 # ---------------------------------------------------------------------------
-_TURNOVER_CACHE: dict[str, str] = {}
-_TPEX_DATA: list[list[str]] = []
-_LAST_TRADING_DAY: str | None = None
-_HOLIDAYS: list[dict[str, str]] = []
+_TURNOVER: dict[str, str] = {}
 
-def set_last_trading_day(day: str | None, holidays: list[dict[str, str]]) -> None:
-    global _LAST_TRADING_DAY, _HOLIDAYS
-    _LAST_TRADING_DAY = day
-    _HOLIDAYS = holidays
+def init_turnover_cache(turnover: dict[str, str], date: str) -> None:
+    """載入預先批次取得的成交金額表，之後 get_turnover 不再發任何請求。"""
+    global _TURNOVER
+    _TURNOVER = turnover
+    logger.info("成交量預載 %s 檔 (基準日 %s)", len(_TURNOVER), date)
 
-def init_turnover_cache(date: str | None = None) -> None:
-    """初始化：預先批次抓取上櫃成交量 (單次 API)。"""
-    global _TPEX_DATA
-    _TPEX_DATA = utils.fetch_tpex_turnover(date)
-    logger.info("上櫃成交量預載 %s 筆 (基準日 %s)", len(_TPEX_DATA), date)
-
-def get_turnover(stock_num: str, all_stock_df: pd.DataFrame) -> str:
-    """取得單一股票成交金額 (惰性載入 + 快取)。"""
-    if stock_num in _TURNOVER_CACHE:
-        return _TURNOVER_CACHE[stock_num]
-
-    try:
-        market = all_stock_df.loc[all_stock_df["股票代號"] == stock_num, "市場別"].values[0]
-    except IndexError:
-        _TURNOVER_CACHE[stock_num] = "0"
-        return "0"
-
-    # 上櫃：從批次資料查
-    if market == "上櫃":
-        for row in _TPEX_DATA:
-            if row[0] == stock_num:
-                val = row[9]  # 成交金額(元)；row[10] 是成交筆數
-                _TURNOVER_CACHE[stock_num] = val
-                return val
-        _TURNOVER_CACHE[stock_num] = "0"
-        return "0"
-
-    # 上市：直接 API 查 + 快取 (使用預先計算的交易日，避免重複呼叫 holiday API)
-    last_day = _LAST_TRADING_DAY or utils.get_current_trading_date()
-    fmt_date = datetime.datetime.strptime(last_day, "%Y-%m-%d").strftime("%Y%m%d")
-    try:
-        resp = requests.get(
-            "https://www.twse.com.tw/exchangeReport/STOCK_DAY",
-            params={"date": fmt_date, "stockNo": stock_num},
-            timeout=15,
-        )
-        if resp.status_code == 200:
-            data = resp.json()
-            if data.get("stat") == "OK" and data.get("data"):
-                val = data["data"][-1][2]
-                _TURNOVER_CACHE[stock_num] = val
-                return val
-    except Exception:
-        pass
-    _TURNOVER_CACHE[stock_num] = "0"
-    return "0"
+def get_turnover(stock_num: str) -> str:
+    """取得單一股票成交金額；查無資料回 "0"。"""
+    return _TURNOVER.get(stock_num, "0")
 
 # ---------------------------------------------------------------------------
 # 通用篩選器
@@ -297,12 +259,9 @@ def filter_stocks(
                 continue
             indicator_val = val
 
-        # 成交量檢查 (惰性查詢 + 自動快取)
-        if sid not in _TURNOVER_CACHE:
-            get_turnover(sid, all_stock)
-        turnover_str = _TURNOVER_CACHE.get(sid, "0")
+        # 成交量檢查 (查預載好的表)
         try:
-            turnover_num = int(turnover_str.replace(",", ""))
+            turnover_num = int(get_turnover(sid).replace(",", ""))
         except (ValueError, AttributeError):
             skip["turnover_err"] += 1
             continue
@@ -343,7 +302,7 @@ def display_results(
 
     for stock, val in items:
         name = all_stock.loc[all_stock["股票代號"] == stock, "股票名稱"].values[0]
-        tv = utils.format_number(get_turnover(stock, all_stock))
+        tv = utils.format_number(get_turnover(stock))
         days = ""
         if stock_data and stock in stock_data.get("stocks", {}):
             days = f", 連續 {stock_data['stocks'][stock]['days']} 天"
@@ -379,7 +338,7 @@ def build_mail_content(
         if d:
             for s, v in (sorted(d.items(), key=lambda x: x[1], reverse=True) if is_dict else [(s, None) for s in d]):
                 name = all_stock.loc[all_stock["股票代號"] == s, "股票名稱"].values[0]
-                tv = utils.format_number(get_turnover(s, all_stock))
+                tv = utils.format_number(get_turnover(s))
                 d_info = stock_data["stocks"][s]["days"] if s in stock_data.get("stocks", {}) else 1
                 if is_dict:
                     lines.append(f"• {s} {name}: {vname} {v:.2f}%, 成交量 {tv}, 連續 {d_info} 天")
@@ -394,7 +353,7 @@ def build_mail_content(
         for s in final_stocks:
             name = all_stock.loc[all_stock["股票代號"] == s, "股票名稱"].values[0]
             m = momentum_stocks[s]
-            tv = utils.format_number(get_turnover(s, all_stock))
+            tv = utils.format_number(get_turnover(s))
             lines.append(f"• {s} {name}: 動能 {m:.2f}%, 成交量 {tv}")
     else:
         lines.append("本日無股票符合所有條件")
@@ -424,11 +383,11 @@ def update_momentum_stocks(
     momentum_stocks: dict[str, float | int],
     rsi_stocks: dict[str, int] | None,
     macd_stocks: dict[str, int] | None,
+    signal_date: str,
 ) -> dict:
     """更新 stocks_data.json 的連續天數與信號。"""
     holidays = _get_holidays()
     current_date = utils.get_current_trading_date()
-    signal_date = utils.get_previous_trading_day(current_date, holidays)
     logger.info("信號日期: %s", signal_date)
 
     data = _load_stock_data()
@@ -446,7 +405,9 @@ def update_momentum_stocks(
 
         if sid in data["stocks"]:
             prev = data["stocks"][sid]["last_signal_date"]
-            if utils.is_consecutive_trading_day(prev, signal_date, holidays):
+            if prev == signal_date:
+                pass  # 同一個訊號日 (同日重跑，或前一日臨時休市) — 不重複計數
+            elif utils.is_consecutive_trading_day(prev, signal_date, holidays):
                 data["stocks"][sid]["days"] += 1
             else:
                 data["stocks"][sid]["days"] = 1
@@ -518,7 +479,11 @@ def main() -> None:
         console.print("[green]交易日，繼續執行[/green]")
         console.print("=" * 50)
 
-        # ---- 1. 取得股票清單與下載歷史資料 --------------------------------
+        # ---- 1. 確認訊號日並取得成交量 (先做，失敗就不必浪費 7 分鐘下載) ------
+        last_trading_day, turnover = utils.resolve_trading_day(holidays=holidays)
+        init_turnover_cache(turnover, last_trading_day)
+
+        # ---- 2. 取得股票清單與下載歷史資料 --------------------------------
         logger.info("取得股票清單…")
         all_stock = utils.get_all_stocks()
         logger.info("上市櫃普通股共 %s 支", len(all_stock))
@@ -528,12 +493,13 @@ def main() -> None:
         if not stock_index:
             console.print("[red]未取得任何股票資料，結束[/red]")
             return
-        logger.info("成功取得 %s 支股票資料", len(stock_index))
 
-        # ---- 2. 初始化成交量快取 + 交易日快取 (避免重複呼叫 holiday API) -------
-        last_trading_day = utils.get_previous_trading_day(holiday_schedule=holidays)
-        set_last_trading_day(last_trading_day, holidays)
-        init_turnover_cache(last_trading_day)
+        # yfinance 對臨時休市日仍會回傳 K 棒，截到確認過的訊號日為止
+        cutoff = datetime.datetime.strptime(last_trading_day, "%Y-%m-%d").date()
+        stock_index = {
+            sid: df[df.index.date <= cutoff] for sid, df in stock_index.items()
+        }
+        logger.info("成功取得 %s 支股票資料 (截至 %s)", len(stock_index), last_trading_day)
 
         # ---- 3. 篩選 ---------------------------------------------------
         logger.info("動能篩選…")
@@ -556,7 +522,7 @@ def main() -> None:
 
         # ---- 4. 更新連續天數 --------------------------------------------
         logger.info("更新連續天數…")
-        updated_data = update_momentum_stocks(momentum_stocks, rsi_stocks, macd_stocks)
+        updated_data = update_momentum_stocks(momentum_stocks, rsi_stocks, macd_stocks, last_trading_day)
 
         # ---- 5. 顯示結果 ------------------------------------------------
         display_results(momentum_stocks, "動能篩選", stock_data=updated_data)
