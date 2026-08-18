@@ -44,7 +44,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add stocks_data.json historical_data.json web/stock_price_data.json web/historical_data.json
+        git add stocks_data.json historical_data.json stock_metadata.json web/stock_price_data.json web/historical_data.json
         if git diff --cached --quiet; then
           echo "無變更"
           exit 0
