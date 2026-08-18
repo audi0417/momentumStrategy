@@ -45,7 +45,12 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add stocks_data.json historical_data.json web/stock_price_data.json web/historical_data.json
-        git commit -m "更新股票數據和價格圖表數據 $(date +'%Y-%m-%d')" || echo "無變更"
+        if git diff --cached --quiet; then
+          echo "無變更"
+          exit 0
+        fi
+        git commit -m "更新股票數據和價格圖表數據 $(date +'%Y-%m-%d')"
+        git pull --rebase origin main
         git push
 
     # 放在 push 之後：結果為空仍要歸檔，但要讓這次 run 顯示失敗
