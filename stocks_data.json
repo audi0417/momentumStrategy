@@ -1,12 +1,4 @@
 {
-  "last_update": "2026-08-19",
-  "stocks": {
-    "6907": {
-      "stock_name": "雅特力-KY",
-      "momentum": 10.26392961876832,
-      "days": 1,
-      "last_signal_date": "2026-08-18",
-      "signals": []
-    }
-  }
+  "last_update": "2026-08-20",
+  "stocks": {}
 }
