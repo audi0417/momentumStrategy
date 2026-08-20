@@ -22,12 +22,22 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-    - name: Run screening script
+    - name: Run screening script (0 支結果時重試，資料源可能尚未入庫完整)
       env:
         APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
         RECIVER_EMAIL: ${{ secrets.RECIVER_EMAIL }}
         SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-      run: python 動能選股.py
+      run: |
+        for attempt in 1 2 3; do
+          python 動能選股.py
+          count=$(python -c "import json;print(len(json.load(open('stocks_data.json')).get('stocks', {})))" 2>/dev/null || echo 0)
+          echo "第 $attempt 次執行，篩選出 $count 支"
+          if [ "$count" != "0" ] || [ "$attempt" -eq 3 ]; then
+            break
+          fi
+          echo "結果為 0，5 分鐘後重試"
+          sleep 300
+        done
     
     - name: Archive historical data
       run: python archive_data.py

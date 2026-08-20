@@ -108,6 +108,13 @@ def parallel_get_stock_data(max_workers: int = 8, start: str | None = None) -> d
 # ---------------------------------------------------------------------------
 # Indicators
 # ---------------------------------------------------------------------------
+def has_recent_close(df: pd.DataFrame, window: int = 5) -> bool:
+    """最近 window 筆是否都有有效收盤價 (yfinance 對剛收盤的股票有時會回傳 NaN)。"""
+    col = "Close" if "Close" in df.columns else "close" if "close" in df.columns else None
+    if col is None or len(df) < window:
+        return False
+    return not df[col].iloc[-window:].isnull().any()
+
 def calculate_momentum(df: pd.DataFrame) -> float | None:
     """5 日動能 = (close[-1] / close[-5] - 1) * 100 (%)。"""
     try:
@@ -497,19 +504,25 @@ def main() -> None:
             sid: df[df.index.date <= cutoff] for sid, df in stock_index.items()
         }
 
-        # yfinance 掛掉或大量缺漏時，改用官方每日行情補齊。
+        # yfinance 掛掉、大量缺漏、或近期收盤價尚未入庫 (NaN) 時，改用官方每日行情補齊。
         # 兩來源不混用同一檔股票 — 官方是原始價自行還原、yfinance 是它自己的還原價，
         # 逐根拼接會在除權息日產生假跳空。
         wanted = set(all_stock["股票代號"])
         missing = wanted - set(stock_index)
-        if len(missing) > len(wanted) * utils.FALLBACK_TRIGGER_RATIO:
+        stale = {
+            sid for sid, df in stock_index.items()
+            if not has_recent_close(df)
+        }
+        bad = missing | stale
+        if len(bad) > len(wanted) * utils.FALLBACK_TRIGGER_RATIO:
             console.print(
-                f"[yellow]⚠ yfinance 缺 {len(missing)}/{len(wanted)} 檔，改用官方行情備援[/yellow]"
+                f"[yellow]⚠ yfinance 缺 {len(missing)} 檔、{len(stale)} 檔最新收盤價尚未入庫，"
+                f"共 {len(bad)}/{len(wanted)} 檔改用官方行情備援[/yellow]"
             )
             start = (cutoff - datetime.timedelta(days=180)).strftime("%Y-%m-%d")
             try:
                 official = utils.build_official_price_index(
-                    start, last_trading_day, stock_ids=missing, holidays=holidays,
+                    start, last_trading_day, stock_ids=bad, holidays=holidays,
                 )
                 stock_index.update(official)
                 logger.info("官方行情補回 %s 檔", len(official))
