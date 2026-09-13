@@ -105940,6 +105940,182 @@
         "days": 1,
         "signals": []
       }
+    },
+    "2026-09-14": {
+      "6620": {
+        "stock_name": "漢達",
+        "momentum": 9.734513274336276,
+        "days": 9,
+        "signals": []
+      },
+      "6538": {
+        "stock_name": "倉和",
+        "momentum": 20.655737704918042,
+        "days": 8,
+        "signals": []
+      },
+      "2305": {
+        "stock_name": "全友",
+        "momentum": 22.904183717639313,
+        "days": 5,
+        "signals": []
+      },
+      "6834": {
+        "stock_name": "天二科技",
+        "momentum": 11.340206185567014,
+        "days": 5,
+        "signals": []
+      },
+      "3624": {
+        "stock_name": "光頡",
+        "momentum": 28.482970113008733,
+        "days": 5,
+        "signals": []
+      },
+      "3229": {
+        "stock_name": "晟鈦",
+        "momentum": 33.39921350891395,
+        "days": 4,
+        "signals": []
+      },
+      "5314": {
+        "stock_name": "世紀*",
+        "momentum": 19.744319921313203,
+        "days": 4,
+        "signals": []
+      },
+      "5464": {
+        "stock_name": "霖宏",
+        "momentum": 16.62303232276812,
+        "days": 4,
+        "signals": []
+      },
+      "6179": {
+        "stock_name": "亞通",
+        "momentum": 18.77076261437043,
+        "days": 4,
+        "signals": []
+      },
+      "2338": {
+        "stock_name": "光罩",
+        "momentum": 23.86511269783609,
+        "days": 3,
+        "signals": []
+      },
+      "3055": {
+        "stock_name": "蔚華科",
+        "momentum": 14.869888475836435,
+        "days": 3,
+        "signals": []
+      },
+      "5386": {
+        "stock_name": "青雲",
+        "momentum": 22.543352601156073,
+        "days": 3,
+        "signals": []
+      },
+      "6739": {
+        "stock_name": "竹陞科技",
+        "momentum": 14.414414414414424,
+        "days": 3,
+        "signals": []
+      },
+      "3016": {
+        "stock_name": "嘉晶",
+        "momentum": 8.955223880597018,
+        "days": 2,
+        "signals": []
+      },
+      "6416": {
+        "stock_name": "瑞祺電通",
+        "momentum": 15.731459386930013,
+        "days": 2,
+        "signals": []
+      },
+      "6861": {
+        "stock_name": "睿生光電",
+        "momentum": 15.013404825737275,
+        "days": 2,
+        "signals": []
+      },
+      "6291": {
+        "stock_name": "沛亨",
+        "momentum": 8.022598870056497,
+        "days": 2,
+        "signals": []
+      },
+      "7825": {
+        "stock_name": "和亞智慧",
+        "momentum": 13.756613756613767,
+        "days": 2,
+        "signals": []
+      },
+      "1528": {
+        "stock_name": "恩德",
+        "momentum": 10.7049670247801,
+        "days": 1,
+        "signals": []
+      },
+      "1560": {
+        "stock_name": "中砂",
+        "momentum": 8.219178082191792,
+        "days": 1,
+        "signals": []
+      },
+      "3406": {
+        "stock_name": "玉晶光",
+        "momentum": 7.396149949341435,
+        "days": 1,
+        "signals": []
+      },
+      "6706": {
+        "stock_name": "惠特",
+        "momentum": 11.336032388663963,
+        "days": 1,
+        "signals": []
+      },
+      "8996": {
+        "stock_name": "高力",
+        "momentum": 7.258064516129026,
+        "days": 1,
+        "signals": []
+      },
+      "9933": {
+        "stock_name": "中鼎",
+        "momentum": 7.522562819581546,
+        "days": 1,
+        "signals": []
+      },
+      "2221": {
+        "stock_name": "大甲",
+        "momentum": 10.034607709191047,
+        "days": 1,
+        "signals": []
+      },
+      "3441": {
+        "stock_name": "聯一光",
+        "momentum": 26.717557251908385,
+        "days": 1,
+        "signals": []
+      },
+      "4556": {
+        "stock_name": "旭然",
+        "momentum": 34.18439499875332,
+        "days": 1,
+        "signals": []
+      },
+      "6227": {
+        "stock_name": "茂綸",
+        "momentum": 14.34977578475336,
+        "days": 1,
+        "signals": []
+      },
+      "8227": {
+        "stock_name": "巨有科技",
+        "momentum": 45.731707317073166,
+        "days": 1,
+        "signals": []
+      }
     }
   }
 }
