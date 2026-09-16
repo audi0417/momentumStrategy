@@ -106462,6 +106462,268 @@
         "days": 1,
         "signals": []
       }
+    },
+    "2026-09-17": {
+      "2305": {
+        "stock_name": "全友",
+        "momentum": 28.311692275010138,
+        "days": 8,
+        "signals": []
+      },
+      "3624": {
+        "stock_name": "光頡",
+        "momentum": 8.370044052863435,
+        "days": 8,
+        "signals": []
+      },
+      "2338": {
+        "stock_name": "光罩",
+        "momentum": 11.062429503310556,
+        "days": 6,
+        "signals": []
+      },
+      "6861": {
+        "stock_name": "睿生光電",
+        "momentum": 9.313725490196067,
+        "days": 5,
+        "signals": []
+      },
+      "1528": {
+        "stock_name": "恩德",
+        "momentum": 29.27462046231366,
+        "days": 4,
+        "signals": []
+      },
+      "6706": {
+        "stock_name": "惠特",
+        "momentum": 17.599999999999994,
+        "days": 4,
+        "signals": []
+      },
+      "3441": {
+        "stock_name": "聯一光",
+        "momentum": 23.178807947019877,
+        "days": 4,
+        "signals": []
+      },
+      "6227": {
+        "stock_name": "茂綸",
+        "momentum": 14.655172413793105,
+        "days": 4,
+        "signals": []
+      },
+      "6112": {
+        "stock_name": "邁達特",
+        "momentum": 10.93750359224428,
+        "days": 3,
+        "signals": []
+      },
+      "6226": {
+        "stock_name": "光鼎",
+        "momentum": 22.392648446142683,
+        "days": 3,
+        "signals": []
+      },
+      "6689": {
+        "stock_name": "伊雲谷",
+        "momentum": 11.480868055013405,
+        "days": 3,
+        "signals": []
+      },
+      "7765": {
+        "stock_name": "中華資安",
+        "momentum": 11.627906976744185,
+        "days": 3,
+        "signals": []
+      },
+      "7799": {
+        "stock_name": "禾榮科",
+        "momentum": 7.529411764705873,
+        "days": 3,
+        "signals": []
+      },
+      "6690": {
+        "stock_name": "安碁資訊",
+        "momentum": 12.772585669781922,
+        "days": 3,
+        "signals": []
+      },
+      "6811": {
+        "stock_name": "宏碁資訊",
+        "momentum": 11.564625850340127,
+        "days": 3,
+        "signals": []
+      },
+      "2468": {
+        "stock_name": "華經",
+        "momentum": 34.10139031948178,
+        "days": 2,
+        "signals": []
+      },
+      "2254": {
+        "stock_name": "巨鎧精密-創",
+        "momentum": 13.10975407646351,
+        "days": 2,
+        "signals": []
+      },
+      "2221": {
+        "stock_name": "大甲",
+        "momentum": 9.326424870466333,
+        "days": 2,
+        "signals": []
+      },
+      "6148": {
+        "stock_name": "驊宏資",
+        "momentum": 29.96454090187286,
+        "days": 2,
+        "signals": []
+      },
+      "6870": {
+        "stock_name": "騰雲",
+        "momentum": 10.296684118673639,
+        "days": 2,
+        "signals": []
+      },
+      "1709": {
+        "stock_name": "和益",
+        "momentum": 10.623229691356407,
+        "days": 1,
+        "signals": []
+      },
+      "2481": {
+        "stock_name": "強茂",
+        "momentum": 9.061488673139163,
+        "days": 1,
+        "signals": []
+      },
+      "2493": {
+        "stock_name": "揚博",
+        "momentum": 7.73638968481376,
+        "days": 1,
+        "signals": []
+      },
+      "2801": {
+        "stock_name": "彰銀",
+        "momentum": 7.635006361025365,
+        "days": 1,
+        "signals": []
+      },
+      "3532": {
+        "stock_name": "台勝科",
+        "momentum": 7.317073170731714,
+        "days": 1,
+        "signals": []
+      },
+      "3605": {
+        "stock_name": "宏致",
+        "momentum": 9.375,
+        "days": 1,
+        "signals": []
+      },
+      "5269": {
+        "stock_name": "祥碩",
+        "momentum": 8.455882352941169,
+        "days": 1,
+        "signals": []
+      },
+      "6168": {
+        "stock_name": "宏齊",
+        "momentum": 7.8859139227621,
+        "days": 1,
+        "signals": []
+      },
+      "6491": {
+        "stock_name": "晶碩",
+        "momentum": 7.230559345156884,
+        "days": 1,
+        "signals": [
+          "macd"
+        ]
+      },
+      "6715": {
+        "stock_name": "嘉基",
+        "momentum": 16.79049034175335,
+        "days": 1,
+        "signals": []
+      },
+      "8103": {
+        "stock_name": "瀚荃",
+        "momentum": 9.090909090909083,
+        "days": 1,
+        "signals": []
+      },
+      "2061": {
+        "stock_name": "風青",
+        "momentum": 7.564770001821564,
+        "days": 1,
+        "signals": []
+      },
+      "3467": {
+        "stock_name": "台灣精材",
+        "momentum": 34.3339577842549,
+        "days": 1,
+        "signals": []
+      },
+      "3490": {
+        "stock_name": "單井",
+        "momentum": 9.669524872667544,
+        "days": 1,
+        "signals": []
+      },
+      "3675": {
+        "stock_name": "德微",
+        "momentum": 11.41780815061133,
+        "days": 1,
+        "signals": []
+      },
+      "6147": {
+        "stock_name": "頎邦",
+        "momentum": 8.923884514435688,
+        "days": 1,
+        "signals": []
+      },
+      "6218": {
+        "stock_name": "豪勉",
+        "momentum": 17.226428354036294,
+        "days": 1,
+        "signals": []
+      },
+      "6221": {
+        "stock_name": "晉泰",
+        "momentum": 37.26414780295937,
+        "days": 1,
+        "signals": []
+      },
+      "6538": {
+        "stock_name": "倉和",
+        "momentum": 12.40768094534712,
+        "days": 1,
+        "signals": []
+      },
+      "6683": {
+        "stock_name": "雍智科技",
+        "momentum": 23.643410852713174,
+        "days": 1,
+        "signals": []
+      },
+      "7717": {
+        "stock_name": "萊德光電-KY",
+        "momentum": 8.324768756423428,
+        "days": 1,
+        "signals": []
+      },
+      "8227": {
+        "stock_name": "巨有科技",
+        "momentum": 25.057471264367813,
+        "days": 1,
+        "signals": []
+      },
+      "8431": {
+        "stock_name": "匯鑽科",
+        "momentum": 7.973420558518574,
+        "days": 1,
+        "signals": []
+      }
     }
   }
 }
