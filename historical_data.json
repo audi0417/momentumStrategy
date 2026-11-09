@@ -123607,6 +123607,74 @@
         "days": 1,
         "signals": []
       }
+    },
+    "2026-11-09": {
+      "1416": {
+        "stock_name": "廣豐",
+        "momentum": 20.66420775882667,
+        "days": 2,
+        "signals": []
+      },
+      "3287": {
+        "stock_name": "廣寰科",
+        "momentum": 24.02708112396088,
+        "days": 2,
+        "signals": []
+      },
+      "5202": {
+        "stock_name": "力新",
+        "momentum": 23.232314929067833,
+        "days": 2,
+        "signals": []
+      },
+      "8099": {
+        "stock_name": "大世科",
+        "momentum": 21.224489795918377,
+        "days": 2,
+        "signals": []
+      },
+      "1476": {
+        "stock_name": "儒鴻",
+        "momentum": 8.791208791208781,
+        "days": 1,
+        "signals": []
+      },
+      "1558": {
+        "stock_name": "伸興",
+        "momentum": 8.133971291866038,
+        "days": 1,
+        "signals": []
+      },
+      "3576": {
+        "stock_name": "聯合再生",
+        "momentum": 9.20245441846108,
+        "days": 1,
+        "signals": [
+          "macd"
+        ]
+      },
+      "6443": {
+        "stock_name": "元晶",
+        "momentum": 9.725163558172234,
+        "days": 1,
+        "signals": []
+      },
+      "6472": {
+        "stock_name": "保瑞",
+        "momentum": 9.302325581395344,
+        "days": 1,
+        "signals": [
+          "macd"
+        ]
+      },
+      "6873": {
+        "stock_name": "泓德能源",
+        "momentum": 9.271525019151383,
+        "days": 1,
+        "signals": [
+          "macd"
+        ]
+      }
     }
   }
 }
