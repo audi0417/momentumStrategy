@@ -1,11 +1,48 @@
 {
-  "last_update": "2026-11-23",
+  "last_update": "2026-11-24",
   "stocks": {
     "5457": {
       "stock_name": "宣德",
-      "momentum": 18.159201737604057,
+      "momentum": 27.007305841647543,
+      "days": 2,
+      "last_signal_date": "2026-11-23",
+      "signals": []
+    },
+    "2451": {
+      "stock_name": "創見",
+      "momentum": 9.433962264150942,
       "days": 1,
-      "last_signal_date": "2026-11-20",
+      "last_signal_date": "2026-11-23",
+      "signals": []
+    },
+    "6614": {
+      "stock_name": "資拓宏宇",
+      "momentum": 11.874999999999991,
+      "days": 1,
+      "last_signal_date": "2026-11-23",
+      "signals": []
+    },
+    "7788": {
+      "stock_name": "松川精密",
+      "momentum": 18.154761904761905,
+      "days": 1,
+      "last_signal_date": "2026-11-23",
+      "signals": [
+        "macd"
+      ]
+    },
+    "6725": {
+      "stock_name": "矽科宏晟",
+      "momentum": 10.000000000000009,
+      "days": 1,
+      "last_signal_date": "2026-11-23",
+      "signals": []
+    },
+    "7828": {
+      "stock_name": "創新服務",
+      "momentum": 7.949790794979084,
+      "days": 1,
+      "last_signal_date": "2026-11-23",
       "signals": []
     }
   }
